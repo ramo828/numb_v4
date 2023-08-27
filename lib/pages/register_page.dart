@@ -44,6 +44,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   user.uid, 'name', 'age'); // Kullanıcıya özel verileri kaydet
             }
             // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
+            // ignore: use_build_context_synchronously
+            Navigator.pop(
+                context); // Başarılı kayıt durumunda önceki sayfaya geri dön
           } catch (e) {
             // Kayıt sırasında bir hata oluştu, burada hata mesajını görüntüleyebilirsiniz
             if (e is FirebaseAuthException) {
