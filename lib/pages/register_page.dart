@@ -92,12 +92,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         Icons.login,
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'E-posta boş bırakılamaz';
-                      }
-                      return null;
-                    },
                   ),
                 ),
               ).animate().fade(duration: 2000.ms).slide(),
