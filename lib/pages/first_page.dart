@@ -1,6 +1,8 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_com/helper.dart';
+import 'package:e_com/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 int pageCount = 3;
@@ -131,7 +133,7 @@ class WelcomeWidget extends StatelessWidget {
               image: AssetImage('assets/welcome/$imageCount.png'),
               width: 350,
               height: 350,
-            ),
+            ).animate().fade(duration: 1000.ms).fadeIn(),
             Padding(
               padding: const EdgeInsets.only(
                 left: 50,
@@ -164,7 +166,14 @@ class WelcomeWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 250),
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  },
                   child: const Icon(
                     FontAwesomeIcons.arrowRight,
                   ),

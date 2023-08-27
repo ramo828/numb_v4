@@ -1,3 +1,4 @@
+import 'package:e_com/pages/register_page.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,20 @@ import 'package:provider/provider.dart';
 
 bool showPass = true;
 bool darkTheme = false;
+// ignore: non_constant_identifier_names
+List color = [
+  Colors.blue.shade50,
+  Colors.blue.shade100,
+  Colors.blue.shade200,
+  Colors.blue.shade300,
+  Colors.blue.shade400,
+  Colors.blue.shade500,
+  Colors.blue.shade600,
+  Colors.blue.shade700,
+  Colors.blue.shade800,
+  Colors.blue.shade900,
+];
+int colorIndex = color.length - 1;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -180,8 +195,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ).animate().fade(duration: 2000.ms).slide(),
-              const SizedBox(
-                height: 16,
+              Padding(
+                padding: const EdgeInsets.only(left: 200, top: 0),
+                child: GestureDetector(
+                  child: Text("Qeydiyyatdan keç",
+                      style: TextStyle(
+                        color: color[colorIndex],
+                      )),
+                  onTap: () {
+                    setState(() {
+                      print(colorIndex);
+                      if (colorIndex == 0)
+                        colorIndex = color.length - 1;
+                      else {
+                        colorIndex--;
+                      }
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => register(),
+                      ),
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -254,7 +291,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(
-              horizontal: 10, vertical: 0), // Boyutu ayarla
+            horizontal: 10,
+            vertical: 0,
+          ), // Boyutu ayarla
           shape: RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.circular(10)), // Kenar yuvarlaklığı ayarla
