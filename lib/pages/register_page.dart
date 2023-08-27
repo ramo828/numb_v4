@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,8 @@ import 'package:e_com/themes/model_theme.dart';
 
 bool showPass = false;
 bool passCheck = true;
+bool access = false;
+String errorMsg = "";
 
 class RegistrationForm extends StatefulWidget {
   @override
@@ -18,23 +21,56 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordController1 = TextEditingController();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> _register() async {
-    if (_emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty) {
-      try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
-      } catch (e) {
-        // Kayıt sırasında bir hata oluştu, burada hata mesajını görüntüleyebilirsiniz
-        print("Hata: $e");
+    errorMsg = "";
+    if (_emailController.text.length > 5 &&
+        _passwordController.text.length > 5) {
+      if (access) {
+        if (_emailController.text.isNotEmpty &&
+            _passwordController.text.isNotEmpty) {
+          try {
+            UserCredential userCredential =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+            User? user =
+                auth.currentUser; // Kaydedilen kullanıcının bilgilerini al
+            if (user != null) {
+              await saveUserData(
+                  user.uid, 'name', 'age'); // Kullanıcıya özel verileri kaydet
+            }
+            // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
+          } catch (e) {
+            // Kayıt sırasında bir hata oluştu, burada hata mesajını görüntüleyebilirsiniz
+            if (e is FirebaseAuthException) {
+              if (e.code == 'weak-password') {
+                errorMsg = "Güclü şifrədəm istifadə edin!";
+              } else if (e.code == 'email-already-in-use') {
+                errorMsg = "Email adresi artıq istifadə edilir!";
+              } else {
+                errorMsg = 'Bilinmətən bir xəta: ${e.message}';
+              }
+            } else {
+              errorMsg = 'Bilinmətən bir xəta: ${e}';
+            }
+            var alert = alert_me(errorMsg);
+            showDialog(context: context, builder: ((context) => alert));
+          }
+        } else {
+          var alert = alert_me("Email ve sifre bos ola bilmez");
+          showDialog(context: context, builder: ((context) => alert));
+        }
+      } else {
+        var alert = alert_me("Şifrələr uyğun deyil!");
+        showDialog(context: context, builder: ((context) => alert));
       }
     } else {
-      print("Email ve sifre bos ola bilmez");
+      var alert = alert_me("Şifrə ən az 6 simvoldan ibarət ola bilər!");
+      showDialog(context: context, builder: ((context) => alert));
     }
   }
 
@@ -174,17 +210,19 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       if (_passwordController.text != pass) {
                         setState(() {
                           passCheck = false;
+                          access = false;
                         });
                       } else {
                         setState(() {
                           passCheck = true;
+                          access = true;
                         });
                       }
                     },
                   ),
                 ),
               ).animate().fade(duration: 2000.ms).slide(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.only(
                   top: 10,
@@ -224,5 +262,34 @@ class _RegistrationFormState extends State<RegistrationForm> {
         ]),
       );
     });
+  }
+
+  Future<void> saveUserData(String userId, String name, String age) async {
+    try {
+      await firestore.collection('users').doc(userId).set({
+        'name': name,
+        'age': age,
+      });
+    } catch (e) {
+      print("Hata: $e");
+    }
+  }
+
+  AlertDialog alert_me(String title) {
+    return AlertDialog(
+      title: Text(
+        title,
+        style: TextStyle(
+            fontSize: 20, color: darkTheme ? Colors.white : Colors.black),
+      ),
+      backgroundColor: darkTheme
+          ? Colors.black.withOpacity(0.4)
+          : Colors.white.withOpacity(0.4),
+      icon: Icon(
+        FontAwesomeIcons.triangleExclamation,
+        color: Colors.yellow.withOpacity(0.5),
+        size: 40,
+      ),
+    );
   }
 }

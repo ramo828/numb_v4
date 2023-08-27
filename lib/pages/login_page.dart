@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 bool showPass = true;
 bool darkTheme = false;
+String errorMsg = "";
 // ignore: non_constant_identifier_names
 List color = [
   Colors.blue.shade50,
@@ -36,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _signInWithEmailAndPassword() async {
+    errorMsg = "";
     try {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
@@ -48,9 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => home_page(
-              email: email,
-            ),
+            builder: (context) => home_page(),
           ),
         );
       } else {
@@ -60,13 +60,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
         showDialog(context: context, builder: ((context) => alert));
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        errorMsg = 'İstifadəçi tapılmadı.';
+      } else if (e.code == 'wrong-password') {
+        errorMsg = 'Xətalı şifrə.';
+      } else {
+        errorMsg = 'Bir xəta baş verdi: ${e.message}';
+      }
     } catch (e) {
-      // ignore: avoid_print
-      print('Error signing in: $e');
-      var alert = alert_me("$e");
-      // ignore: use_build_context_synchronously
-      showDialog(context: context, builder: ((context) => alert));
+      errorMsg = "$e";
     }
+    var alert = alert_me(
+      errorMsg,
+    );
+
+    showDialog(context: context, builder: ((context) => alert));
   }
 
   @override
