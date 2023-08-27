@@ -1,15 +1,180 @@
+import 'package:dots_indicator/dots_indicator.dart';
+import 'package:e_com/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class first extends StatefulWidget {
-  const first({super.key});
+int pageCount = 3;
+int position = 0;
+
+class First extends StatefulWidget {
+  const First({Key? key});
 
   @override
-  State<first> createState() => _firstState();
+  State<First> createState() => _FirstState();
 }
 
-class _firstState extends State<first> {
+class _FirstState extends State<First> {
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (int page) {
+                setState(() {
+                  position = page;
+                });
+              },
+              children: [
+                // qarsilama_widget(),
+                WelcomeWidget(
+                  title: title1,
+                  content: content1,
+                  imageCount: 1,
+                  nextButtonStatus: false,
+                ),
+                WelcomeWidget(
+                  title: title2,
+                  content: content2,
+                  imageCount: 2,
+                  nextButtonStatus: false,
+                ),
+                WelcomeWidget(
+                  title: title3,
+                  content: content3,
+                  imageCount: 3,
+                  nextButtonStatus: true,
+                ),
+              ],
+            ),
+          ),
+          DotsIndicator(
+            dotsCount: pageCount,
+            position: position,
+            decorator: const DotsDecorator(
+              color: Colors.grey,
+              activeColor: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class qarsilama_widget extends StatelessWidget {
+  const qarsilama_widget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(40),
+          child: Center(
+            child: Text(
+              qarsilama,
+              style: const TextStyle(
+                fontFamily: 'Handwriting',
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class WelcomeWidget extends StatelessWidget {
+  final String title;
+  final String content;
+  final int imageCount;
+  final bool nextButtonStatus;
+
+  const WelcomeWidget({
+    Key? key,
+    required this.title,
+    required this.content,
+    required this.imageCount,
+    this.nextButtonStatus = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        Column(
+          children: [
+            Image(
+              image: AssetImage('assets/welcome/$imageCount.png'),
+              width: 350,
+              height: 350,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 50,
+                top: 5,
+                bottom: 10,
+              ),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Handwriting',
+                  fontSize: 40,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 35),
+              child: Center(
+                child: Text(
+                  content,
+                  style: const TextStyle(
+                    fontFamily: 'Lobster',
+                    fontSize: 21,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            if (nextButtonStatus)
+              Padding(
+                padding: const EdgeInsets.only(left: 250),
+                child: OutlinedButton(
+                  onPressed: () {},
+                  child: const Icon(
+                    FontAwesomeIcons.arrowRight,
+                  ),
+                ),
+              )
+            else
+              const Center(),
+          ],
+        ),
+      ],
+    );
   }
 }

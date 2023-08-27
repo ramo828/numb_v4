@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'themes/model_theme.dart';
-import 'pages/login_page.dart';
+import 'pages/first_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,7 @@ void main() async {
                     ),
                   ),
             debugShowCheckedModeBanner: false,
-            home: LoginScreen(),
+            home: First(),
           );
         },
       ),
