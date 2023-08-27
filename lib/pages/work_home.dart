@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'user.dart';
+import 'login_page.dart';
 
 class home_page extends StatefulWidget {
-  // const home_page({super.key});
   final String email;
   home_page({
     super.key,
@@ -23,24 +23,25 @@ class _home_pageState extends State<home_page> {
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 65,
           centerTitle: true,
           actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OutlinedButton(
-                onPressed: () {
-                  themeNotifier.isDark
-                      ? themeNotifier.isDark = false
-                      : themeNotifier.isDark = true;
-                },
-                child: Icon(
-                  themeNotifier.isDark ? Icons.sunny : FontAwesomeIcons.moon,
-                  size: 35,
-                ),
-              ),
-            )
+            theme(themeNotifier),
           ],
-          title: Text("Second app"),
+          title: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Number Seller',
+              style: TextStyle(
+                  fontFamily: 'Handwriting',
+                  fontSize: 30,
+                  color: themeNotifier.isDark
+                      ? Colors.brown.withOpacity(0.9)
+                      : Colors.blueGrey),
+            ),
+          ),
         ),
         body: user_info(
           username: widget.email,

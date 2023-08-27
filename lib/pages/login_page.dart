@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => register(),
+                        builder: (context) => RegistrationForm(),
                       ),
                     );
                   },
@@ -284,35 +284,35 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
 
-  Padding theme(ModelTheme themeNotifier) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2, right: 10),
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 0,
-          ), // Boyutu ayarla
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(10)), // Kenar yuvarlaklığı ayarla
-          side: BorderSide(
-            color: darkTheme ? Colors.brown : Colors.blueGrey,
-          ), // Kenarlık rengi ayarla
-        ),
-        onPressed: () {
-          themeNotifier.isDark
-              ? themeNotifier.isDark = false
-              : themeNotifier.isDark = true;
-          darkTheme = themeNotifier.isDark;
-        },
-        child: Icon(
-          color: themeNotifier.isDark ? Colors.blueGrey : Colors.yellow,
-          !themeNotifier.isDark ? Icons.sunny : FontAwesomeIcons.moon,
-          size: 35,
-        ),
+Padding theme(ModelTheme themeNotifier) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 2, right: 10),
+    child: OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 0,
+        ), // Boyutu ayarla
+        shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(10)), // Kenar yuvarlaklığı ayarla
+        side: BorderSide(
+          color: darkTheme ? Colors.brown : Colors.blueGrey,
+        ), // Kenarlık rengi ayarla
       ),
-    );
-  }
+      onPressed: () {
+        themeNotifier.isDark
+            ? themeNotifier.isDark = false
+            : themeNotifier.isDark = true;
+        darkTheme = themeNotifier.isDark;
+      },
+      child: Icon(
+        color: themeNotifier.isDark ? Colors.blueGrey : Colors.yellow,
+        !themeNotifier.isDark ? Icons.sunny : FontAwesomeIcons.moon,
+        size: 35,
+      ),
+    ),
+  );
 }
