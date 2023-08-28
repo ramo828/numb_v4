@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/login_page.dart';
+import 'package:e_com/pages/work_elements.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,9 @@ class RegistrationForm extends StatefulWidget {
 
 class _RegistrationFormState extends State<RegistrationForm> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _suname = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordController1 = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -40,8 +45,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
             User? user =
                 auth.currentUser; // Kaydedilen kullanıcının bilgilerini al
             if (user != null) {
-              await saveUserData(
-                  user.uid, 'name', 'age'); // Kullanıcıya özel verileri kaydet
+              await saveUserData(user.uid, 'name', 'age',
+                  ""); // Kullanıcıya özel verileri kaydet
             }
             // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
             // ignore: use_build_context_synchronously
@@ -110,121 +115,96 @@ class _RegistrationFormState extends State<RegistrationForm> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(
-                height: 250,
+                height: 25,
               ),
-              Padding(
-                padding: const EdgeInsets.all(9.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.brown.shade200.withOpacity(0.4),
-                    borderRadius:
-                        BorderRadius.circular(20), // Yuvarlak köşeler için
-                  ),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      enabledBorder: underlineInputBorder,
-                      focusedBorder: underlineInputBorder,
-                      // Çizgiyi şeffaf yapar
-                      labelText: 'Elektron poçt',
-                      prefixIcon: Icon(
-                        Icons.login,
-                      ),
-                    ),
-                  ),
+              buildTextField(
+                label: 'Ad',
+                icon: const Icon(
+                  Icons.person,
                 ),
-              ).animate().fade(duration: 2000.ms).slide(),
-              Padding(
-                  padding: const EdgeInsets.all(9.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.brown.shade200.withOpacity(0.4),
-                      borderRadius:
-                          BorderRadius.circular(20), // Yuvarlak köşeler için
-                    ),
-                    child: TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        enabledBorder: underlineInputBorder,
-                        focusedBorder: underlineInputBorder,
-                        // Çizgiyi şeffaf yapar
-                        labelText: 'Şifrə',
-                        prefixIcon: const Icon(
-                          Icons.password,
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (showPass) {
-                                showPass = false;
-                              } else {
-                                showPass = true;
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            showPass
-                                ? FontAwesomeIcons.eye
-                                : FontAwesomeIcons.eyeLowVision,
-                          ),
-                        ),
-                      ),
-                      obscureText: showPass,
-                    ),
-                  )).animate().fade(duration: 2000.ms).slide(),
-              Padding(
-                padding: const EdgeInsets.all(9.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.brown.shade200.withOpacity(0.4),
-                    borderRadius:
-                        BorderRadius.circular(20), // Yuvarlak köşeler için
-                  ),
-                  child: TextFormField(
-                    controller: _passwordController1,
-                    decoration: InputDecoration(
-                      enabledBorder: underlineInputBorder,
-                      focusedBorder: underlineInputBorder,
-                      prefixIconColor: passCheck ? Colors.black : Colors.red,
-                      // Çizgiyi şeffaf yapar
-                      labelText: 'Təkrar şifrə',
-                      prefixIcon: const Icon(
-                        Icons.password,
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (showPass) {
-                              showPass = false;
-                            } else {
-                              showPass = true;
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          showPass
-                              ? FontAwesomeIcons.eye
-                              : FontAwesomeIcons.eyeLowVision,
-                        ),
-                      ),
-                    ),
-                    obscureText: showPass,
-                    onChanged: (pass) {
-                      if (_passwordController.text != pass) {
-                        setState(() {
-                          passCheck = false;
-                          access = false;
-                        });
+                controller: _name,
+                uib: underlineInputBorder,
+              ),
+              buildTextField(
+                label: 'Soyad',
+                icon: const Icon(
+                  Icons.person,
+                ),
+                controller: _suname,
+                uib: underlineInputBorder,
+              ),
+              buildTextField(
+                label: 'Mobil nömrə',
+                icon: const Icon(
+                  Icons.phone_in_talk,
+                ),
+                controller: _phone,
+                uib: underlineInputBorder,
+                inputType: TextInputType.phone,
+                prefixText: "+994",
+                formatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^[0-9+]*$')),
+                  PhoneNumberFormatter(),
+                ],
+              ),
+              buildTextField(
+                label: 'Elektron poçt',
+                icon: const Icon(
+                  Icons.login,
+                ),
+                controller: _emailController,
+                uib: underlineInputBorder,
+              ),
+              buildTextField(
+                label: 'Şifrə',
+                icon: const Icon(
+                  Icons.password,
+                ),
+                controller: _passwordController,
+                uib: underlineInputBorder,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (showPass) {
+                        showPass = false;
                       } else {
-                        setState(() {
-                          passCheck = true;
-                          access = true;
-                        });
+                        showPass = true;
                       }
-                    },
+                    });
+                  },
+                  icon: Icon(
+                    showPass
+                        ? FontAwesomeIcons.eye
+                        : FontAwesomeIcons.eyeLowVision,
                   ),
                 ),
-              ).animate().fade(duration: 2000.ms).slide(),
+                obscureText: showPass,
+              ),
+              buildTextField(
+                label: 'Təkrar Şifrə',
+                icon: const Icon(
+                  Icons.password,
+                ),
+                controller: _passwordController1,
+                uib: underlineInputBorder,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (showPass) {
+                        showPass = false;
+                      } else {
+                        showPass = true;
+                      }
+                    });
+                  },
+                  icon: Icon(
+                    showPass
+                        ? FontAwesomeIcons.eye
+                        : FontAwesomeIcons.eyeLowVision,
+                  ),
+                ),
+                obscureText: showPass,
+              ),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.only(
@@ -267,12 +247,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
     });
   }
 
-  Future<void> saveUserData(String userId, String name, String age) async {
+  Future<void> saveUserData(
+      String userId, String name, String surname, String phone_number) async {
     try {
-      await firestore.collection('users').doc(userId).set({
-        'name': name,
-        'age': age,
-      });
+      await firestore.collection('users').doc(userId).set(
+          {'name': name, 'surname': surname, 'phone_number': phone_number});
     } catch (e) {
       print("Hata: $e");
     }
