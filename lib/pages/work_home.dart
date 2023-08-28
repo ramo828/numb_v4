@@ -24,7 +24,7 @@ class _home_pageState extends State<home_page> {
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   User? _user;
   String _name = '';
-  String _age = '';
+  String _surname = '';
 
   @override
   void initState() {
@@ -41,12 +41,11 @@ class _home_pageState extends State<home_page> {
               userSnapshot.data() as Map<String, dynamic>;
           setState(() {
             _name = userData['name'];
-            _age = userData['age'];
+            _surname = userData['surname'];
           });
         } else {
           setState(() {
             _name = 'Kullanıcı bulunamadı';
-            _age = '';
           });
         }
       });
@@ -84,7 +83,11 @@ class _home_pageState extends State<home_page> {
             ),
           ),
         ),
-        body: Text("$_name $_age"),
+        body: Column(
+          children: [
+            Text("$_name $_surname"),
+          ],
+        ),
       );
     });
   }

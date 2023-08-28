@@ -54,11 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else {
-        var alert = alert_me(
-          "Login ve ya parol boş ola bilməz!",
-        );
-
-        showDialog(context: context, builder: ((context) => alert));
+        errorMsg = "Login ve ya parol boş ola bilməz!";
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -71,11 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       errorMsg = "$e";
     }
-    var alert = alert_me(
-      errorMsg,
-    );
-
-    showDialog(context: context, builder: ((context) => alert));
+    if (errorMsg.isNotEmpty) {
+      var alert = alert_me(
+        errorMsg,
+      );
+      showDialog(context: context, builder: ((context) => alert));
+    }
   }
 
   @override
