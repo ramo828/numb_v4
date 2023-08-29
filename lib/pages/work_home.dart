@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_page.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 class home_page extends StatefulWidget {
   home_page({
@@ -27,6 +26,7 @@ class _home_pageState extends State<home_page> {
   User? _user;
   String _name = '';
   String _surname = '';
+  String _deviceID = '';
 
   @override
   void initState() {
@@ -44,6 +44,7 @@ class _home_pageState extends State<home_page> {
           setState(() {
             _name = userData['name'];
             _surname = userData['surname'];
+            _deviceID = userData['deviceID'];
           });
         } else {
           setState(() {
@@ -85,93 +86,123 @@ class _home_pageState extends State<home_page> {
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 15, top: 10),
-          child: Column(
-            children: [
-              my_container(
-                color: Colors.brown.shade300,
-                height: 200,
-                width: 350,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: my_container(
-                        height: 35,
-                        color: Colors.brown.shade900.withOpacity(0.4),
-                        width: 325,
-                        child: const Center(
-                          child: Text(
-                            "Istifadəçi bilgiləri",
+        body: Column(
+          children: [
+            FutureBuilder<bool>(
+              future: equalDeviceID(_deviceID),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Yükleniyor göstergesi
+                } else if (snapshot.hasError) {
+                  return Text("Hata: ${snapshot.error}");
+                } else {
+                  bool isEqual = snapshot.data ?? false;
+                  if (isEqual) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 15, top: 10),
+                      child: Column(
+                        children: [
+                          my_container(
+                            color: Colors.brown.shade300,
+                            height: 200,
+                            width: 350,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: my_container(
+                                    height: 35,
+                                    color:
+                                        Colors.brown.shade900.withOpacity(0.4),
+                                    width: 325,
+                                    child: const Center(
+                                      child: Text(
+                                        "Istifadəçi bilgiləri",
+                                        style: TextStyle(
+                                          fontFamily: 'Handwriting',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                my_container(
+                                  height: 30,
+                                  width: 280,
+                                  color: Colors.brown.shade500.withOpacity(0.5),
+                                  child: Center(
+                                    child: double_string(
+                                      text1: "Ad: ",
+                                      text2: _name,
+                                      fontName1: "Lobster",
+                                      fontName2: "Handwriting",
+                                      color2: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                my_container(
+                                  height: 30,
+                                  width: 280,
+                                  color: Colors.brown.shade500.withOpacity(0.5),
+                                  child: Center(
+                                    child: double_string(
+                                      text1: "Soyad: ",
+                                      text2: "$_surname",
+                                      fontName1: "Lobster",
+                                      fontName2: "Handwriting",
+                                      color2: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                my_container(
+                                  height: 30,
+                                  width: 280,
+                                  color: Colors.brown.shade500.withOpacity(0.5),
+                                  child: const Center(
+                                    child: double_string(
+                                      text1: "Qeyd. Tarix: ",
+                                      text2: "07/14/21",
+                                      fontName1: "Lobster",
+                                      fontName2: "Handwriting",
+                                      color2: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 200),
+                        child: my_container(
+                          color: Colors.brown.shade500.withOpacity(0.5),
+                          child: const Text(
+                            "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
                             style: TextStyle(
-                              fontFamily: 'Handwriting',
+                              fontSize: 30,
+                              fontFamily: "Lobster",
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    my_container(
-                      height: 30,
-                      width: 280,
-                      color: Colors.brown.shade500.withOpacity(0.5),
-                      child: Center(
-                        child: double_string(
-                          text1: "Ad: ",
-                          text2: _name,
-                          fontName1: "Lobster",
-                          fontName2: "Handwriting",
-                          color2: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    my_container(
-                      height: 30,
-                      width: 280,
-                      color: Colors.brown.shade500.withOpacity(0.5),
-                      child: Center(
-                        child: double_string(
-                          text1: "Soyad: ",
-                          text2: "$_surname",
-                          fontName1: "Lobster",
-                          fontName2: "Handwriting",
-                          color2: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    my_container(
-                      height: 30,
-                      width: 280,
-                      color: Colors.brown.shade500.withOpacity(0.5),
-                      child: const Center(
-                        child: double_string(
-                          text1: "Qeyd. Tarix: ",
-                          text2: "07/14/21",
-                          fontName1: "Lobster",
-                          fontName2: "Handwriting",
-                          color2: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () async {
-                  await getDeviceID();
-                },
-                child: Text("Info"),
-              )
-            ],
-          ),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
         ),
       );
     });

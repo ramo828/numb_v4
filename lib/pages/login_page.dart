@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/register_page.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:e_com/themes/model_theme.dart';
@@ -35,6 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _signInWithEmailAndPassword() async {
     errorMsg = "";
