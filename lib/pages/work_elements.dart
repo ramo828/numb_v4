@@ -7,6 +7,7 @@ class buildTextField extends StatelessWidget {
   final TextEditingController controller;
   final UnderlineInputBorder uib;
   final VoidCallback? onPressed;
+  final ValueSetter<String>? onChanged;
   final bool obscureText;
   final IconButton? suffixIcon;
   final String? prefixText;
@@ -19,6 +20,7 @@ class buildTextField extends StatelessWidget {
     required this.controller,
     required this.uib,
     this.onPressed,
+    this.onChanged,
     this.obscureText = false,
     this.suffixIcon,
     this.prefixText,
@@ -38,6 +40,7 @@ class buildTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: TextFormField(
+            onChanged: onChanged,
             inputFormatters: formatter,
             keyboardType: inputType,
             obscureText: obscureText,

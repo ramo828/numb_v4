@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/login_page.dart';
 import 'package:e_com/pages/work_elements.dart';
+import 'package:e_com/pages/work_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Future<void> _register() async {
     errorMsg = "";
+    String name = _name.text;
+    String surname = _suname.text;
+    String phoneNumber = _phone.text;
+    String email = _emailController.text;
+    String deviceID = await getDeviceID();
+
     if (_emailController.text.length > 5 &&
         _passwordController.text.length > 5) {
       if (access) {
@@ -45,8 +52,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
             User? user =
                 auth.currentUser; // Kaydedilen kullanıcının bilgilerini al
             if (user != null) {
-              await saveUserData(user.uid, 'name', 'age',
-                  ""); // Kullanıcıya özel verileri kaydet
+              await saveUserData(
+                user.uid,
+                name,
+                surname,
+                phoneNumber,
+                email,
+                deviceID,
+              ); // Kullanıcıya özel verileri kaydet
             }
             // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
             // ignore: use_build_context_synchronously
@@ -182,11 +195,23 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               buildTextField(
                 label: 'Təkrar Şifrə',
-                icon: const Icon(
+                icon: Icon(
                   Icons.password,
+                  color: passCheck ? Colors.black : Colors.red,
                 ),
                 controller: _passwordController1,
                 uib: underlineInputBorder,
+                onChanged: (value) {
+                  setState(() {
+                    if (_passwordController.text != value) {
+                      passCheck = false;
+                      access = false;
+                    } else {
+                      passCheck = true;
+                      access = true;
+                    }
+                  });
+                },
                 suffixIcon: IconButton(
                   onPressed: () {
                     setState(() {
@@ -248,10 +273,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   Future<void> saveUserData(
-      String userId, String name, String surname, String phone_number) async {
+    String userId,
+    String name,
+    String surname,
+    String phone_number,
+    email,
+    String deviceID,
+  ) async {
     try {
-      await firestore.collection('users').doc(userId).set(
-          {'name': name, 'surname': surname, 'phone_number': phone_number});
+      await firestore.collection('users').doc(userId).set({
+        'name': name,
+        'surname': surname,
+        'phone_number': phone_number,
+        'email': email,
+        'deviceID': deviceID,
+      });
     } catch (e) {
       print("Hata: $e");
     }
