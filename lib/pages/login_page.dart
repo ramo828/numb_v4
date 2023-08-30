@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 bool showPass = true;
 bool darkTheme = false;
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final String password = _passwordController.text.trim();
 
       if (email.isNotEmpty && password.isNotEmpty) {
-        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        await _auth.signInWithEmailAndPassword(
             email: email, password: password);
         // Giriş başarılıysa istediğiniz sayfaya yönlendirebilirsiniz.
         // ignore: use_build_context_synchronously

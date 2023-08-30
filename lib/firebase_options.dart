@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '756817341318',
     projectId: 'mekan-4c393',
     storageBucket: 'mekan-4c393.appspot.com',
-    iosClientId: '756817341318-cjupnrteg5nathqdnqf2au8b4uuptpqu.apps.googleusercontent.com',
+    iosClientId:
+        '756817341318-cjupnrteg5nathqdnqf2au8b4uuptpqu.apps.googleusercontent.com',
     iosBundleId: 'com.example.eCom',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '756817341318',
     projectId: 'mekan-4c393',
     storageBucket: 'mekan-4c393.appspot.com',
-    iosClientId: '756817341318-or4a2316e80qlatouek6hiitej0170e2.apps.googleusercontent.com',
+    iosClientId:
+        '756817341318-or4a2316e80qlatouek6hiitej0170e2.apps.googleusercontent.com',
     iosBundleId: 'com.example.eCom.RunnerTests',
   );
 }

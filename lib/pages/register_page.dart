@@ -45,8 +45,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         if (_emailController.text.isNotEmpty &&
             _passwordController.text.isNotEmpty) {
           try {
-            UserCredential userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: _emailController.text,
               password: _passwordController.text,
             );

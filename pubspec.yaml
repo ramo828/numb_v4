@@ -50,6 +50,7 @@ dependencies:
   dots_indicator:
   crypto:
   intl:
+  url_launcher:
 
 
 dev_dependencies:

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_com/pages/number_/number_home.dart';
+import 'package:e_com/pages/work_elements.dart';
 import 'package:e_com/pages/work_functions.dart';
 import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class home_page extends StatefulWidget {
@@ -19,10 +21,13 @@ class home_page extends StatefulWidget {
 }
 
 class _home_pageState extends State<home_page> {
-  @override
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<DocumentSnapshot>? _keysSubscription;
+  StreamSubscription<DocumentSnapshot>? _notificationSubscription;
 
+  Map<String, dynamic>? _keysData;
+  Map<String, dynamic>? _notificationData;
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   User? _user;
   String _name = '';
@@ -30,6 +35,12 @@ class _home_pageState extends State<home_page> {
   String _deviceID = '';
   String _registerDate = '';
   bool _logOut = false;
+  bool _notifStatus = false;
+  String _message = "";
+  bool _updateStatus = false;
+  String _updateLink = '';
+  String _updateContent = '';
+  String _updateTitle = '';
 
   @override
   void initState() {
@@ -57,6 +68,38 @@ class _home_pageState extends State<home_page> {
           });
         }
       });
+
+      _notificationSubscription = _firestore
+          .collection('settings')
+          .doc('notification')
+          .snapshots()
+          .listen((notificationSnapshot) {
+        if (notificationSnapshot.exists) {
+          setState(() {
+            _notificationData =
+                notificationSnapshot.data() as Map<String, dynamic>;
+            _message = _notificationData!['message'];
+            _notifStatus = _notificationData!['status'];
+          });
+        }
+      });
+
+      _notificationSubscription = _firestore
+          .collection('settings')
+          .doc('update')
+          .snapshots()
+          .listen((notificationSnapshot) {
+        if (notificationSnapshot.exists) {
+          setState(() {
+            _notificationData =
+                notificationSnapshot.data() as Map<String, dynamic>;
+            _updateStatus = _notificationData!['status'];
+            _updateContent = _notificationData!['content'];
+            _updateTitle = _notificationData!['title'];
+            _updateLink = _notificationData!['url'];
+          });
+        }
+      });
     }
   }
 
@@ -80,7 +123,14 @@ class _home_pageState extends State<home_page> {
             ),
             OutlinedButton(
               child: Icon(Icons.list),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => number_home(),
+                  ),
+                );
+              },
             ),
             OutlinedButton(
               child: Icon(Icons.settings),
@@ -133,90 +183,16 @@ class _home_pageState extends State<home_page> {
                 } else {
                   bool isEqual = snapshot.data ?? false;
                   if (isEqual) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 10),
-                      child: Column(
-                        children: [
-                          my_container(
-                            color: Colors.brown.shade300,
-                            height: 200,
-                            width: 350,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: my_container(
-                                    height: 35,
-                                    color:
-                                        const Color.fromARGB(255, 112, 104, 103)
-                                            .withOpacity(0.4),
-                                    width: 325,
-                                    child: const Center(
-                                      child: Text(
-                                        "Istifadəçi bilgiləri",
-                                        style: TextStyle(
-                                          fontFamily: 'Handwriting',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                my_container(
-                                  height: 30,
-                                  width: 280,
-                                  color: Colors.brown.shade500.withOpacity(0.5),
-                                  child: Center(
-                                    child: double_string(
-                                      text1: "Ad: ",
-                                      text2: _name,
-                                      fontName1: "Lobster",
-                                      fontName2: "Handwriting",
-                                      color2: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                my_container(
-                                  height: 30,
-                                  width: 280,
-                                  color: Colors.brown.shade500.withOpacity(0.5),
-                                  child: Center(
-                                    child: double_string(
-                                      text1: "Soyad: ",
-                                      text2: "$_surname",
-                                      fontName1: "Lobster",
-                                      fontName2: "Handwriting",
-                                      color2: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                my_container(
-                                  height: 30,
-                                  width: 280,
-                                  color: Colors.brown.shade500.withOpacity(0.5),
-                                  child: Center(
-                                    child: double_string(
-                                      text1: "Qeyd. Tarix: ",
-                                      text2: _registerDate,
-                                      fontName1: "Lobster",
-                                      fontName2: "Handwriting",
-                                      color2: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return work_info(
+                        name: _name,
+                        surname: _surname,
+                        registerDate: _registerDate,
+                        notifStatus: _notifStatus,
+                        notifMessage: _message,
+                        updateStatus: _updateStatus,
+                        updateTitle: _updateTitle,
+                        updateContent: _updateContent,
+                        updateUrl: _updateLink);
                   } else {
                     return Center(
                       child: Padding(
