@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:e_com/themes/model_theme.dart';
 
@@ -280,6 +281,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
     String email,
     String deviceID,
   ) async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('MMM dd, yyyy').format(now);
+
     try {
       await firestore.collection('users').doc(userId).set({
         'name': name,
@@ -288,6 +292,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
         'email': email,
         'deviceID': deviceID,
         'isAdmin': false,
+        'isActive': false,
+        'logOut': false,
+        'registerDate': formattedDate,
       });
     } catch (e) {
       print("Hata: $e");

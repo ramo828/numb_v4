@@ -1,6 +1,8 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_com/helper.dart';
 import 'package:e_com/pages/login_page.dart';
+import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/work_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,67 +18,24 @@ class First extends StatefulWidget {
 }
 
 class _FirstState extends State<First> {
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  position = page;
-                });
-              },
-              children: [
-                // qarsilama_widget(),
-                WelcomeWidget(
-                  title: title1,
-                  content: content1,
-                  imageCount: 1,
-                  nextButtonStatus: false,
-                ),
-                WelcomeWidget(
-                  title: title2,
-                  content: content2,
-                  imageCount: 2,
-                  nextButtonStatus: false,
-                ),
-                WelcomeWidget(
-                  title: title3,
-                  content: content3,
-                  imageCount: 3,
-                  nextButtonStatus: true,
-                ),
-              ],
-            ),
-          ),
-          DotsIndicator(
-            dotsCount: pageCount,
-            position: position,
-            decorator: const DotsDecorator(
-              color: Colors.grey,
-              activeColor: Colors.blue,
-            ),
-          ),
-        ],
+      body: FutureBuilder<bool>(
+        future: getBoolValue('logIn'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Gösterilecek bir yüklenme animasyonu
+          } else {
+            bool logInValue = snapshot.data ?? false;
+            if (!logInValue) {
+              return helloApp();
+            } else {
+              return home_page();
+            }
+          }
+        },
       ),
     );
   }
@@ -182,6 +141,78 @@ class WelcomeWidget extends StatelessWidget {
             else
               const Center(),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class helloApp extends StatefulWidget {
+  const helloApp({super.key});
+
+  @override
+  State<helloApp> createState() => _helloAppState();
+}
+
+class _helloAppState extends State<helloApp> {
+  @override
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (int page) {
+              setState(() {
+                position = page;
+                print(position);
+                print("_pageController.page: ${_pageController.page}");
+              });
+            },
+            children: [
+              // qarsilama_widget(),
+              WelcomeWidget(
+                title: title1,
+                content: content1,
+                imageCount: 1,
+                nextButtonStatus: false,
+              ),
+              WelcomeWidget(
+                title: title2,
+                content: content2,
+                imageCount: 2,
+                nextButtonStatus: false,
+              ),
+              WelcomeWidget(
+                title: title3,
+                content: content3,
+                imageCount: 3,
+                nextButtonStatus: true,
+              ),
+            ],
+          ),
+        ),
+        DotsIndicator(
+          dotsCount: pageCount,
+          position: position,
+          decorator: const DotsDecorator(
+            color: Colors.grey,
+            activeColor: Colors.blue,
+          ),
         ),
       ],
     );

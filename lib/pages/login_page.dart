@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/register_page.dart';
+import 'package:e_com/pages/work_functions.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool showPass = true;
 bool darkTheme = false;
@@ -39,8 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _signInWithEmailAndPassword() async {
     errorMsg = "";
@@ -49,9 +46,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final String password = _passwordController.text.trim();
 
       if (email.isNotEmpty && password.isNotEmpty) {
-        await _auth.signInWithEmailAndPassword(
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
         // Giriş başarılıysa istediğiniz sayfaya yönlendirebilirsiniz.
+        // ignore: use_build_context_synchronously
+
+        // ignore: use_build_context_synchronously
+        saveBoolValue("logIn", true);
         // ignore: use_build_context_synchronously
         Navigator.push(
           context,
@@ -87,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
           toolbarHeight: 65,
           centerTitle: true,
           actions: [

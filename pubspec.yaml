@@ -49,6 +49,7 @@ dependencies:
   flutter_animate: ^4.2.0+1
   dots_indicator:
   crypto:
+  intl:
 
 
 dev_dependencies:

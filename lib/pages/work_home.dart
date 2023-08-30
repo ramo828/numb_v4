@@ -6,6 +6,7 @@ import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 
 class home_page extends StatefulWidget {
@@ -27,6 +28,8 @@ class _home_pageState extends State<home_page> {
   String _name = '';
   String _surname = '';
   String _deviceID = '';
+  String _registerDate = '';
+  bool _logOut = false;
 
   @override
   void initState() {
@@ -45,6 +48,8 @@ class _home_pageState extends State<home_page> {
             _name = userData['name'];
             _surname = userData['surname'];
             _deviceID = userData['deviceID'];
+            _logOut = userData['logOut'];
+            _registerDate = userData['registerDate'];
           });
         } else {
           setState(() {
@@ -65,6 +70,36 @@ class _home_pageState extends State<home_page> {
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
+        bottomNavigationBar: NavigationBar(
+          backgroundColor: Colors.brown.shade400.withOpacity(0.3),
+          height: 25,
+          destinations: [
+            OutlinedButton(
+              child: Icon(Icons.home),
+              onPressed: () {},
+            ),
+            OutlinedButton(
+              child: Icon(Icons.list),
+              onPressed: () {},
+            ),
+            OutlinedButton(
+              child: Icon(Icons.settings),
+              onPressed: () {},
+            ),
+            OutlinedButton(
+              child: Icon(Icons.exit_to_app),
+              onPressed: () {
+                saveBoolValue('logIn', false);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
@@ -113,7 +148,8 @@ class _home_pageState extends State<home_page> {
                                   child: my_container(
                                     height: 35,
                                     color:
-                                        Colors.brown.shade900.withOpacity(0.4),
+                                        const Color.fromARGB(255, 112, 104, 103)
+                                            .withOpacity(0.4),
                                     width: 325,
                                     child: const Center(
                                       child: Text(
@@ -141,7 +177,7 @@ class _home_pageState extends State<home_page> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 my_container(
@@ -165,10 +201,10 @@ class _home_pageState extends State<home_page> {
                                   height: 30,
                                   width: 280,
                                   color: Colors.brown.shade500.withOpacity(0.5),
-                                  child: const Center(
+                                  child: Center(
                                     child: double_string(
                                       text1: "Qeyd. Tarix: ",
-                                      text2: "07/14/21",
+                                      text2: _registerDate,
                                       fontName1: "Lobster",
                                       fontName2: "Handwriting",
                                       color2: Colors.black,
