@@ -58,7 +58,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 surname,
                 phoneNumber,
                 email,
-                deviceID,
+                calculateMD5(deviceID),
               ); // Kullanıcıya özel verileri kaydet
             }
             // Kullanıcı başarıyla kaydedildi, burada istediğiniz işlemleri yapabilirsiniz
@@ -277,7 +277,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     String name,
     String surname,
     String phone_number,
-    email,
+    String email,
     String deviceID,
   ) async {
     try {
@@ -287,6 +287,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         'phone_number': phone_number,
         'email': email,
         'deviceID': deviceID,
+        'isAdmin': false,
       });
     } catch (e) {
       print("Hata: $e");
