@@ -37,9 +37,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading =
+      false; // Duruma göre yükleme göstergesini göstermek için kullanılacak
 
   Future<void> _signInWithEmailAndPassword() async {
     errorMsg = "";
+    setState(() {
+      isLoading = true; // İşlem başlamış olduğunu belirt
+    });
     try {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
@@ -72,6 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       errorMsg = "$e";
+    } finally {
+      setState(() {
+        isLoading = false; // İşlem tamamlandığında göstergesini kaldır
+      });
     }
     if (errorMsg.isNotEmpty) {
       var alert = alert_me(
@@ -142,6 +151,11 @@ class _LoginScreenState extends State<LoginScreen> {
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              isLoading
+                  ? Center(
+                      child: LinearProgressIndicator(),
+                    )
+                  : Text(""),
               SizedBox(
                 height: 330,
                 child: logo().animate().fade(duration: 2000.ms).fadeIn(),

@@ -30,6 +30,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final TextEditingController _passwordController1 = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  bool isLoading = false;
 
   Future<void> _register() async {
     errorMsg = "";
@@ -38,6 +39,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
     String phoneNumber = _phone.text;
     String email = _emailController.text;
     String deviceID = await getDeviceID();
+
+    setState(() {
+      isLoading = true; // İşlem başlamış olduğunu belirt
+    });
 
     if (_emailController.text.length > 5 &&
         _passwordController.text.length > 5) {
@@ -81,6 +86,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
             var alert = alert_me(errorMsg);
             showDialog(context: context, builder: ((context) => alert));
           }
+          setState(() {
+            isLoading = false; // İşlem tamamlandığında göstergesini kaldır
+          });
         } else {
           var alert = alert_me("Email ve sifre bos ola bilmez");
           showDialog(context: context, builder: ((context) => alert));
@@ -127,6 +135,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              isLoading ? LinearProgressIndicator() : Center(),
               const SizedBox(
                 height: 25,
               ),
