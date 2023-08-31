@@ -70,6 +70,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
             // ignore: use_build_context_synchronously
             Navigator.pop(
                 context); // Başarılı kayıt durumunda önceki sayfaya geri dön
+            // ignore: use_build_context_synchronously
+            showSnackBar(
+              context,
+              "Qeydiyyat tamamlandı",
+              2,
+            );
           } catch (e) {
             // Kayıt sırasında bir hata oluştu, burada hata mesajını görüntüleyebilirsiniz
             if (e is FirebaseAuthException) {
@@ -84,7 +90,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
               errorMsg = 'Bilinmətən bir xəta: ${e}';
             }
             var alert = alert_me(errorMsg);
-            showDialog(context: context, builder: ((context) => alert));
+            // ignore: use_build_context_synchronously
+            showDialog(
+              context: context,
+              builder: ((context) => alert),
+            );
           }
           setState(() {
             isLoading = false; // İşlem tamamlandığında göstergesini kaldır

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,4 +53,18 @@ void launchURLupdate(String link) async {
   } else {
     throw 'Could not launch $link';
   }
+}
+
+void showSnackBar(
+  BuildContext context,
+  String message,
+  int second,
+) {
+  final snackBar = SnackBar(
+    content: Text(message),
+    duration: Duration(seconds: second),
+  );
+
+  ScaffoldMessenger.of(context)
+      .showSnackBar(snackBar); // ScaffoldMessenger ile SnackBar göster
 }
