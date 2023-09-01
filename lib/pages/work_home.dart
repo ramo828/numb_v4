@@ -9,7 +9,6 @@ import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class home_page extends StatefulWidget {
@@ -129,7 +128,7 @@ class _home_pageState extends State<home_page> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => number_home(),
+                    builder: (context) => const number_home(),
                   ),
                 );
               },
@@ -140,7 +139,7 @@ class _home_pageState extends State<home_page> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsPage(),
+                    builder: (context) => const SettingsPage(),
                   ),
                 );
               },

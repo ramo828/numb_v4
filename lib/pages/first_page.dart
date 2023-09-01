@@ -32,7 +32,7 @@ class _FirstState extends State<First> {
             if (!logInValue) {
               return const helloApp();
             } else {
-              return home_page();
+              return const home_page();
             }
           }
         },
@@ -129,7 +129,7 @@ class WelcomeWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
+                        builder: (context) => const LoginScreen(),
                       ),
                     );
                   },

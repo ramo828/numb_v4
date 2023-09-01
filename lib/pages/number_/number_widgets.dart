@@ -1,7 +1,6 @@
 import 'package:e_com/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
 
 class myDropCollections extends StatefulWidget {
@@ -104,12 +103,12 @@ class _myDropCollectionsState extends State<myDropCollections> {
           items: operators.map<DropdownMenuItem<String>>((String item) {
             return DropdownMenuItem<String>(
               value: item,
-              child: Text(item),
               enabled: item.contains("Azərcell")
                   ? false
                   : item.contains("Nar")
                       ? false
                       : true,
+              child: Text(item),
             );
           }).toList(),
         ),
@@ -188,8 +187,9 @@ final ssnMaskFormatter = TextInputFormatter.withFunction(
     final maskedText = StringBuffer();
     var index = 0;
     for (var i = 0; i < filteredText.length; i++) {
-      if (index >= 7)
+      if (index >= 7) {
         break; // Format "###-##-##" olduğu için indeksi 8'e düşürdük
+      }
       if (filteredText[i] == 'x' || filteredText[i] == 'X') {
         if (index == 3 || index == 5) {
           // İndeks 3 ve 5'te "-" eklemesi

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:e_com/pages/login_page.dart';
 import 'package:e_com/pages/number_/background/number_constant.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:e_com/pages/number_/models/number_models.dart';
 import 'package:e_com/pages/number_/number_widgets.dart';
 import 'package:e_com/themes/model_theme.dart';
@@ -21,6 +22,9 @@ class _number_homeState extends State<number_home> {
   int operatorChoise = 0;
   List<String> getData = [];
   String numberValue = "";
+  List<String> getNumberValue = [];
+  int numberLength = 0;
+
   @override
   Widget build(BuildContext context) {
     final selectedOperator = Provider.of<OperatorProvider>(context);
@@ -101,7 +105,7 @@ class _number_homeState extends State<number_home> {
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
-                      child: myDropCollections(),
+                      child: const myDropCollections(),
                     ),
                   ),
                   Padding(
@@ -114,73 +118,7 @@ class _number_homeState extends State<number_home> {
                       ),
                       child: OutlinedButton(
                         onPressed: () async {
-                          print(selectedOperator.selectedOperator);
-                          print(selectedOperator.selectedPrefix);
-                          print(selectedOperator.selectedCategory);
-                          // try {
-                          //   setState(() {
-                          //     isLoad = true;
-                          //   });
-                          //   Network network = Network(
-                          //     number: numberValue!,
-                          //     categoryKey: getCategory(
-                          //         selectedOperator.selectedCategory! == "Hamısı"
-                          //             ? "all"
-                          //             : selectedOperator.selectedCategory!),
-                          //     page: 0,
-                          //     prefixKey: selectedOperator.selectedPrefix
-                          //         .replaceAll("0", '')!,
-                          //     context: context,
-                          //   );
-                          //   print(getCategory(
-                          //       selectedOperator.selectedCategory!));
-                          //   network.connect();
-                          //   // if (operatorValue == 'Bakcell') {
-                          //   //   debugPrint("Bakcell selected");
-                          //   //   const numberList().setPrefix(referancePrefixList);
-                          //   //   await network.connect();
-                          //   //   // listedeki kohne datalari sil
-                          //   //   const numberList().clearData();
-                          //   //   // yeni datalari elave et
-                          //   //   const numberList()
-                          //   //       .setNumberList(network.numberList);
-                          //   //   // datalari liste elave et
-                          //   //   const numberList().addNumber();
-                          //   // } else if (operatorValue == 'Nar') {
-                          //   //   debugPrint("Nar selected");
-                          //   //   const numberList().setPrefix(referancePrefixList);
-                          //   //   await network.connectNar();
-                          //   //   // listedeki kohne datalari sil
-                          //   //   const numberList().clearData();
-                          //   //   // yeni datalari elave et
-                          //   //   const numberList()
-                          //   //       .setNumberList(network.numberList);
-                          //   //   const numberList().addNumber();
-                          //   //   // datalari liste elave et
-                          //   // } else if (operatorValue == 'Azərcell') {
-                          //   //   debugPrint("Azərcell selected");
-                          //   //   const numberList().setPrefix(referancePrefixList);
-                          //   //   await network.connectAzercell();
-                          //   //   // listedeki kohne datalari sil
-                          //   //   const numberList().clearData();
-                          //   //   // yeni datalari elave et
-                          //   //   const numberList()
-                          //   //       .setNumberList(network.numberList);
-                          //   //   const numberList().addNumber();
-                          //   //   // datalari liste elave et
-                          //   // }
-                          //   getData = network.numberList;
-                          //   print(getData);
-                          //   setState(() {
-                          //     isLoad = false;
-                          //     showSnackBar(
-                          //         context,
-                          //         "Tapılan nömrə sayı: ${network.numberList.length}",
-                          //         2);
-                          //   });
-                          // } catch (e) {
-                          //   showSnackBar(context, e.toString(), 2);
-                          // }
+                          getNumberValue = [];
                           var response = await http.get(
                             getBakcell(
                               numberValue,
@@ -196,9 +134,25 @@ class _number_homeState extends State<number_home> {
                             final List<dynamic> jsonData =
                                 json.decode(response.body);
                             for (var item in jsonData)
-                              for (var numbList in item['freeMsisdnList'])
+                              // ignore: curly_braces_in_flow_control_structures
+                              for (var numbList in item['freeMsisdnList']) {
+                                getNumberValue.add(numbList['msisdn']);
                                 print(numbList['msisdn']);
+                                setState(() {
+                                  numberLength = getNumberValue.length;
+                                });
+                              }
+                          } else if (response.statusCode == 500) {
+                            print("Key xetasi");
+                          } else {
+                            print(response.statusCode);
                           }
+                          // ignore: use_build_context_synchronously
+                          showSnackBar(
+                            context,
+                            "Tapılan nömrə: ${numberLength.toString()}",
+                            2,
+                          );
                         },
                         child: const Center(
                           child: Text("Axtar"),
