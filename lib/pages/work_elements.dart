@@ -1,4 +1,4 @@
-import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +16,8 @@ class buildTextField extends StatelessWidget {
   final TextInputType? inputType;
   final List<TextInputFormatter>? formatter;
 
-  buildTextField({
+  const buildTextField({
+    super.key,
     required this.label,
     required this.icon,
     required this.controller,
@@ -71,11 +72,11 @@ class PhoneNumberFormatter extends TextInputFormatter {
 
     if (newText.startsWith('+994')) {
       if (newText.length == 5) {
-        return TextEditingValue(text: newText + ' ');
+        return TextEditingValue(text: '$newText ');
       } else if (newText.length == 8 ||
           newText.length == 11 ||
           newText.length == 14) {
-        return TextEditingValue(text: newText + ' ');
+        return TextEditingValue(text: '$newText ');
       }
     } else if (newText.startsWith('+994 ') && newText.length == 15) {
       return TextEditingValue(text: newText);
@@ -118,8 +119,7 @@ class _work_infoState extends State<work_info> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
-      child: Expanded(
-          child: Column(
+      child: Column(
         children: [
           my_container(
             color: Colors.brown.shade300,
@@ -177,7 +177,7 @@ class _work_infoState extends State<work_info> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 my_container(
@@ -218,8 +218,8 @@ class _work_infoState extends State<work_info> {
               ),
             )
           else
-            Text(" "),
-          SizedBox(
+            const Text(" "),
+          const SizedBox(
             height: 8,
           ),
           widget.updateStatus
@@ -261,9 +261,9 @@ class _work_infoState extends State<work_info> {
                     ],
                   ),
                 )
-              : Text('')
+              : const Text('')
         ],
-      )),
+      ),
     );
   }
 }

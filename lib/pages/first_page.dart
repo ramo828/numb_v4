@@ -1,7 +1,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_com/helper.dart';
 import 'package:e_com/pages/login_page.dart';
-import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,7 +11,7 @@ int pageCount = 3;
 int position = 0;
 
 class First extends StatefulWidget {
-  const First({Key? key});
+  const First({super.key});
 
   @override
   State<First> createState() => _FirstState();
@@ -26,11 +26,11 @@ class _FirstState extends State<First> {
         future: getBoolValue('logIn'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Gösterilecek bir yüklenme animasyonu
+            return const CircularProgressIndicator(); // Gösterilecek bir yüklenme animasyonu
           } else {
             bool logInValue = snapshot.data ?? false;
             if (!logInValue) {
-              return helloApp();
+              return const helloApp();
             } else {
               return home_page();
             }
@@ -51,7 +51,7 @@ class qarsilama_widget extends StatelessWidget {
     return ListView(
       children: [
         Padding(
-          padding: EdgeInsets.all(40),
+          padding: const EdgeInsets.all(40),
           child: Center(
             child: Text(
               qarsilama,

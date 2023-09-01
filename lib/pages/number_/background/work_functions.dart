@@ -45,6 +45,16 @@ Future<bool> getBoolValue(String key) async {
   return prefs.getBool(key) ?? false; // Varsayılan değer false
 }
 
+Future<void> saveStringList(String key, List<String> valueList) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList(key, valueList);
+}
+
+Future<List<String>> getStringList(String key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList(key) ?? []; // Varsayılan değer boş liste
+}
+
 void launchURLupdate(String link) async {
   Uri uri = Uri.parse(link);
 

@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/number_/number_home.dart';
+import 'package:e_com/pages/settings_page.dart';
 import 'package:e_com/pages/work_elements.dart';
-import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class home_page extends StatefulWidget {
-  home_page({
+  const home_page({
     super.key,
   });
 
@@ -109,6 +110,7 @@ class _home_pageState extends State<home_page> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
@@ -118,11 +120,11 @@ class _home_pageState extends State<home_page> {
           height: 25,
           destinations: [
             OutlinedButton(
-              child: Icon(Icons.home),
+              child: const Icon(Icons.home),
               onPressed: () {},
             ),
             OutlinedButton(
-              child: Icon(Icons.list),
+              child: const Icon(Icons.list),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -133,17 +135,24 @@ class _home_pageState extends State<home_page> {
               },
             ),
             OutlinedButton(
-              child: Icon(Icons.settings),
-              onPressed: () {},
+              child: const Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(),
+                  ),
+                );
+              },
             ),
             OutlinedButton(
-              child: Icon(Icons.exit_to_app),
+              child: const Icon(Icons.exit_to_app),
               onPressed: () {
                 saveBoolValue('logIn', false);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+                    builder: (context) => const LoginScreen(),
                   ),
                 );
               },
@@ -159,7 +168,7 @@ class _home_pageState extends State<home_page> {
             theme(themeNotifier),
           ],
           title: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Number Seller',
               style: TextStyle(
@@ -271,7 +280,7 @@ class my_container extends StatelessWidget {
   final double? height;
   final double? width;
   final Color color;
-  my_container({
+  const my_container({
     super.key,
     required this.child,
     this.height,

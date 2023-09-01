@@ -51,6 +51,11 @@ dependencies:
   crypto:
   intl:
   url_launcher:
+  http:
+  html:
+  flutter_masked_text2:
+  beautiful_soup_dart: 
+
 
 
 dev_dependencies:

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_com/pages/login_page.dart';
 import 'package:e_com/pages/work_elements.dart';
-import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +17,8 @@ bool access = false;
 String errorMsg = "";
 
 class RegistrationForm extends StatefulWidget {
+  const RegistrationForm({super.key});
+
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
 }
@@ -87,7 +89,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 errorMsg = 'Bilinmətən bir xəta: ${e.message}';
               }
             } else {
-              errorMsg = 'Bilinmətən bir xəta: ${e}';
+              errorMsg = 'Bilinmətən bir xəta: $e';
             }
             var alert = alert_me(errorMsg);
             // ignore: use_build_context_synchronously
@@ -129,7 +131,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             theme(themeNotifier),
           ],
           title: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Number Seller',
               style: TextStyle(
@@ -145,7 +147,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              isLoading ? LinearProgressIndicator() : Center(),
+              isLoading ? const LinearProgressIndicator() : const Center(),
               const SizedBox(
                 height: 25,
               ),
@@ -295,7 +297,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     String userId,
     String name,
     String surname,
-    String phone_number,
+    String phoneNumber,
     String email,
     String deviceID,
   ) async {
@@ -306,7 +308,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
       await firestore.collection('users').doc(userId).set({
         'name': name,
         'surname': surname,
-        'phone_number': phone_number,
+        'phone_number': phoneNumber,
         'email': email,
         'deviceID': deviceID,
         'isAdmin': false,

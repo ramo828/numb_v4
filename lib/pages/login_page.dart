@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:e_com/pages/register_page.dart';
-import 'package:e_com/pages/work_functions.dart';
+import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:e_com/pages/work_home.dart';
 import 'package:e_com/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +28,8 @@ List color = [
 int colorIndex = color.length - 1;
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
@@ -103,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
             theme(themeNotifier),
           ],
           title: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Number Seller',
               style: TextStyle(
@@ -152,10 +154,10 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               isLoading
-                  ? Center(
+                  ? const Center(
                       child: LinearProgressIndicator(),
                     )
-                  : Text(""),
+                  : const Text(""),
               SizedBox(
                 height: 330,
                 child: logo().animate().fade(duration: 2000.ms).fadeIn(),
@@ -231,9 +233,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     setState(() {
                       print(colorIndex);
-                      if (colorIndex == 0)
+                      if (colorIndex == 0) {
                         colorIndex = color.length - 1;
-                      else {
+                      } else {
                         colorIndex--;
                       }
                     });
