@@ -7,6 +7,7 @@ import 'package:e_com/themes/model_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class number_home extends StatefulWidget {
   const number_home({super.key});
@@ -20,6 +21,7 @@ class _number_homeState extends State<number_home> {
   int operatorChoise = 0;
   List<String> getData = [];
   String numberValue = "";
+  TextEditingController _numberInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +77,7 @@ class _number_homeState extends State<number_home> {
                             FilteringTextInputFormatter.allow(
                                 RegExp('[0-9xX]')),
                           ],
+                          controller: _numberInputController,
                           maxLength: 7,
                           decoration: const InputDecoration(
                             enabledBorder: underlineInputBorder,
@@ -82,7 +85,6 @@ class _number_homeState extends State<number_home> {
                             // Çizgiyi şeffaf yapar
                             hintText: 'XXX-XX-XX',
                           ),
-                          initialValue: "",
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 20,
@@ -95,7 +97,7 @@ class _number_homeState extends State<number_home> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
-                      height: 250,
+                      height: 260,
                       // width: 100,
                       decoration: BoxDecoration(
                         color: Colors.brown.shade200.withOpacity(0.4),
@@ -116,19 +118,13 @@ class _number_homeState extends State<number_home> {
                       child: OutlinedButton(
                         onPressed: () async {
                           Network net = Network(context: context);
-                          // net.getData(
-                          //   numberValue,
-                          //   selectedOperator.selectedOperator,
-                          //   selectedOperator.selectedPrefix,
-                          //   selectedOperator.selectedCategory,
-                          // );
                           net.getData(
-                            '65xxxxx',
-                            'Bakcell',
-                            '099',
-                            'Bürünc',
+                            _numberInputController.text,
+                            selectedOperator.selectedOperator,
+                            selectedOperator.selectedPrefix,
+                            selectedOperator.selectedCategory,
+                            selectedOperator.selectedFileType,
                           );
-                          // print(data);
                         },
                         child: const Center(
                           child: Text("Axtar"),
@@ -137,12 +133,23 @@ class _number_homeState extends State<number_home> {
                     ),
                   ),
                   OutlinedButton(
-                    onPressed: () async {
-                      var data = await readData();
-                      print(data);
-                    },
-                    child: Icon(Icons.read_more),
-                  )
+                      onPressed: () async {
+                        final result = await Share.shareXFiles(
+                          <XFile>[
+                            XFile(selectedOperator.selectedFileType
+                                    .contains("Text")
+                                ? '/sdcard/work/numberList.txt'
+                                : '/sdcard/work/contact.vcf')
+                          ],
+                          text: 'RamoSoft',
+                          subject: 'Nömrələr',
+                        );
+
+                        if (result.status == ShareResultStatus.success) {
+                          print('Thank you for sharing the picture!');
+                        }
+                      },
+                      child: Text("Paylaş"))
                 ],
               ),
             ),

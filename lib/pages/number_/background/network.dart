@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:e_com/pages/number_/background/file_io.dart';
+import 'package:e_com/pages/number_/background/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_com/pages/number_/background/number_constant.dart';
 import 'package:e_com/pages/number_/background/work_functions.dart';
@@ -8,6 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 class Network {
   List<String> numberList = [];
+  List<String> vcfType = [];
+
   final BuildContext context;
   Network({
     required this.context,
@@ -29,7 +32,7 @@ class Network {
         category.toLowerCase(),
         page,
         prefix.replaceAll("0", ""),
-        false,
+        category.contains("Hamısı") ? true : false,
       ),
       headers: await getHeaders(0),
     );
@@ -40,7 +43,7 @@ class Network {
         // ignore: curly_braces_in_flow_control_structures
         for (var numbList in item['freeMsisdnList']) {
           number = numbList['msisdn'];
-          getNumberValue.add(number);
+          getNumberValue.add("$number\n");
           counter++;
         }
       }
@@ -59,13 +62,16 @@ class Network {
     String operator,
     String prefix,
     String category,
+    String fileType,
   ) async {
     int counter = 0;
     print(number);
     print(operator);
     print(prefix);
     print(category);
+    print(fileType);
 
+    func myFunctions = func();
     while (true) {
       var numbList = await getBakcellData(
         number,
@@ -88,9 +94,41 @@ class Network {
         2,
       );
     }
-    print(numberList);
-    await writeData(numberList.toString());
-
+    if (fileType.contains("Text")) {
+      await writeData(
+          numberList
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "")
+              .replaceAll(",", "")
+              .replaceAll(" ", ""),
+          "numberList.txt");
+      print(numberList.toString());
+    } else
+      // ignore: curly_braces_in_flow_control_structures
+      for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
+        for (int prefixCount = 0;
+            prefixCount < myFunctions.defaultPrefix.length;
+            prefixCount++) {
+          vcfType.add(
+            myFunctions.vcf(
+              "Metros",
+              myFunctions.defaultPrefix,
+              prefixCount,
+              numberList[countNumb],
+              countNumb,
+            ),
+          );
+        }
+      }
+    await writeData(
+        vcfType
+            .toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "")
+            .replaceAll(",", "")
+            .replaceAll(" ", ""),
+        "contact.vcf");
     // ignore: use_build_context_synchronously
     showSnackBar(
       context,

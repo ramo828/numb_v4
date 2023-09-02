@@ -10,6 +10,9 @@ class myDropCollections extends StatefulWidget {
 }
 
 class _myDropCollectionsState extends State<myDropCollections> {
+  final List<String> fileFomrat = ['Text', 'VCF']; // Dropdown öğeleri
+  String selectFileFormat = "Text";
+
   // String operatorSelectedItem = 'Azərcell';
   String operatorSelectedItem = 'Bakcell';
 
@@ -33,7 +36,14 @@ class _myDropCollectionsState extends State<myDropCollections> {
     '099',
   ];
 
-  List<String> categoryDefault = ['Hamısı'];
+  // List<String> categoryDefault = ['Hamısı'];
+  List<String> categoryDefault = [
+    'Hamısı',
+    'Sadə',
+    'Xüsusi 1',
+    'Xüsusi 2',
+  ];
+
   // final List<String> categoryAzercell = ['Hamısı'];
   final List<String> categoryBakcell055 = [
     'Hamısı',
@@ -114,7 +124,6 @@ class _myDropCollectionsState extends State<myDropCollections> {
             ),
           ],
         ),
-        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -141,7 +150,6 @@ class _myDropCollectionsState extends State<myDropCollections> {
             ),
           ],
         ),
-        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -164,6 +172,27 @@ class _myDropCollectionsState extends State<myDropCollections> {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Fayl format: "),
+            DropdownButton<String>(
+              value: selectFileFormat, // Başlangıç değeri (ilk öğe)
+              items: fileFomrat.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item), // Öğe metni
+                );
+              }).toList(),
+              onChanged: (selectedValue) {
+                selectedOperator.updateSelectedFileType(selectedValue!);
+                setState(() {
+                  selectFileFormat = selectedValue != null ? selectedValue : '';
+                });
+              },
+            ),
+          ],
+        )
       ],
     );
   }

@@ -57,6 +57,7 @@ dependencies:
   beautiful_soup_dart: 
   path_provider:
   permission_handler:
+  share_plus:
 
 
 
