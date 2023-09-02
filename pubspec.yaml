@@ -55,6 +55,8 @@ dependencies:
   html:
   flutter_masked_text2:
   beautiful_soup_dart: 
+  path_provider:
+  permission_handler:
 
 
 

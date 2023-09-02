@@ -34,6 +34,8 @@ class _home_pageState extends State<home_page> {
   String _surname = '';
   String _deviceID = '';
   String _registerDate = '';
+  String _email = '';
+
   bool _logOut = false;
   bool _notifStatus = false;
   String _message = "";
@@ -61,6 +63,7 @@ class _home_pageState extends State<home_page> {
             _deviceID = userData['deviceID'];
             _logOut = userData['logOut'];
             _registerDate = userData['registerDate'];
+            _email = userData['email'];
           });
         } else {
           setState(() {
@@ -101,6 +104,7 @@ class _home_pageState extends State<home_page> {
         }
       });
     }
+    requestPermision();
   }
 
   @override
@@ -114,6 +118,76 @@ class _home_pageState extends State<home_page> {
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
+        drawer: Drawer(
+          backgroundColor: Colors.brown.shade100.withOpacity(0.8),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                currentAccountPictureSize: Size(60, 60),
+                decoration: BoxDecoration(
+                  color:
+                      Colors.brown.shade300.withOpacity(0.8), // Arka plan rengi
+                ),
+                accountName: Text(
+                  "$_name $_surname",
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontFamily: 'Handwriting',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                accountEmail: Text(
+                  "$_email",
+                  style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontFamily: 'Handwriting',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                currentAccountPicture: const CircleAvatar(
+                  radius: 100,
+                  backgroundImage: AssetImage('assets/indir.jpeg'),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.home),
+                title: Text('Ana Sshifə'),
+                onTap: () {
+                  // Ana sayfaya gitmek için yapılacak işlemler burada
+                  Navigator.pop(context); // Drawer'ı kapat
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Ayarlar'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
+                  );
+                },
+              ),
+              Divider(), // Ayırıcı çizgi ekleyebilirsiniz
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Çıxış'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
         bottomNavigationBar: NavigationBar(
           backgroundColor: Colors.brown.shade400.withOpacity(0.3),
           height: 25,
@@ -133,33 +207,10 @@ class _home_pageState extends State<home_page> {
                 );
               },
             ),
-            OutlinedButton(
-              child: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsPage(),
-                  ),
-                );
-              },
-            ),
-            OutlinedButton(
-              child: const Icon(Icons.exit_to_app),
-              onPressed: () {
-                saveBoolValue('logIn', false);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              },
-            ),
           ],
         ),
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           toolbarHeight: 65,
           centerTitle: true,

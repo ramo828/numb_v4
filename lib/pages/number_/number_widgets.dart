@@ -1,6 +1,5 @@
 import 'package:e_com/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class myDropCollections extends StatefulWidget {
@@ -11,28 +10,39 @@ class myDropCollections extends StatefulWidget {
 }
 
 class _myDropCollectionsState extends State<myDropCollections> {
-  String operatorSelectedItem = 'Azərcell';
+  // String operatorSelectedItem = 'Azərcell';
+  String operatorSelectedItem = 'Bakcell';
+
   String categorySelectedItem = 'Hamısı';
-  String prefixSelectedItem = '050';
+  // String prefixSelectedItem = '050';
+  String prefixSelectedItem = '055';
 
   final List<String> operators = [
-    'Azərcell',
+    // 'Azərcell',
     'Bakcell',
     'Nar',
   ];
+  // List<String> prefixDefault = [
+  //   '050',
+  //   '051',
+  //   '010',
+  // ];
+
   List<String> prefixDefault = [
-    '050',
-    '051',
-    '010',
+    '055',
+    '099',
   ];
+
   List<String> categoryDefault = ['Hamısı'];
-  final List<String> categoryAzercell = ['Hamısı'];
+  // final List<String> categoryAzercell = ['Hamısı'];
   final List<String> categoryBakcell055 = [
+    'Hamısı',
     'Sadə',
     'Xüsusi 1',
     'Xüsusi 2',
   ];
   final List<String> categoryBakcell099 = [
+    'Hamısı',
     'Sadə099',
     'Bürünc',
     'Gümüş',
@@ -76,142 +86,88 @@ class _myDropCollectionsState extends State<myDropCollections> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 20),
-        DropdownButton<String>(
-          value: operatorSelectedItem,
-          onChanged: (value) {
-            selectedOperator.updateSelectedOperator(value ?? '');
-            setState(() {
-              operatorSelectedItem = value!;
-              if (value.contains("Azercell")) {
-                prefixDefault = prefixAzercell;
-                prefixSelectedItem = '050';
-                categoryDefault = categoryAzercell;
-                categorySelectedItem = "Hamısı";
-              } else if (value.contains("Bakcell")) {
-                prefixDefault = prefixBakcell;
-                prefixSelectedItem = '055';
-                categoryDefault = categoryBakcell055;
-                categorySelectedItem = "Sadə";
-              } else {
-                prefixDefault = prefixNar;
-                prefixSelectedItem = '070';
-                categoryDefault = categoryNar;
-                categorySelectedItem = "GENERAL";
-              }
-            });
-          },
-          items: operators.map<DropdownMenuItem<String>>((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              enabled: item.contains("Azərcell")
-                  ? false
-                  : item.contains("Nar")
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Operator: "),
+            DropdownButton<String>(
+              value: operatorSelectedItem,
+              onChanged: (value) {
+                selectedOperator.updateSelectedOperator(value ?? '');
+                setState(() {
+                  prefixDefault = prefixBakcell;
+                  prefixSelectedItem = "055";
+                  categoryDefault = categoryBakcell055;
+                });
+              },
+              items: operators.map<DropdownMenuItem<String>>((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  enabled: item.contains("Azərcell")
                       ? false
-                      : true,
-              child: Text(item),
-            );
-          }).toList(),
+                      : item.contains("Nar")
+                          ? false
+                          : true,
+                  child: Text(item),
+                );
+              }).toList(),
+            ),
+          ],
         ),
         const SizedBox(height: 20),
-        DropdownButton<String>(
-          value: prefixSelectedItem,
-          onChanged: operatorSelectedItem.contains("Azərcell")
-              ? null
-              : operatorSelectedItem.contains("Nar")
-                  ? null
-                  : (value) {
-                      selectedOperator.updateSelectedPrefix(value ?? '');
-
-                      setState(() {
-                        prefixSelectedItem = value!;
-                        print(value);
-                        if (value.contains("050") ||
-                            value.contains("051") ||
-                            value.contains("010")) {
-                          categoryDefault = categoryAzercell;
-                          categorySelectedItem = "Hamısı";
-                        } else if (value.contains("055")) {
-                          categoryDefault = categoryBakcell055;
-                          categorySelectedItem = "Sadə";
-                        } else if (value.contains("099")) {
-                          categoryDefault = categoryBakcell099;
-                          categorySelectedItem = "Sadə099";
-                        } else if (value.contains("070") ||
-                            value.contains("077")) {
-                          categoryDefault = categoryNar;
-                          categorySelectedItem = "GENERAL";
-                        }
-                        print(categoryDefault);
-                      });
-                    },
-          items: prefixDefault.map<DropdownMenuItem<String>>((String item1) {
-            return DropdownMenuItem<String>(
-              value: item1,
-              child: Text(item1),
-            );
-          }).toList(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Prefix: "),
+            DropdownButton<String>(
+              value: prefixSelectedItem,
+              onChanged: (value) {
+                selectedOperator.updateSelectedPrefix(value ?? '');
+                setState(() {
+                  prefixSelectedItem = value ?? '';
+                  categoryDefault = value!.contains("055")
+                      ? categoryBakcell055
+                      : categoryBakcell099;
+                });
+                print(prefixSelectedItem);
+              },
+              items:
+                  prefixDefault.map<DropdownMenuItem<String>>((String item1) {
+                return DropdownMenuItem<String>(
+                  value: item1,
+                  child: Text(item1),
+                );
+              }).toList(),
+            ),
+          ],
         ),
         const SizedBox(height: 20),
-        DropdownButton<String>(
-          value: categorySelectedItem,
-          onChanged: operatorSelectedItem.contains("Azərcell")
-              ? null
-              : operatorSelectedItem.contains("Nar")
-                  ? null
-                  : (value) {
-                      selectedOperator.updateSelectedCategory(value ?? '');
-
-                      setState(() {
-                        categorySelectedItem = value!;
-                      });
-                    },
-          items: categoryDefault.map<DropdownMenuItem<String>>((String item1) {
-            return DropdownMenuItem<String>(
-              value: item1,
-              child: Text(item1),
-            );
-          }).toList(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Kategoriya: "),
+            DropdownButton<String>(
+              value: categorySelectedItem,
+              onChanged: (value) {
+                setState(() {
+                  categorySelectedItem = value ?? "";
+                });
+                selectedOperator.updateSelectedCategory(value ?? '');
+              },
+              items:
+                  categoryDefault.map<DropdownMenuItem<String>>((String item1) {
+                return DropdownMenuItem<String>(
+                  value: item1,
+                  child: Text(item1),
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ],
     );
   }
 }
-
-final ssnMaskFormatter = TextInputFormatter.withFunction(
-  (TextEditingValue oldValue, TextEditingValue newValue) {
-    // Mask ve filtreleme mantığını burada uygulayın
-    // Bu örnekte, yalnızca rakam veya 'x' veya 'X' karakterlerini kabul ediyoruz
-    final filteredText = newValue.text.replaceAll(RegExp(r'[^0-9xX]'), '');
-
-    // Maskı uygula (###-##-##)
-    final maskedText = StringBuffer();
-    var index = 0;
-    for (var i = 0; i < filteredText.length; i++) {
-      if (index >= 7) {
-        break; // Format "###-##-##" olduğu için indeksi 8'e düşürdük
-      }
-      if (filteredText[i] == 'x' || filteredText[i] == 'X') {
-        if (index == 3 || index == 5) {
-          // İndeks 3 ve 5'te "-" eklemesi
-          maskedText.write('-');
-        }
-        maskedText.write(filteredText[i]);
-      } else {
-        maskedText.write(filteredText[i]);
-        if (index == 2 || index == 4) {
-          // İndeks 2 ve 4'te "-" eklemesi
-          maskedText.write('-');
-        }
-      }
-      index++;
-    }
-
-    return TextEditingValue(
-      text: maskedText.toString(),
-      selection: TextSelection.collapsed(offset: maskedText.length),
-    );
-  },
-);
 
 const underlineInputBorder = UnderlineInputBorder(
   borderSide: BorderSide(color: Colors.transparent),

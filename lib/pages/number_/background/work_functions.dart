@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -77,4 +78,15 @@ void showSnackBar(
 
   ScaffoldMessenger.of(context)
       .showSnackBar(snackBar); // ScaffoldMessenger ile SnackBar göster
+}
+
+Future<void> requestPermision() async {
+  var status = await Permission.storage.status;
+  var status1 = await Permission.manageExternalStorage.status;
+
+  if (!status.isGranted) {
+    await Permission.storage.request();
+  } else if (!status1.isGranted) {
+    await Permission.manageExternalStorage.request();
+  } else {}
 }
