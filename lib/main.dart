@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart'; // Firebase yapılandırma dosyanızı ekleyin
-import 'themes/model_theme.dart'; // ModelTheme'ı içeren dosyanızı ekleyin
+import 'pages/number_/models/model_theme.dart'; // ModelTheme'ı içeren dosyanızı ekleyin
 import 'pages/first_page.dart';
 
 void main() async {

@@ -3,7 +3,7 @@ import 'package:number_seller/pages/number_/background/network.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:number_seller/pages/number_/number_widgets.dart';
-import 'package:number_seller/themes/model_theme.dart';
+import 'package:number_seller/pages/number_/models/model_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -152,13 +152,22 @@ class _number_homeState extends State<number_home> {
                           loading.okay
                               ? OutlinedButton(
                                   onPressed: () async {
+                                    String filePath = '';
+                                    if (selectedOperator.selectedFileType
+                                        .contains("Text")) {
+                                      filePath = '/sdcard/work/numberList.txt';
+                                    } else if (selectedOperator
+                                            .selectedFileType ==
+                                        "VCF") {
+                                      filePath = '/sdcard/work/contact.vcf';
+                                    } else if (selectedOperator
+                                            .selectedFileType ==
+                                        "VCF(Zip)") {
+                                      filePath = '/sdcard/work/contact.vcf.zip';
+                                    }
+                                    print(selectedOperator.selectedFileType);
                                     final result = await Share.shareXFiles(
-                                      <XFile>[
-                                        XFile(selectedOperator.selectedFileType
-                                                .contains("Text")
-                                            ? '/sdcard/work/numberList.txt'
-                                            : '/sdcard/work/contact.vcf')
-                                      ],
+                                      <XFile>[XFile(filePath)],
                                       text: 'RamoSoft',
                                       subject: 'Nömrələr',
                                     );

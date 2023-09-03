@@ -99,17 +99,20 @@ class Network {
       );
     }
     if (fileType.contains("Text")) {
-      await writeData(
-          numberList
-              .toString()
-              .replaceAll("[", "")
-              .replaceAll("]", "")
-              .replaceAll(",", "")
-              .replaceAll(" ", ""),
-          "numberList.txt");
+      try {
+        await writeData(
+            numberList
+                .toString()
+                .replaceAll("[", "")
+                .replaceAll("]", "")
+                .replaceAll(",", "")
+                .replaceAll(" ", ""),
+            "numberList.txt");
+      } catch (e) {
+        showSnackBar(context, "Xəta: ${e}", 2);
+      }
       print(numberList.toString());
-    } else
-      // ignore: curly_braces_in_flow_control_structures
+    } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
       for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
         for (int prefixCount = 0;
             prefixCount < myFunctions.defaultPrefix.length;
@@ -125,20 +128,28 @@ class Network {
           );
         }
       }
-    await writeData(
-        vcfType
-            .toString()
-            .replaceAll("[", "")
-            .replaceAll("]", "")
-            .replaceAll(",", "")
-            .replaceAll(" ", ""),
-        "contact.vcf");
+    }
+    try {
+      await writeData(
+          vcfType
+              .toString()
+              .replaceAll("[", "")
+              .replaceAll("]", "")
+              .replaceAll(",", "")
+              .replaceAll(" ", ""),
+          "contact.vcf");
+    } catch (e) {
+      showSnackBar(context, "Xəta: ${e}", 2);
+    }
     // ignore: use_build_context_synchronously
     showSnackBar(
       context,
       "Tapılan nömrə: ${numberList.length.toString()}",
       2,
     );
+    if (fileType.contains("VCF(Zip)")) {
+      zipFile('/sdcard/work/contact.vcf', '/sdcard/work/contact.vcf.zip');
+    }
     loading.updateOkay(true);
     loading.updateLoad(false);
   }

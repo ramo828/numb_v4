@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:archive/archive_io.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -89,4 +91,23 @@ Future<void> requestPermision() async {
   } else if (!status1.isGranted) {
     await Permission.manageExternalStorage.request();
   } else {}
+}
+
+Future<void> zipFile(String sourceFilePath, String zipFilePath) async {
+  final encoder = ZipFileEncoder();
+
+  final sourceFile = File(sourceFilePath);
+
+  if (!sourceFile.existsSync()) {
+    print('Kaynak dosya bulunamadı: $sourceFilePath');
+    return;
+  }
+
+  final sourceFileName = sourceFile.uri.pathSegments.last;
+
+  encoder.create(zipFilePath);
+  encoder.addFile(sourceFile, sourceFileName);
+
+  encoder.close();
+  print('Dosya başarıyla sıkıştırıldı: $zipFilePath');
 }

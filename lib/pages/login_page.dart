@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/register_page.dart';
 import 'package:number_seller/pages/work_home.dart';
-import 'package:number_seller/themes/model_theme.dart';
+import 'package:number_seller/pages/number_/models/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

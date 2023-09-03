@@ -10,7 +10,11 @@ class myDropCollections extends StatefulWidget {
 }
 
 class _myDropCollectionsState extends State<myDropCollections> {
-  final List<String> fileFomrat = ['Text', 'VCF']; // Dropdown öğeleri
+  final List<String> fileFomrat = [
+    'Text',
+    'VCF',
+    'VCF(Zip)'
+  ]; // Dropdown öğeleri
   String selectFileFormat = "Text";
 
   // String operatorSelectedItem = 'Azərcell';

@@ -9,7 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:number_seller/themes/model_theme.dart';
+import 'package:number_seller/pages/number_/models/model_theme.dart';
 
 bool showPass = false;
 bool passCheck = true;
