@@ -1,4 +1,4 @@
-import 'package:e_com/pages/number_/models/number_models.dart';
+import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

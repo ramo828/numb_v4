@@ -1,5 +1,5 @@
-import 'package:e_com/pages/number_/background/work_functions.dart';
-import 'package:e_com/pages/work_home.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/work_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -96,6 +96,7 @@ class work_info extends StatefulWidget {
   final String updateTitle;
   final String updateContent;
   final String updateUrl;
+  final bool isActive;
 
   const work_info({
     super.key,
@@ -108,6 +109,7 @@ class work_info extends StatefulWidget {
     required this.updateTitle,
     required this.updateContent,
     required this.updateUrl,
+    required this.isActive,
   });
 
   @override
@@ -123,7 +125,7 @@ class _work_infoState extends State<work_info> {
         children: [
           my_container(
             color: Colors.brown.shade300,
-            height: 200,
+            height: 300,
             width: 350,
             child: Column(
               children: [
@@ -191,6 +193,26 @@ class _work_infoState extends State<work_info> {
                       fontName1: "Lobster",
                       fontName2: "Handwriting",
                       color2: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                my_container(
+                  height: 30,
+                  width: 280,
+                  color: Colors.brown.shade500.withOpacity(0.5),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: double_string(
+                        text1: "Status: ",
+                        text2: widget.isActive ? "Aktiv" : "Passiv",
+                        fontName1: "Lobster",
+                        fontName2: "Handwriting",
+                        color2: Colors.black,
+                      ),
                     ),
                   ),
                 ),

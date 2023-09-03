@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoadingProvider extends ChangeNotifier {
-  bool _load = true;
+  bool _load = false;
   bool _okay = false;
 
   bool get load => _load;

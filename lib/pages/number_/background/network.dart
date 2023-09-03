@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:e_com/pages/number_/background/file_io.dart';
-import 'package:e_com/pages/number_/background/functions.dart';
-import 'package:e_com/pages/number_/models/loading_models.dart';
+import 'package:number_seller/pages/number_/background/file_io.dart';
+import 'package:number_seller/pages/number_/background/functions.dart';
+import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:http/http.dart' as http;
-import 'package:e_com/pages/number_/background/number_constant.dart';
-import 'package:e_com/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/number_/background/number_constant.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,9 +71,9 @@ class Network {
     print(prefix);
     print(category);
     print(fileType);
-
-    final _loading = Provider.of<LoadingProvider>(context, listen: false);
-    _loading.updateOkay(false);
+    final loading = Provider.of<LoadingProvider>(context, listen: false);
+    loading.updateOkay(false);
+    loading.updateLoad(true);
 
     func myFunctions = func();
     while (true) {
@@ -139,6 +139,7 @@ class Network {
       "Tapılan nömrə: ${numberList.length.toString()}",
       2,
     );
-    _loading.updateOkay(true);
+    loading.updateOkay(true);
+    loading.updateLoad(false);
   }
 }

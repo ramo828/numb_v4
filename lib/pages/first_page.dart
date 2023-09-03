@@ -1,8 +1,8 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:e_com/helper.dart';
-import 'package:e_com/pages/login_page.dart';
-import 'package:e_com/pages/number_/background/work_functions.dart';
-import 'package:e_com/pages/work_home.dart';
+import 'package:number_seller/helper.dart';
+import 'package:number_seller/pages/login_page.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/work_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

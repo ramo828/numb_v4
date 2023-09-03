@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_com/pages/login_page.dart';
-import 'package:e_com/pages/work_elements.dart';
-import 'package:e_com/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/login_page.dart';
+import 'package:number_seller/pages/work_elements.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:e_com/themes/model_theme.dart';
+import 'package:number_seller/themes/model_theme.dart';
 
 bool showPass = false;
 bool passCheck = true;

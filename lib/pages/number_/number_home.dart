@@ -1,9 +1,9 @@
-import 'package:e_com/pages/login_page.dart';
-import 'package:e_com/pages/number_/background/network.dart';
-import 'package:e_com/pages/number_/models/loading_models.dart';
-import 'package:e_com/pages/number_/models/number_models.dart';
-import 'package:e_com/pages/number_/number_widgets.dart';
-import 'package:e_com/themes/model_theme.dart';
+import 'package:number_seller/pages/login_page.dart';
+import 'package:number_seller/pages/number_/background/network.dart';
+import 'package:number_seller/pages/number_/models/loading_models.dart';
+import 'package:number_seller/pages/number_/models/number_models.dart';
+import 'package:number_seller/pages/number_/number_widgets.dart';
+import 'package:number_seller/themes/model_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,7 @@ class _number_homeState extends State<number_home> {
   @override
   Widget build(BuildContext context) {
     final selectedOperator = Provider.of<OperatorProvider>(context);
-    final _loading = Provider.of<LoadingProvider>(context);
+    final loading = Provider.of<LoadingProvider>(context);
 
     return Consumer<ModelTheme>(
       builder: (context, ModelTheme themeNotifier, child) {
@@ -61,7 +61,9 @@ class _number_homeState extends State<number_home> {
               ),
               child: ListView(
                 children: [
-                  !_loading.okay ? LinearProgressIndicator() : Center(),
+                  loading.load
+                      ? const LinearProgressIndicator()
+                      : const Center(),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
@@ -144,10 +146,10 @@ class _number_homeState extends State<number_home> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          _loading.okay
+                          loading.okay
                               ? OutlinedButton(
                                   onPressed: () async {
                                     final result = await Share.shareXFiles(
@@ -167,9 +169,9 @@ class _number_homeState extends State<number_home> {
                                           'Thank you for sharing the picture!');
                                     }
                                   },
-                                  child: Row(
+                                  child: const Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.share,
                                         color: Colors.blue,
                                       ),
@@ -177,7 +179,7 @@ class _number_homeState extends State<number_home> {
                                     ],
                                   ),
                                 )
-                              : Text(''),
+                              : const Text(''),
                         ],
                       ),
                     ),

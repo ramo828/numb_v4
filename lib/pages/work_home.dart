@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_com/pages/number_/number_home.dart';
-import 'package:e_com/pages/settings_page.dart';
-import 'package:e_com/pages/work_elements.dart';
-import 'package:e_com/pages/number_/background/work_functions.dart';
-import 'package:e_com/themes/model_theme.dart';
+import 'package:number_seller/pages/number_/number_home.dart';
+import 'package:number_seller/pages/settings_page.dart';
+import 'package:number_seller/pages/work_elements.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,8 @@ class _home_pageState extends State<home_page> {
   String _updateLink = '';
   String _updateContent = '';
   String _updateTitle = '';
+  bool _isActive = false;
+  bool _isAdmin = false;
 
   @override
   void initState() {
@@ -64,6 +67,8 @@ class _home_pageState extends State<home_page> {
             _logOut = userData['logOut'];
             _registerDate = userData['registerDate'];
             _email = userData['email'];
+            _isActive = userData['isActive'];
+            _isAdmin = userData['isAdmin'];
           });
         } else {
           setState(() {
@@ -115,6 +120,10 @@ class _home_pageState extends State<home_page> {
 
   @override
   Widget build(BuildContext context) {
+    if (_logOut) {
+      saveBoolValue("logIn", false);
+      exit(1);
+    }
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
@@ -154,7 +163,7 @@ class _home_pageState extends State<home_page> {
               ),
               ListTile(
                 leading: const Icon(Icons.home),
-                title: const Text('Ana Sshifə'),
+                title: const Text('Ana Səhifə'),
                 onTap: () {
                   // Ana sayfaya gitmek için yapılacak işlemler burada
                   Navigator.pop(context); // Drawer'ı kapat
@@ -177,6 +186,8 @@ class _home_pageState extends State<home_page> {
                 leading: const Icon(Icons.exit_to_app),
                 title: const Text('Çıxış'),
                 onTap: () {
+                  saveBoolValue("logIn", false);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -193,19 +204,29 @@ class _home_pageState extends State<home_page> {
           height: 25,
           destinations: [
             OutlinedButton(
-              child: const Icon(Icons.home),
+              child: const Icon(
+                Icons.home,
+                color: Colors.brown,
+              ),
               onPressed: () {},
             ),
             OutlinedButton(
-              child: const Icon(Icons.list),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const number_home(),
-                  ),
-                );
-              },
+              onPressed: _isActive
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const number_home(),
+                        ),
+                      );
+                    }
+                  : () {
+                      showSnackBar(context, "Sizin hesab aktiv degil", 2);
+                    },
+              child: Icon(
+                Icons.list,
+                color: _isActive ? Colors.brown : Colors.black,
+              ),
             ),
           ],
         ),
@@ -236,22 +257,26 @@ class _home_pageState extends State<home_page> {
               future: equalDeviceID(_deviceID),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Yükleniyor göstergesi
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  ); // Yükleniyor göstergesi
                 } else if (snapshot.hasError) {
                   return Text("Hata: ${snapshot.error}");
                 } else {
                   bool isEqual = snapshot.data ?? false;
                   if (isEqual) {
                     return work_info(
-                        name: _name,
-                        surname: _surname,
-                        registerDate: _registerDate,
-                        notifStatus: _notifStatus,
-                        notifMessage: _message,
-                        updateStatus: _updateStatus,
-                        updateTitle: _updateTitle,
-                        updateContent: _updateContent,
-                        updateUrl: _updateLink);
+                      name: _name,
+                      surname: _surname,
+                      registerDate: _registerDate,
+                      notifStatus: _notifStatus,
+                      notifMessage: _message,
+                      updateStatus: _updateStatus,
+                      updateTitle: _updateTitle,
+                      updateContent: _updateContent,
+                      updateUrl: _updateLink,
+                      isActive: _isActive,
+                    );
                   } else {
                     return Center(
                       child: Padding(

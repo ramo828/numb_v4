@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:e_com/pages/register_page.dart';
-import 'package:e_com/pages/number_/background/work_functions.dart';
-import 'package:e_com/pages/work_home.dart';
-import 'package:e_com/themes/model_theme.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/register_page.dart';
+import 'package:number_seller/pages/work_home.dart';
+import 'package:number_seller/themes/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -74,8 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
         errorMsg = 'İstifadəçi tapılmadı.';
       } else if (e.code == 'wrong-password') {
         errorMsg = 'Xətalı şifrə.';
+      } else if (e.code == 'user-disabled') {
+        errorMsg = 'Sizin hesab bloklanıb';
       } else {
         errorMsg = 'Bir xəta baş verdi: ${e.message}';
+      }
+    } on PlatformException catch (e) {
+      if (e.code == "ERROR_USER_DISABLED") {
+        errorMsg = 'Sizin hesab bloklanıb';
+      } else {
+        errorMsg = "$e";
       }
     } catch (e) {
       errorMsg = "$e";
@@ -88,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var alert = alert_me(
         errorMsg,
       );
+      // ignore: use_build_context_synchronously
       showDialog(context: context, builder: ((context) => alert));
     }
   }
