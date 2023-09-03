@@ -82,15 +82,28 @@ void showSnackBar(
       .showSnackBar(snackBar); // ScaffoldMessenger ile SnackBar göster
 }
 
-Future<void> requestPermision() async {
-  var status = await Permission.storage.status;
-  var status1 = await Permission.manageExternalStorage.status;
+Future<void> requestPermissions() async {
+  var statusStorage = await Permission.storage.status;
+  var statusManageExternalStorage =
+      await Permission.manageExternalStorage.status;
 
-  if (!status.isGranted) {
-    await Permission.storage.request();
-  } else if (!status1.isGranted) {
-    await Permission.manageExternalStorage.request();
-  } else {}
+  if (!statusStorage.isGranted) {
+    if (statusStorage.isPermanentlyDenied) {
+      // Kullanıcı bu izni kalıcı olarak reddetti, ayarlara yönlendirin.
+      print("Icaze verilmeyib");
+    } else {
+      await Permission.storage.request();
+    }
+  }
+
+  if (!statusManageExternalStorage.isGranted) {
+    if (statusManageExternalStorage.isPermanentlyDenied) {
+      // Kullanıcı bu izni kalıcı olarak reddetti, ayarlara yönlendirin.
+      print("Icaze verilmeyib");
+    } else {
+      await Permission.manageExternalStorage.request();
+    }
+  }
 }
 
 Future<void> zipFile(String sourceFilePath, String zipFilePath) async {

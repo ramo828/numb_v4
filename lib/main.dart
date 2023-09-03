@@ -1,3 +1,4 @@
+import 'package:number_seller/pages/number_/models/error_models.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,6 +26,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => LoadingProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ErrorProvider(),
         ),
       ],
       child: const MyApp(),

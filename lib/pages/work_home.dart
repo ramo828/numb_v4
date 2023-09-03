@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:number_seller/pages/number_/models/error_models.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -109,7 +111,7 @@ class _home_pageState extends State<home_page> {
         }
       });
     }
-    requestPermision();
+    requestPermissions();
   }
 
   @override
@@ -120,6 +122,8 @@ class _home_pageState extends State<home_page> {
 
   @override
   Widget build(BuildContext context) {
+    final errorProvider = Provider.of<ErrorProvider>(context, listen: false);
+
     if (_logOut) {
       saveBoolValue("logIn", false);
       exit(1);
@@ -179,6 +183,15 @@ class _home_pageState extends State<home_page> {
                       builder: (context) => const SettingsPage(),
                     ),
                   );
+                },
+              ),
+              const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
+
+              ListTile(
+                leading: const Icon(FontAwesomeIcons.universalAccess),
+                title: const Text('İcazələri yoxla'),
+                onTap: () async {
+                  await requestPermissions();
                 },
               ),
               const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
