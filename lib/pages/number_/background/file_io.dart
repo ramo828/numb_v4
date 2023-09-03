@@ -1,18 +1,17 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
 
 Future<void> writeData(String data, String filename) async {
   // final directory =
   //     await getExternalStorageDirectory(); // Cihazın dış hafızasına erişim sağlar
   _createFolder();
-  final directory = "/sdcard/work/";
-  final file = File('${directory}${filename}');
+  const directory = "/sdcard/work/";
+  final file = File('$directory$filename');
   await file.writeAsString(data);
 }
 
 Future<String> readData() async {
-  final directory = "/sdcard/work/";
+  const directory = "/sdcard/work/";
   // final directory = await getExternalStorageDirectory();
   final file = File('${directory}test.txt');
   String data = await file.readAsString();
@@ -24,10 +23,10 @@ void _createFolder() async {
   // final directory = await getApplicationDocumentsDirectory();
 
   // Yeni bir klasör adı belirlenir
-  final folderName = 'work';
+  const folderName = 'work';
 
   // Klasörün yolu oluşturulur
-  final folderPath = '${"/sdcard/"}$folderName';
+  const folderPath = '${"/sdcard/"}$folderName';
 
   // Klasör kontrol edilir ve yoksa oluşturulur
   final folder = Directory(folderPath);

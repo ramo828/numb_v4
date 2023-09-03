@@ -1,6 +1,6 @@
 import 'package:e_com/pages/login_page.dart';
-import 'package:e_com/pages/number_/background/file_io.dart';
 import 'package:e_com/pages/number_/background/network.dart';
+import 'package:e_com/pages/number_/models/loading_models.dart';
 import 'package:e_com/pages/number_/models/number_models.dart';
 import 'package:e_com/pages/number_/number_widgets.dart';
 import 'package:e_com/themes/model_theme.dart';
@@ -21,11 +21,12 @@ class _number_homeState extends State<number_home> {
   int operatorChoise = 0;
   List<String> getData = [];
   String numberValue = "";
-  TextEditingController _numberInputController = TextEditingController();
+  final TextEditingController _numberInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final selectedOperator = Provider.of<OperatorProvider>(context);
+    final _loading = Provider.of<LoadingProvider>(context);
 
     return Consumer<ModelTheme>(
       builder: (context, ModelTheme themeNotifier, child) {
@@ -60,6 +61,7 @@ class _number_homeState extends State<number_home> {
               ),
               child: ListView(
                 children: [
+                  !_loading.okay ? LinearProgressIndicator() : Center(),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
@@ -110,46 +112,76 @@ class _number_homeState extends State<number_home> {
                   Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: Container(
+                      height: 40,
                       decoration: BoxDecoration(
                         color: Colors.brown.shade200.withOpacity(0.4),
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          Network net = Network(context: context);
-                          net.getData(
-                            _numberInputController.text,
-                            selectedOperator.selectedOperator,
-                            selectedOperator.selectedPrefix,
-                            selectedOperator.selectedCategory,
-                            selectedOperator.selectedFileType,
-                          );
-                        },
-                        child: const Center(
-                          child: Text("Axtar"),
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () async {
+                              Network net = Network(context: context);
+                              net.getData(
+                                _numberInputController.text,
+                                selectedOperator.selectedOperator,
+                                selectedOperator.selectedPrefix,
+                                selectedOperator.selectedCategory,
+                                selectedOperator.selectedFileType,
+                              );
+                            },
+                            child: const Center(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.search,
+                                    color: Colors.black,
+                                  ),
+                                  Text("Axtar"),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          _loading.okay
+                              ? OutlinedButton(
+                                  onPressed: () async {
+                                    final result = await Share.shareXFiles(
+                                      <XFile>[
+                                        XFile(selectedOperator.selectedFileType
+                                                .contains("Text")
+                                            ? '/sdcard/work/numberList.txt'
+                                            : '/sdcard/work/contact.vcf')
+                                      ],
+                                      text: 'RamoSoft',
+                                      subject: 'Nömrələr',
+                                    );
+
+                                    if (result.status ==
+                                        ShareResultStatus.success) {
+                                      print(
+                                          'Thank you for sharing the picture!');
+                                    }
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.share,
+                                        color: Colors.blue,
+                                      ),
+                                      Text("Paylaş"),
+                                    ],
+                                  ),
+                                )
+                              : Text(''),
+                        ],
                       ),
                     ),
                   ),
-                  OutlinedButton(
-                      onPressed: () async {
-                        final result = await Share.shareXFiles(
-                          <XFile>[
-                            XFile(selectedOperator.selectedFileType
-                                    .contains("Text")
-                                ? '/sdcard/work/numberList.txt'
-                                : '/sdcard/work/contact.vcf')
-                          ],
-                          text: 'RamoSoft',
-                          subject: 'Nömrələr',
-                        );
-
-                        if (result.status == ShareResultStatus.success) {
-                          print('Thank you for sharing the picture!');
-                        }
-                      },
-                      child: Text("Paylaş"))
                 ],
               ),
             ),

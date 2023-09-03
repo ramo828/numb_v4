@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:e_com/pages/number_/background/file_io.dart';
 import 'package:e_com/pages/number_/background/functions.dart';
+import 'package:e_com/pages/number_/models/loading_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_com/pages/number_/background/number_constant.dart';
 import 'package:e_com/pages/number_/background/work_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class Network {
   List<String> numberList = [];
@@ -71,6 +72,9 @@ class Network {
     print(category);
     print(fileType);
 
+    final _loading = Provider.of<LoadingProvider>(context, listen: false);
+    _loading.updateOkay(false);
+
     func myFunctions = func();
     while (true) {
       var numbList = await getBakcellData(
@@ -82,7 +86,7 @@ class Network {
       );
       counter++;
 
-      if (numbList.length == 0) {
+      if (numbList.isEmpty) {
         break;
       } else {
         numberList.addAll(numbList);
@@ -135,5 +139,6 @@ class Network {
       "Tapılan nömrə: ${numberList.length.toString()}",
       2,
     );
+    _loading.updateOkay(true);
   }
 }

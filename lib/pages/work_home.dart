@@ -124,14 +124,14 @@ class _home_pageState extends State<home_page> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               UserAccountsDrawerHeader(
-                currentAccountPictureSize: Size(60, 60),
+                currentAccountPictureSize: const Size(60, 60),
                 decoration: BoxDecoration(
                   color:
                       Colors.brown.shade300.withOpacity(0.8), // Arka plan rengi
                 ),
                 accountName: Text(
                   "$_name $_surname",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.blueGrey,
                     fontFamily: 'Handwriting',
                     fontWeight: FontWeight.bold,
@@ -139,7 +139,7 @@ class _home_pageState extends State<home_page> {
                   ),
                 ),
                 accountEmail: Text(
-                  "$_email",
+                  _email,
                   style: const TextStyle(
                     color: Colors.blueGrey,
                     fontFamily: 'Handwriting',
@@ -153,16 +153,16 @@ class _home_pageState extends State<home_page> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.home),
-                title: Text('Ana Sshifə'),
+                leading: const Icon(Icons.home),
+                title: const Text('Ana Sshifə'),
                 onTap: () {
                   // Ana sayfaya gitmek için yapılacak işlemler burada
                   Navigator.pop(context); // Drawer'ı kapat
                 },
               ),
               ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Ayarlar'),
+                leading: const Icon(Icons.settings),
+                title: const Text('Ayarlar'),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -172,10 +172,10 @@ class _home_pageState extends State<home_page> {
                   );
                 },
               ),
-              Divider(), // Ayırıcı çizgi ekleyebilirsiniz
+              const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
               ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text('Çıxış'),
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text('Çıxış'),
                 onTap: () {
                   Navigator.push(
                     context,

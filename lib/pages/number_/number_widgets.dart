@@ -99,7 +99,7 @@ class _myDropCollectionsState extends State<myDropCollections> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Operator: "),
+            const Text("Operator: "),
             DropdownButton<String>(
               value: operatorSelectedItem,
               onChanged: (value) {
@@ -127,7 +127,7 @@ class _myDropCollectionsState extends State<myDropCollections> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Prefix: "),
+            const Text("Prefix: "),
             DropdownButton<String>(
               value: prefixSelectedItem,
               onChanged: (value) {
@@ -153,7 +153,7 @@ class _myDropCollectionsState extends State<myDropCollections> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Kategoriya: "),
+            const Text("Kategoriya: "),
             DropdownButton<String>(
               value: categorySelectedItem,
               onChanged: (value) {
@@ -175,7 +175,7 @@ class _myDropCollectionsState extends State<myDropCollections> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Fayl format: "),
+            const Text("Fayl format: "),
             DropdownButton<String>(
               value: selectFileFormat, // Başlangıç değeri (ilk öğe)
               items: fileFomrat.map((String item) {
@@ -187,7 +187,7 @@ class _myDropCollectionsState extends State<myDropCollections> {
               onChanged: (selectedValue) {
                 selectedOperator.updateSelectedFileType(selectedValue!);
                 setState(() {
-                  selectFileFormat = selectedValue != null ? selectedValue : '';
+                  selectFileFormat = selectedValue ?? '';
                 });
               },
             ),

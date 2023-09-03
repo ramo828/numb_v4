@@ -1,3 +1,4 @@
+import 'package:e_com/pages/number_/models/loading_models.dart';
 import 'package:e_com/pages/number_/models/number_models.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => OperatorProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LoadingProvider(),
         ),
       ],
       child: const MyApp(),
