@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:number_seller/pages/number_/background/file_io.dart';
-import 'package:number_seller/pages/number_/background/functions.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:number_seller/pages/number_/background/number_constant.dart';
@@ -49,8 +48,7 @@ class Network {
         }
       }
     } else if (response.statusCode == 500) {
-      print("Key xetasi");
-      print(response.body);
+      showSnackBar(context, "Key xətası", 2);
     } else {
       print(response.statusCode);
     }
@@ -64,13 +62,11 @@ class Network {
     String prefix,
     String category,
     String fileType,
+    List<String> prefixList,
   ) async {
     int counter = 0;
     print(number);
-    print(operator);
-    print(prefix);
-    print(category);
-    print(fileType);
+
     final loading = Provider.of<LoadingProvider>(context, listen: false);
     loading.updateOkay(false);
     loading.updateLoad(true);
@@ -115,12 +111,12 @@ class Network {
     } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
       for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
         for (int prefixCount = 0;
-            prefixCount < myFunctions.defaultPrefix.length;
+            prefixCount < prefixList.length;
             prefixCount++) {
           vcfType.add(
             myFunctions.vcf(
               "Metros",
-              myFunctions.defaultPrefix,
+              prefixList,
               prefixCount,
               numberList[countNumb],
               countNumb,

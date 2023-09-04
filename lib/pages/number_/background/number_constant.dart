@@ -1,18 +1,17 @@
 import 'dart:convert';
 
+import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<dynamic> loadData(String jsonData) => json.decode(jsonData).toList();
 
 Future<Map<String, String>> getHeaders(int choise) async {
   String key = "";
-  SharedPreferences sp = await SharedPreferences.getInstance();
-  List<String>? setting = sp.getStringList("settings") ?? [];
-  if (choise == 0) {
-    // key = setting[0];
 
-    key =
-        'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJNQUlOIiwiZXhwIjoxNjk1MjAxMTEwfQ.ebD5AqHCViU8eBO6t6AJJc6BW1zf1USM9FEKa7MadgvNhNw_T-NzJEb9cXBd3nNREi6KE5Aq2LjBNbH7LnbSZA';
+  List<String>? setting = await getStringList('keys') ?? [];
+  if (choise == 0) {
+    key = setting[0];
+    print(key);
   } else {
     key = setting[1];
     print(key);

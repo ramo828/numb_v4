@@ -1,5 +1,6 @@
 import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/network.dart';
+import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:number_seller/pages/number_/number_widgets.dart';
@@ -67,7 +68,7 @@ class _number_homeState extends State<number_home> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
-                      height: 85,
+                      height: 110,
                       width: 200,
                       decoration: BoxDecoration(
                         color: Colors.brown.shade200.withOpacity(0.4),
@@ -75,7 +76,7 @@ class _number_homeState extends State<number_home> {
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 0),
+                        padding: const EdgeInsets.all(14),
                         child: TextFormField(
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -114,7 +115,7 @@ class _number_homeState extends State<number_home> {
                   Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: Container(
-                      height: 40,
+                      height: 50,
                       decoration: BoxDecoration(
                         color: Colors.brown.shade200.withOpacity(0.4),
                         borderRadius:
@@ -123,26 +124,33 @@ class _number_homeState extends State<number_home> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          OutlinedButton(
-                            onPressed: () async {
-                              Network net = Network(context: context);
-                              net.getData(
-                                _numberInputController.text,
-                                selectedOperator.selectedOperator,
-                                selectedOperator.selectedPrefix,
-                                selectedOperator.selectedCategory,
-                                selectedOperator.selectedFileType,
-                              );
-                            },
-                            child: const Center(
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.search,
-                                    color: Colors.black,
-                                  ),
-                                  Text("Axtar"),
-                                ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: OutlinedButton(
+                              onPressed: () async {
+                                List<String> pref =
+                                    await getStringList('addPrefix');
+                                print(pref);
+                                Network net = Network(context: context);
+                                net.getData(
+                                  _numberInputController.text,
+                                  selectedOperator.selectedOperator,
+                                  selectedOperator.selectedPrefix,
+                                  selectedOperator.selectedCategory,
+                                  selectedOperator.selectedFileType,
+                                  pref,
+                                );
+                              },
+                              child: const Center(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      color: Colors.black,
+                                    ),
+                                    Text("Axtar"),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

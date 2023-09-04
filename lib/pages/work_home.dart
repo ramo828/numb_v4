@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:number_seller/pages/number_/models/error_models.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -31,6 +30,8 @@ class _home_pageState extends State<home_page> {
 
   Map<String, dynamic>? _keysData;
   Map<String, dynamic>? _notificationData;
+  Map<String, dynamic>? _updateData;
+
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   User? _user;
   String _name = '';
@@ -48,6 +49,8 @@ class _home_pageState extends State<home_page> {
   String _updateTitle = '';
   bool _isActive = false;
   bool _isAdmin = false;
+  String _bakcellKey = "";
+  String _narKey = "";
 
   @override
   void initState() {
@@ -93,6 +96,19 @@ class _home_pageState extends State<home_page> {
           });
         }
       });
+      _notificationSubscription = _firestore
+          .collection('settings')
+          .doc('keys')
+          .snapshots()
+          .listen((notificationSnapshot) {
+        if (notificationSnapshot.exists) {
+          setState(() {
+            _keysData = notificationSnapshot.data() as Map<String, dynamic>;
+            _bakcellKey = _keysData!['bakcell'];
+            _narKey = _keysData!['nar'];
+          });
+        }
+      });
 
       _notificationSubscription = _firestore
           .collection('settings')
@@ -101,12 +117,11 @@ class _home_pageState extends State<home_page> {
           .listen((notificationSnapshot) {
         if (notificationSnapshot.exists) {
           setState(() {
-            _notificationData =
-                notificationSnapshot.data() as Map<String, dynamic>;
-            _updateStatus = _notificationData!['status'];
-            _updateContent = _notificationData!['content'];
-            _updateTitle = _notificationData!['title'];
-            _updateLink = _notificationData!['url'];
+            _updateData = notificationSnapshot.data() as Map<String, dynamic>;
+            _updateStatus = _updateData!['status'];
+            _updateContent = _updateData!['content'];
+            _updateTitle = _updateData!['title'];
+            _updateLink = _updateData!['url'];
           });
         }
       });
@@ -122,12 +137,13 @@ class _home_pageState extends State<home_page> {
 
   @override
   Widget build(BuildContext context) {
-    final errorProvider = Provider.of<ErrorProvider>(context, listen: false);
-
     if (_logOut) {
       saveBoolValue("logIn", false);
       exit(1);
     }
+    saveStringList("keys", [_bakcellKey, _narKey]);
+    //Bakcell ve nar keyleri burdan yuklenecek
+
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(

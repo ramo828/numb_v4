@@ -1,6 +1,8 @@
+import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class myDropCollections extends StatefulWidget {
   const myDropCollections({super.key});
@@ -92,10 +94,12 @@ class _myDropCollectionsState extends State<myDropCollections> {
     '077',
   ];
 
+  List<String> allItems = ['055', '099', '050', '051', '010', '070', '077'];
+
   @override
   Widget build(BuildContext context) {
     final selectedOperator = Provider.of<OperatorProvider>(context);
-
+    setState(() {});
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -176,6 +180,24 @@ class _myDropCollectionsState extends State<myDropCollections> {
             ),
           ],
         ),
+        DropdownButton<String>(
+          hint: Text('Hazırlanacaq prefixlər: '),
+          // value: '055',
+          items: allItems.map((item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Container(
+                width: 200,
+                child: ListView(
+                  children: [MyCheckboxListTile(item: item)],
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (value) {
+            // Dropdown değeri değiştiğinde burada işlem yapabilirsiniz.
+          },
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -202,7 +224,90 @@ class _myDropCollectionsState extends State<myDropCollections> {
   }
 }
 
+List<String> prefixList = [];
+
 const underlineInputBorder = UnderlineInputBorder(
   borderSide: BorderSide(color: Colors.transparent),
   // Çizgiyi şeffaf yapar
 );
+
+class MyCheckboxListTile extends StatefulWidget {
+  final String item;
+
+  MyCheckboxListTile({required this.item});
+
+  @override
+  _MyCheckboxListTileState createState() => _MyCheckboxListTileState();
+}
+
+class _MyCheckboxListTileState extends State<MyCheckboxListTile> {
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPreferences();
+  }
+
+  void initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    bool initialValue = prefs.getBool(widget.item) ?? false;
+    setState(() {
+      data[widget.item] = initialValue;
+    });
+  }
+
+  Map<String, bool> data = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      title: Text(widget.item),
+      value: data[widget.item] ?? false,
+      onChanged: (value) {
+        setState(() {
+          data[widget.item] = value!;
+          saveBoolValue(widget.item, value!);
+
+          if (value!) {
+            // Seçildiğinde yapılması gereken işlemler
+            if (!prefixList.contains(widget.item)) {
+              if (widget.item.contains('050')) {
+                prefixList.add(widget.item.replaceAll("050", '+99450'));
+              } else if (widget.item.contains('010')) {
+                prefixList.add(widget.item.replaceAll("010", '+99410'));
+              } else if (widget.item.contains('070')) {
+                prefixList.add(widget.item.replaceAll('070', '+99470'));
+              } else {
+                prefixList.add(widget.item.replaceAll('0', '+994'));
+              }
+            }
+          } else {
+            if (!prefixList.contains(widget.item)) {
+              if (widget.item.contains('050')) {
+                prefixList.remove(widget.item.replaceAll("050", '+99450'));
+              } else if (widget.item.contains('010')) {
+                prefixList.remove(widget.item.replaceAll("010", '+99410'));
+              } else if (widget.item.contains('070')) {
+                prefixList.remove(widget.item.replaceAll('070', '+99470'));
+              } else {
+                prefixList.remove(widget.item.replaceAll('0', '+994'));
+              }
+            }
+          }
+          print(prefixList);
+          saveStringList("addPrefix", prefixList);
+        });
+      },
+      selected: data[widget.item] ?? false,
+    );
+  }
+
+  Future<void> saveBoolValue(String key, bool value) async {
+    await prefs.setBool(key, value);
+  }
+
+  Future<void> saveStringList(String key, List<String> value) async {
+    await prefs.setStringList(key, value);
+  }
+}
