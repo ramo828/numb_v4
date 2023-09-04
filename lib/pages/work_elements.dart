@@ -93,6 +93,7 @@ class work_info extends StatefulWidget {
   final bool notifStatus;
   final String notifMessage;
   final bool updateStatus;
+  final List<String> updateVersion;
   final String updateTitle;
   final String updateContent;
   final String updateUrl;
@@ -110,6 +111,7 @@ class work_info extends StatefulWidget {
     required this.updateContent,
     required this.updateUrl,
     required this.isActive,
+    required this.updateVersion,
   });
 
   @override
@@ -244,7 +246,8 @@ class _work_infoState extends State<work_info> {
           const SizedBox(
             height: 8,
           ),
-          widget.updateStatus
+          widget.updateStatus &&
+                  widget.updateVersion[0] != widget.updateVersion[1]
               ? my_container(
                   height: 145,
                   width: 350,

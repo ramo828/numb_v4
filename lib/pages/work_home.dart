@@ -39,7 +39,7 @@ class _home_pageState extends State<home_page> {
   String _deviceID = '';
   String _registerDate = '';
   String _email = '';
-
+  String real_version = "4.1.3";
   bool _logOut = false;
   bool _notifStatus = false;
   String _message = "";
@@ -51,6 +51,7 @@ class _home_pageState extends State<home_page> {
   bool _isAdmin = false;
   String _bakcellKey = "";
   String _narKey = "";
+  String _version = "";
 
   @override
   void initState() {
@@ -122,6 +123,7 @@ class _home_pageState extends State<home_page> {
             _updateContent = _updateData!['content'];
             _updateTitle = _updateData!['title'];
             _updateLink = _updateData!['url'];
+            _version = _updateData!['version'];
           });
         }
       });
@@ -305,6 +307,7 @@ class _home_pageState extends State<home_page> {
                       updateContent: _updateContent,
                       updateUrl: _updateLink,
                       isActive: _isActive,
+                      updateVersion: [_version, real_version],
                     );
                   } else {
                     return Center(
