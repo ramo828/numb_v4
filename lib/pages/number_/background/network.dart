@@ -65,6 +65,7 @@ class Network {
     List<String> prefixList,
   ) async {
     int counter = 0;
+    int countNumb = 1;
     print(number);
 
     final loading = Provider.of<LoadingProvider>(context, listen: false);
@@ -109,7 +110,8 @@ class Network {
       }
       print(numberList.toString());
     } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
-      for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
+      // for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
+      while (countNumb < numberList.length) {
         for (int prefixCount = 0;
             prefixCount < prefixList.length;
             prefixCount++) {
@@ -122,6 +124,7 @@ class Network {
               countNumb,
             ),
           );
+          countNumb++;
         }
       }
     }

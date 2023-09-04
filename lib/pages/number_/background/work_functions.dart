@@ -11,6 +11,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 // ignore: camel_case_types
 class func {
+  String alpabetical_order(int counter) {
+    if (counter <= 10) {
+      return '_A';
+    } else if (counter > 10) {
+      return '_B';
+    } else if (counter > 10 && counter <= 100) {
+      return '_C';
+    } else if (counter > 100 && counter <= 1000) {
+      return '_D';
+    } else {
+      return "_E";
+    }
+  }
+
   List<String> dataVcard = [
     "BEGIN:VCARD\n",
     "N:",
@@ -48,7 +62,7 @@ class func {
   String vcf(String contactName, List<String> prefix, int prefixIndex,
       String number, int counter) {
     try {
-      return "${dataVcard[0]}${dataVcard[1]}$contactName$counter\n${dataVcard[2]}$contactName$counter\n${dataVcard[3]}${prefix[prefixIndex]}${number.substring(2, 9)}\n${dataVcard[4]}${dataVcard[5]}";
+      return "${dataVcard[0]}${dataVcard[1]}$contactName$counter\n${dataVcard[2]}$contactName${alpabetical_order(counter)}$counter\n${dataVcard[3]}${prefix[prefixIndex]}${number.substring(2, 9)}\n${dataVcard[4]}${dataVcard[5]}";
     } catch (e, s) {
       print(e);
       print(s);

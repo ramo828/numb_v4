@@ -1,12 +1,15 @@
 import 'dart:io';
 
-
 Future<void> writeData(String data, String filename) async {
   // final directory =
   //     await getExternalStorageDirectory(); // Cihazın dış hafızasına erişim sağlar
   _createFolder();
   const directory = "/sdcard/work/";
   final file = File('$directory$filename');
+  if (file.existsSync()) {
+    new File('$directory$filename').create(recursive: true);
+  }
+
   await file.writeAsString(data);
 }
 
