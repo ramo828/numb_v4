@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/network.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
@@ -23,6 +27,45 @@ class _number_homeState extends State<number_home> {
   List<String> getData = [];
   String numberValue = "";
   final TextEditingController _numberInputController = TextEditingController();
+  StreamSubscription<DocumentSnapshot>? _userDataSubscription;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  int _level = 0;
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = _auth.currentUser;
+    if (_user != null) {
+      _userDataSubscription = _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .snapshots()
+          .listen((userSnapshot) {
+        if (userSnapshot.exists) {
+          Map<String, dynamic> userData =
+              userSnapshot.data() as Map<String, dynamic>;
+          setState(() {
+            _level = userData['level'];
+            print(_level);
+          });
+        } else {
+          setState(() {
+            // _name = 'Kullanıcı bulunamadı';
+            _level = 0;
+            print(_level);
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _userDataSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +152,7 @@ class _number_homeState extends State<number_home> {
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
-                      child: const myDropCollections(),
+                      child: myDropCollections(status: _level),
                     ),
                   ),
                   Padding(

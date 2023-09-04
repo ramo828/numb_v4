@@ -315,6 +315,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         'isActive': false,
         'logOut': false,
         'registerDate': formattedDate,
+        'level': 0,
       });
     } catch (e) {
       print("Hata: $e");

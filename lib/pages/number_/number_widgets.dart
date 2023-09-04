@@ -5,7 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class myDropCollections extends StatefulWidget {
-  const myDropCollections({super.key});
+  final int status;
+  const myDropCollections({
+    super.key,
+    required this.status,
+  });
 
   @override
   State<myDropCollections> createState() => _myDropCollectionsState();
@@ -94,7 +98,15 @@ class _myDropCollectionsState extends State<myDropCollections> {
     '077',
   ];
 
-  List<String> allItems = ['055', '099', '050', '051', '010', '070', '077'];
+  List<String> allItems = [
+    '055',
+    '099',
+    '050',
+    '051',
+    '010',
+    '070',
+    '077',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -121,12 +133,24 @@ class _myDropCollectionsState extends State<myDropCollections> {
               items: operators.map<DropdownMenuItem<String>>((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  enabled: item.contains("Azərcell")
-                      ? false
-                      : item.contains("Nar")
-                          ? false
-                          : true,
-                  child: Text(item),
+                  enabled:
+                      // item.contains("Azərcell")
+                      // ? false
+                      // :
+                      // widget.status == 0
+                      // ?
+                      item.contains("Nar") ? false : true,
+                  // : true,
+                  child: Text(
+                    item,
+                    style: TextStyle(
+                      color: widget.status == 0
+                          ? item.contains("Nar")
+                              ? Colors.red
+                              : Colors.black
+                          : Colors.black,
+                    ),
+                  ),
                 );
               }).toList(),
             ),
@@ -173,8 +197,21 @@ class _myDropCollectionsState extends State<myDropCollections> {
               items:
                   categoryDefault.map<DropdownMenuItem<String>>((String item1) {
                 return DropdownMenuItem<String>(
+                  enabled: widget.status == 0
+                      ? item1.contains("Bürünc")
+                          ? false
+                          : true
+                      : true,
                   value: item1,
-                  child: Text(item1),
+                  child: Text(
+                    item1,
+                    style: TextStyle(
+                        color: widget.status == 0
+                            ? item1.contains("Bürünc")
+                                ? Colors.red
+                                : Colors.black
+                            : Colors.black),
+                  ),
                 );
               }).toList(),
             ),
