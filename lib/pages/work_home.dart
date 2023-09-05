@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -39,7 +40,7 @@ class _home_pageState extends State<home_page> {
   String _deviceID = '';
   String _registerDate = '';
   String _email = '';
-  String real_version = "4.1.3";
+  String real_version = "4.1.4";
   bool _logOut = false;
   bool _notifStatus = false;
   String _message = "";
@@ -52,6 +53,7 @@ class _home_pageState extends State<home_page> {
   String _bakcellKey = "";
   String _narKey = "";
   String _version = "";
+  String _title = "";
 
   @override
   void initState() {
@@ -93,6 +95,7 @@ class _home_pageState extends State<home_page> {
             _notificationData =
                 notificationSnapshot.data() as Map<String, dynamic>;
             _message = _notificationData!['message'];
+            _title = _notificationData!['title'];
             _notifStatus = _notificationData!['status'];
           });
         }
@@ -155,6 +158,14 @@ class _home_pageState extends State<home_page> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               UserAccountsDrawerHeader(
+                otherAccountsPicturesSize: Size.square(63),
+                otherAccountsPictures: [
+                  Padding(
+                      child: theme(
+                        themeNotifier,
+                      ),
+                      padding: EdgeInsets.only(right: 1)),
+                ],
                 currentAccountPictureSize: const Size(60, 60),
                 decoration: BoxDecoration(
                   color:
@@ -203,7 +214,6 @@ class _home_pageState extends State<home_page> {
                   );
                 },
               ),
-              const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
 
               ListTile(
                 leading: const Icon(FontAwesomeIcons.universalAccess),
@@ -267,7 +277,28 @@ class _home_pageState extends State<home_page> {
           toolbarHeight: 65,
           centerTitle: true,
           actions: [
-            theme(themeNotifier),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Badge(
+                isLabelVisible: _notifStatus,
+                padding: EdgeInsets.all(8),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => notification(
+                              message: _message,
+                              notifStatus: true,
+                              title: _title),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.bell,
+                    )),
+              ),
+            )
           ],
           title: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -300,8 +331,6 @@ class _home_pageState extends State<home_page> {
                       name: _name,
                       surname: _surname,
                       registerDate: _registerDate,
-                      notifStatus: _notifStatus,
-                      notifMessage: _message,
                       updateStatus: _updateStatus,
                       updateTitle: _updateTitle,
                       updateContent: _updateContent,

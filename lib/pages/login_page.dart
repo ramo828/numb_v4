@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 30,
                   color: themeNotifier.isDark
                       ? Colors.brown.withOpacity(0.9)
-                      : Colors.blueGrey),
+                      : const Color.fromARGB(255, 145, 182, 201)),
             ),
           ),
         ),

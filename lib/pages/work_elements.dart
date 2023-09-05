@@ -90,8 +90,6 @@ class work_info extends StatefulWidget {
   final String name;
   final String surname;
   final String registerDate;
-  final bool notifStatus;
-  final String notifMessage;
   final bool updateStatus;
   final List<String> updateVersion;
   final String updateTitle;
@@ -104,8 +102,6 @@ class work_info extends StatefulWidget {
     required this.name,
     required this.surname,
     required this.registerDate,
-    required this.notifStatus,
-    required this.notifMessage,
     required this.updateStatus,
     required this.updateTitle,
     required this.updateContent,
@@ -223,28 +219,6 @@ class _work_infoState extends State<work_info> {
           ),
           const SizedBox(
             height: 10,
-          ),
-          if (widget.notifStatus)
-            my_container(
-              width: 350,
-              color: const Color.fromRGBO(141, 110, 99, 1).withOpacity(0.5),
-              height: 350,
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Text(
-                  widget.notifMessage,
-                  style: const TextStyle(
-                    fontFamily: 'Handwriting',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-              ),
-            )
-          else
-            const Text(" "),
-          const SizedBox(
-            height: 8,
           ),
           widget.updateStatus &&
                   widget.updateVersion[0] != widget.updateVersion[1]
