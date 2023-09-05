@@ -65,9 +65,8 @@ class Network {
     List<String> prefixList,
   ) async {
     int counter = 0;
-    int countNumb = 1;
-    print(number);
-
+    int countNumb = 0;
+    int prefixCounter = 0;
     final loading = Provider.of<LoadingProvider>(context, listen: false);
     loading.updateOkay(false);
     loading.updateLoad(true);
@@ -108,12 +107,11 @@ class Network {
       } catch (e) {
         showSnackBar(context, "Xəta: ${e}", 2);
       }
-      print(numberList.toString());
     } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
       // for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
-      while (countNumb < numberList.length) {
+      while (countNumb <= numberList.length - 1) {
         for (int prefixCount = 0;
-            prefixCount < prefixList.length;
+            prefixCount <= prefixList.length;
             prefixCount++) {
           vcfType.add(
             myFunctions.vcf(
@@ -121,11 +119,12 @@ class Network {
               prefixList,
               prefixCount,
               numberList[countNumb],
-              countNumb,
+              prefixCounter,
             ),
           );
-          countNumb++;
+          prefixCounter++;
         }
+        countNumb++;
       }
     }
     try {
