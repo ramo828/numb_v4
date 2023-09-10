@@ -214,6 +214,26 @@ class _work_infoState extends State<work_info> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                my_container(
+                  height: 30,
+                  width: 280,
+                  color: Colors.brown.shade500.withOpacity(0.5),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: double_string(
+                        text1: "Verisya: ",
+                        text2: widget.updateVersion[1],
+                        fontName1: "Lobster",
+                        fontName2: "Handwriting",
+                        color2: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
