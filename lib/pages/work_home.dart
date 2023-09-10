@@ -40,7 +40,7 @@ class _home_pageState extends State<home_page> {
   String _deviceID = '';
   String _registerDate = '';
   String _email = '';
-  String real_version = "4.1.5";
+  String real_version = "4.1.5c";
   bool _logOut = false;
   bool _notifStatus = false;
   String _message = "";

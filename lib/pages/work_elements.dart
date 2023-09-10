@@ -225,7 +225,7 @@ class _work_infoState extends State<work_info> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 40),
                       child: double_string(
-                        text1: "Verisya: ",
+                        text1: "Versiya: ",
                         text2: widget.updateVersion[1],
                         fontName1: "Lobster",
                         fontName2: "Handwriting",
