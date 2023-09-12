@@ -16,7 +16,7 @@ class Network {
     required this.context,
   });
 
-  Future<List<String>> getBakcellData(
+  Future<List<String>> getOperatorData(
     String number,
     String operator,
     String prefix,
@@ -27,14 +27,16 @@ class Network {
     int counter = 0;
 
     var response = await http.get(
-      getBakcell(
-        number,
-        category.toLowerCase(),
-        page,
-        prefix.replaceAll("0", ""),
-        category.contains("Hamısı") ? true : false,
-      ),
-      headers: await getHeaders(0),
+      operator.contains("Bakcell")
+          ? getBakcell(
+              number,
+              category.toLowerCase(),
+              page,
+              prefix.replaceAll("0", ""),
+              category.contains("Hamısı") ? true : false,
+            )
+          : getNar(number, category, prefix.replaceAll("0", ""), page),
+      headers: await getHeaders(operator.contains("Bakcell") ? 0 : 1),
     );
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
@@ -70,16 +72,16 @@ class Network {
     final loading = Provider.of<LoadingProvider>(context, listen: false);
     loading.updateOkay(false);
     loading.updateLoad(true);
-
     func myFunctions = func();
     while (true) {
-      var numbList = await getBakcellData(
+      var numbList = await getOperatorData(
         number,
         operator,
         prefix,
         category,
         counter,
       );
+
       counter++;
 
       if (numbList.isEmpty) {

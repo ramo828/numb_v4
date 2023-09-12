@@ -4,221 +4,139 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class myDropCollections extends StatefulWidget {
-  final int status;
-  const myDropCollections({
+List<String> prefixList = [];
+
+// Initial Selected Value
+String defaultOperator = 'Bakcell';
+String defaultPrefix = '055';
+String defaultCategory = 'Hamısı';
+
+// List<String> categoryDefault = ['Hamısı'];
+List<String> category055 = [
+  'Hamısı',
+  'Sadə',
+  'Xüsusi 1',
+  'Xüsusi 2',
+];
+List<String> category099 = [
+  'Hamısı',
+  'Sadə',
+  'Bürünc',
+  'Gümüş',
+  'Qızıl',
+  'Platin'
+];
+
+List<String> categoryNar = [
+  'GENERAL',
+  'Prestige',
+  'Prestige1',
+  'Prestige2',
+  'Prestige3',
+  'Prestige4',
+  'Prestige5',
+  'Prestige6',
+  'Prestige7',
+  'Prestige8',
+  'Hamısı',
+];
+// List of items in our dropdown menu
+List<String> operators = [
+  'Bakcell',
+  'Nar',
+];
+
+// List of items in our dropdown menu
+List<String> prefixBakcell = [
+  '055',
+  '099',
+];
+List<String> prefixNar = [
+  '070',
+  '077',
+];
+
+List<String> allItems = [
+  '055',
+  '099',
+  '050',
+  '051',
+  '010',
+  '070',
+  '077',
+];
+
+final List<String> fileFomrat = ['Text', 'VCF', 'VCF(Zip)']; // Dropdown öğeleri
+String selectFileFormat = "Text";
+
+class WorkElements extends StatefulWidget {
+  final int level;
+  const WorkElements({
     super.key,
-    required this.status,
+    required this.level,
   });
 
   @override
-  State<myDropCollections> createState() => _myDropCollectionsState();
+  State<WorkElements> createState() => _WorkElementsState();
 }
 
-class _myDropCollectionsState extends State<myDropCollections> {
-  final List<String> fileFomrat = [
-    'Text',
-    'VCF',
-    'VCF(Zip)'
-  ]; // Dropdown öğeleri
-  String selectFileFormat = "Text";
-
-  // String operatorSelectedItem = 'Azərcell';
-  String operatorSelectedItem = 'Bakcell';
-
-  String categorySelectedItem = 'Hamısı';
-  // String prefixSelectedItem = '050';
-  String prefixSelectedItem = '055';
-
-  final List<String> operators = [
-    // 'Azərcell',
-    'Bakcell',
-    'Nar',
-  ];
-  // List<String> prefixDefault = [
-  //   '050',
-  //   '051',
-  //   '010',
-  // ];
-
-  List<String> prefixDefault = [
-    '055',
-    '099',
-  ];
-
-  // List<String> categoryDefault = ['Hamısı'];
-  List<String> categoryDefault = [
-    'Hamısı',
-    'Sadə',
-    'Xüsusi 1',
-    'Xüsusi 2',
-  ];
-
-  // final List<String> categoryAzercell = ['Hamısı'];
-  final List<String> categoryBakcell055 = [
-    'Hamısı',
-    'Sadə',
-    'Xüsusi 1',
-    'Xüsusi 2',
-  ];
-  final List<String> categoryBakcell099 = [
-    'Hamısı',
-    'Sadə099',
-    'Bürünc',
-    'Gümüş',
-    'Qızıl',
-    'Platin'
-  ];
-
-  final List<String> categoryNar = [
-    'GENERAL',
-    'Prestige',
-    'Prestige1',
-    'Prestige2',
-    'Prestige3',
-    'Prestige4',
-    'Prestige5',
-    'Prestige6',
-    'Prestige7',
-    'Prestige8',
-    'Hamısı',
-  ];
-
-  final List<String> prefixAzercell = [
-    '050',
-    '051',
-    '010',
-  ];
-  final List<String> prefixBakcell = [
-    '055',
-    '099',
-  ];
-  final List<String> prefixNar = [
-    '070',
-    '077',
-  ];
-
-  List<String> allItems = [
-    '055',
-    '099',
-    '050',
-    '051',
-    '010',
-    '070',
-    '077',
-  ];
-
+class _WorkElementsState extends State<WorkElements> {
   @override
   Widget build(BuildContext context) {
     final selectedOperator = Provider.of<OperatorProvider>(context);
-    setState(() {});
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Operator: "),
-            DropdownButton<String>(
-              value: operatorSelectedItem,
-              onChanged: (value) {
-                selectedOperator.updateSelectedOperator(value ?? '');
-                setState(() {
-                  prefixDefault = prefixBakcell;
-                  prefixSelectedItem = "055";
-                  categoryDefault = categoryBakcell055;
-                });
-              },
-              items: operators.map<DropdownMenuItem<String>>((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  enabled:
-                      // item.contains("Azərcell")
-                      // ? false
-                      // :
-                      // widget.status == 0
-                      // ?
-                      item.contains("Nar") ? false : true,
-                  // : true,
-                  child: Text(
-                    item,
-                    style: TextStyle(
-                      color: widget.status == 0
-                          ? item.contains("Nar")
-                              ? Colors.red
-                              : Colors.black
-                          : Colors.black,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Prefix: "),
-            DropdownButton<String>(
-              value: prefixSelectedItem,
-              onChanged: (value) {
-                selectedOperator.updateSelectedPrefix(value ?? '');
-                setState(() {
-                  prefixSelectedItem = value ?? '';
-                  categoryDefault = value!.contains("055")
-                      ? categoryBakcell055
-                      : categoryBakcell099;
-                });
-                print(prefixSelectedItem);
-              },
-              items:
-                  prefixDefault.map<DropdownMenuItem<String>>((String item1) {
-                return DropdownMenuItem<String>(
-                  value: item1,
-                  child: Text(item1),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Kategoriya: "),
-            DropdownButton<String>(
-              value: categorySelectedItem,
-              onChanged: (value) {
-                setState(() {
-                  categorySelectedItem = value ?? "";
-                });
-                selectedOperator.updateSelectedCategory(value ?? '');
-              },
-              items:
-                  categoryDefault.map<DropdownMenuItem<String>>((String item1) {
-                return DropdownMenuItem<String>(
-                  enabled: widget.status == 0
-                      ? item1.contains("Bürünc")
-                          ? false
-                          : true
-                      : true,
-                  value: item1,
-                  child: Text(
-                    item1,
-                    style: TextStyle(
-                        color: widget.status == 0
-                            ? item1.contains("Bürünc")
-                                ? Colors.red
-                                : Colors.black
-                            : Colors.black),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
+        CustomDropdownButton(
+            dropName: "Operator",
+            dropdownValue: defaultOperator,
+            items: operators,
+            onChanged: (String? newValue) {
+              selectedOperator.updateSelectedOperator(newValue!);
+              setState(() {
+                defaultOperator = newValue!;
+                if (defaultOperator.contains("Bakcell")) {
+                  defaultPrefix = "055";
+                } else {
+                  defaultPrefix = "070";
+                }
+              });
+            }),
+        CustomDropdownButton(
+            dropName: "Prefix",
+            dropdownValue: defaultPrefix,
+            items:
+                defaultOperator.contains("Bakcell") ? prefixBakcell : prefixNar,
+            onChanged: (String? newValue) {
+              selectedOperator.updateSelectedPrefix(newValue!);
+              setState(() {
+                defaultPrefix = newValue!;
+                defaultCategory = "Hamısı";
+              });
+            }),
+        CustomDropdownButton(
+            dropName: "Kategoriya",
+            dropdownValue: defaultCategory,
+            items: defaultPrefix.contains("055")
+                ? category055
+                : defaultPrefix.contains("099")
+                    ? category099
+                    : categoryNar,
+            onChanged: (String? newValue) {
+              selectedOperator.updateSelectedCategory(newValue!);
+              setState(() {
+                defaultCategory = newValue!;
+              });
+            }),
         DropdownButton<String>(
-          hint: Text('Hazırlanacaq prefixlər: '),
+          hint: const Text(
+            'Hazırlanacaq prefixlər',
+            style: TextStyle(
+              fontFamily: "Lobster",
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           // value: '055',
           items: allItems.map((item) {
             return DropdownMenuItem<String>(
@@ -235,38 +153,20 @@ class _myDropCollectionsState extends State<myDropCollections> {
             // Dropdown değeri değiştiğinde burada işlem yapabilirsiniz.
           },
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Fayl format: "),
-            DropdownButton<String>(
-              value: selectFileFormat, // Başlangıç değeri (ilk öğe)
-              items: fileFomrat.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item), // Öğe metni
-                );
-              }).toList(),
-              onChanged: (selectedValue) {
-                selectedOperator.updateSelectedFileType(selectedValue!);
-                setState(() {
-                  selectFileFormat = selectedValue ?? '';
-                });
-              },
-            ),
-          ],
-        )
+        CustomDropdownButton(
+            dropdownValue: selectFileFormat,
+            items: fileFomrat,
+            onChanged: (String? myValue) {
+              selectedOperator.updateSelectedFileType(myValue!);
+              setState(() {
+                selectFileFormat = myValue!;
+              });
+            },
+            dropName: "Fayl tipi")
       ],
     );
   }
 }
-
-List<String> prefixList = [];
-
-const underlineInputBorder = UnderlineInputBorder(
-  borderSide: BorderSide(color: Colors.transparent),
-  // Çizgiyi şeffaf yapar
-);
 
 class MyCheckboxListTile extends StatefulWidget {
   final String item;
@@ -348,3 +248,63 @@ class _MyCheckboxListTileState extends State<MyCheckboxListTile> {
     await prefs.setStringList(key, value);
   }
 }
+
+class CustomDropdownButton extends StatelessWidget {
+  final String dropdownValue;
+  final List<String> items;
+  final Function(String?) onChanged;
+  final bool enableStatus;
+  final String disableItem;
+  final String dropName;
+
+  CustomDropdownButton({
+    required this.dropdownValue,
+    required this.items,
+    required this.onChanged,
+    required this.dropName,
+    this.enableStatus = true,
+    this.disableItem = "",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            "$dropName: ",
+            style: const TextStyle(
+              fontFamily: "Lobster",
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        DropdownButton(
+          value: dropdownValue,
+          icon: const Icon(Icons.keyboard_arrow_down),
+          items: items.map((String item) {
+            return DropdownMenuItem(
+              enabled: disableItem.contains(item) ? false : true,
+              value: item,
+              child: Text(
+                item,
+                style: TextStyle(
+                  color: disableItem.contains(item) ? Colors.red : Colors.black,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: enableStatus ? onChanged : null,
+        ),
+      ],
+    );
+  }
+}
+
+const underlineInputBorder = UnderlineInputBorder(
+  borderSide: BorderSide(color: Colors.transparent),
+  // Çizgiyi şeffaf yapar
+);

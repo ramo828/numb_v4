@@ -145,14 +145,16 @@ class _number_homeState extends State<number_home> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
-                      height: 260,
+                      height: 300,
                       // width: 100,
                       decoration: BoxDecoration(
                         color: Colors.brown.shade200.withOpacity(0.4),
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
-                      child: myDropCollections(status: _level),
+                      child: WorkElements(
+                        level: _level,
+                      ),
                     ),
                   ),
                   Padding(

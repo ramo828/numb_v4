@@ -1,7 +1,6 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:number_seller/pages/number_/background/work_functions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 List<dynamic> loadData(String jsonData) => json.decode(jsonData).toList();
 
@@ -133,4 +132,27 @@ String getCategory(String keyData) {
   // ignore: unnecessary_null_comparison
   if (keyData == null) throw ("Null key");
   return category[keyData].toString();
+}
+
+class AutoKey {
+  final String username;
+  final String password;
+
+  AutoKey(this.username, this.password);
+
+  Future<String> getKey() async {
+    final url = Uri.parse("https://public-api.azerconnect.az/api/authenticate");
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({'username': username, 'password': password});
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final key = jsonResponse['id_token'];
+      return key.toString();
+    } else {
+      throw Exception('Failed to get key');
+    }
+  }
 }
