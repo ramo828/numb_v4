@@ -90,6 +90,7 @@ class _WorkElementsState extends State<WorkElements> {
             dropName: "Operator",
             dropdownValue: defaultOperator,
             items: operators,
+            disableItem: widget.level < 1 ? "Nar" : "",
             onChanged: (String? newValue) {
               selectedOperator.updateSelectedOperator(newValue!);
               setState(() {
@@ -99,6 +100,7 @@ class _WorkElementsState extends State<WorkElements> {
                 } else {
                   defaultPrefix = "070";
                 }
+                selectedOperator.updateSelectedPrefix(defaultPrefix);
               });
             }),
         CustomDropdownButton(
@@ -116,6 +118,7 @@ class _WorkElementsState extends State<WorkElements> {
         CustomDropdownButton(
             dropName: "Kategoriya",
             dropdownValue: defaultCategory,
+            disableItem: widget.level < 1 ? "Bürünc" : "",
             items: defaultPrefix.contains("055")
                 ? category055
                 : defaultPrefix.contains("099")
@@ -256,7 +259,8 @@ class CustomDropdownButton extends StatelessWidget {
   final String disableItem;
   final String dropName;
 
-  const CustomDropdownButton({super.key, 
+  const CustomDropdownButton({
+    super.key,
     required this.dropdownValue,
     required this.items,
     required this.onChanged,

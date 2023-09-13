@@ -80,7 +80,8 @@ Uri getBakcell(
 }
 
 // bunu duzelt
-Uri getNar(String number, String prestigeKey, String prefixKey, int page) {
+Uri getNar(String number, String prestigeKey, String prefixKey, int page,
+    bool status) {
   print(prefixKey);
   List<String> num = [
     number[0] == 'x' ? '' : number[0],
@@ -95,11 +96,11 @@ Uri getNar(String number, String prestigeKey, String prefixKey, int page) {
     "public-api.azerconnect.az",
     "/msazfposapptrans/api/msisdn-search",
     {
-      "prefix": prefixKey,
+      "prefix": status ? '7077' : prefixKey,
       "msisdn": number,
       "size": "2000",
       "page": "$page",
-      "prestigeLevel": prestigeKey,
+      status ? "prestigeLevel" : prestigeKey: null,
       "a1": num[0],
       "a2": num[1],
       "a3": num[2],

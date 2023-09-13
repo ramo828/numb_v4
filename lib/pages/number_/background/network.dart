@@ -35,7 +35,17 @@ class Network {
               prefix.replaceAll("0", ""),
               category.contains("Hamısı") ? true : false,
             )
-          : getNar(number, category, prefix.replaceAll("070", "70"), page),
+          : getNar(
+              number,
+              category,
+              prefix.contains("070")
+                  ? prefix.replaceAll("070", "70")
+                  : prefix.contains("077")
+                      ? prefix.replaceAll("0", "")
+                      : prefix,
+              page,
+              category.contains("Hamısı") ? true : false,
+            ),
       headers: await getHeaders(operator.contains("Bakcell") ? 0 : 1),
     );
     if (response.statusCode == 200) {
@@ -78,11 +88,6 @@ class Network {
     loading.updateOkay(false);
     loading.updateLoad(true);
     func myFunctions = func();
-    // print(number);
-    // print(operator);
-    // print(prefix);
-    // print(category);
-    // print(fileType);
 
     while (true) {
       var numbList = await getOperatorData(
@@ -121,10 +126,9 @@ class Network {
         showSnackBar(context, "Xəta: $e", 2);
       }
     } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
-      // for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
       while (countNumb <= numberList.length - 1) {
         for (int prefixCount = 0;
-            prefixCount <= prefixList.length;
+            prefixCount < prefixList.length;
             prefixCount++) {
           vcfType.add(
             myFunctions.vcf(

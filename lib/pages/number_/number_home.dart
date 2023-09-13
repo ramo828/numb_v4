@@ -175,16 +175,21 @@ class _number_homeState extends State<number_home> {
                               onPressed: () async {
                                 List<String> pref =
                                     await getStringList('addPrefix');
-                                print(pref);
                                 Network net = Network(context: context);
-                                net.getData(
-                                  _numberInputController.text,
-                                  selectedOperator.selectedOperator,
-                                  selectedOperator.selectedPrefix,
-                                  selectedOperator.selectedCategory,
-                                  selectedOperator.selectedFileType,
-                                  pref,
-                                );
+                                if (!(_numberInputController.text.length < 7)) {
+                                  net.getData(
+                                    _numberInputController.text,
+                                    selectedOperator.selectedOperator,
+                                    selectedOperator.selectedPrefix,
+                                    selectedOperator.selectedCategory,
+                                    selectedOperator.selectedFileType,
+                                    pref,
+                                  );
+                                } else {
+                                  // ignore: use_build_context_synchronously
+                                  showSnackBar(context,
+                                      "Xanadaki boşluqları X ilə əvəzləyin", 2);
+                                }
                               },
                               child: const Center(
                                 child: Row(
@@ -226,10 +231,7 @@ class _number_homeState extends State<number_home> {
                                     );
 
                                     if (result.status ==
-                                        ShareResultStatus.success) {
-                                      print(
-                                          'Thank you for sharing the picture!');
-                                    }
+                                        ShareResultStatus.success) {}
                                   },
                                   child: const Row(
                                     children: [
