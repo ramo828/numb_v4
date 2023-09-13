@@ -1,4 +1,3 @@
-import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +93,7 @@ class _WorkElementsState extends State<WorkElements> {
             onChanged: (String? newValue) {
               selectedOperator.updateSelectedOperator(newValue!);
               setState(() {
-                defaultOperator = newValue!;
+                defaultOperator = newValue;
                 if (defaultOperator.contains("Bakcell")) {
                   defaultPrefix = "055";
                 } else {
@@ -110,7 +109,7 @@ class _WorkElementsState extends State<WorkElements> {
             onChanged: (String? newValue) {
               selectedOperator.updateSelectedPrefix(newValue!);
               setState(() {
-                defaultPrefix = newValue!;
+                defaultPrefix = newValue;
                 defaultCategory = "Hamısı";
               });
             }),
@@ -125,7 +124,7 @@ class _WorkElementsState extends State<WorkElements> {
             onChanged: (String? newValue) {
               selectedOperator.updateSelectedCategory(newValue!);
               setState(() {
-                defaultCategory = newValue!;
+                defaultCategory = newValue;
               });
             }),
         DropdownButton<String>(
@@ -141,7 +140,7 @@ class _WorkElementsState extends State<WorkElements> {
           items: allItems.map((item) {
             return DropdownMenuItem<String>(
               value: item,
-              child: Container(
+              child: SizedBox(
                 width: 200,
                 child: ListView(
                   children: [MyCheckboxListTile(item: item)],
@@ -159,7 +158,7 @@ class _WorkElementsState extends State<WorkElements> {
             onChanged: (String? myValue) {
               selectedOperator.updateSelectedFileType(myValue!);
               setState(() {
-                selectFileFormat = myValue!;
+                selectFileFormat = myValue;
               });
             },
             dropName: "Fayl tipi")
@@ -171,7 +170,7 @@ class _WorkElementsState extends State<WorkElements> {
 class MyCheckboxListTile extends StatefulWidget {
   final String item;
 
-  MyCheckboxListTile({required this.item});
+  const MyCheckboxListTile({super.key, required this.item});
 
   @override
   _MyCheckboxListTileState createState() => _MyCheckboxListTileState();
@@ -204,9 +203,9 @@ class _MyCheckboxListTileState extends State<MyCheckboxListTile> {
       onChanged: (value) {
         setState(() {
           data[widget.item] = value!;
-          saveBoolValue(widget.item, value!);
+          saveBoolValue(widget.item, value);
 
-          if (value!) {
+          if (value) {
             // Seçildiğinde yapılması gereken işlemler
             if (!prefixList.contains(widget.item)) {
               if (widget.item.contains('050')) {
@@ -257,7 +256,7 @@ class CustomDropdownButton extends StatelessWidget {
   final String disableItem;
   final String dropName;
 
-  CustomDropdownButton({
+  const CustomDropdownButton({super.key, 
     required this.dropdownValue,
     required this.items,
     required this.onChanged,
@@ -272,7 +271,7 @@ class CustomDropdownButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             "$dropName: ",
             style: const TextStyle(

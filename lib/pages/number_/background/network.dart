@@ -35,22 +35,27 @@ class Network {
               prefix.replaceAll("0", ""),
               category.contains("Hamısı") ? true : false,
             )
-          : getNar(number, category, prefix.replaceAll("0", ""), page),
+          : getNar(number, category, prefix.replaceAll("070", "70"), page),
       headers: await getHeaders(operator.contains("Bakcell") ? 0 : 1),
     );
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
-
       for (var item in jsonData) {
-        // ignore: curly_braces_in_flow_control_structures
-        for (var numbList in item['freeMsisdnList']) {
-          number = numbList['msisdn'];
+        if (operator.contains("Bakcell")) {
+          for (var numbList in item['freeMsisdnList']) {
+            // for (var numbList in item) {
+            number = numbList['msisdn'];
+            getNumberValue.add("$number\n");
+            counter++;
+          }
+        } else {
+          number = item['msisdn'];
           getNumberValue.add("$number\n");
           counter++;
         }
       }
     } else if (response.statusCode == 500) {
-      showSnackBar(context, "Key xətası", 2);
+      showSnackBar(context, "Key xətası: ${response.body}", 2);
     } else {
       print(response.statusCode);
     }
@@ -73,6 +78,12 @@ class Network {
     loading.updateOkay(false);
     loading.updateLoad(true);
     func myFunctions = func();
+    // print(number);
+    // print(operator);
+    // print(prefix);
+    // print(category);
+    // print(fileType);
+
     while (true) {
       var numbList = await getOperatorData(
         number,
@@ -107,7 +118,7 @@ class Network {
                 .replaceAll(" ", ""),
             "numberList.txt");
       } catch (e) {
-        showSnackBar(context, "Xəta: ${e}", 2);
+        showSnackBar(context, "Xəta: $e", 2);
       }
     } else if (fileType.contains("VCF") || fileType.contains("VCF(Zip)")) {
       // for (int countNumb = 0; countNumb < numberList.length; countNumb++) {
@@ -139,7 +150,7 @@ class Network {
               .replaceAll(" ", ""),
           "contact.vcf");
     } catch (e) {
-      showSnackBar(context, "Xəta: ${e}", 2);
+      showSnackBar(context, "Xəta: $e", 2);
     }
     // ignore: use_build_context_synchronously
     showSnackBar(

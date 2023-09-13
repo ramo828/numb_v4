@@ -23,7 +23,7 @@ class _notificationState extends State<notification> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Number Seller',
               style: TextStyle(

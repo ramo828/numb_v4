@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/pages/notification_page.dart';
+import 'package:number_seller/pages/number_/background/number_constant.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -28,7 +29,7 @@ class _home_pageState extends State<home_page> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   StreamSubscription<DocumentSnapshot>? _keysSubscription;
   StreamSubscription<DocumentSnapshot>? _notificationSubscription;
-
+  AutoKey autoKey = AutoKey("824-0038", "samir9995099");
   Map<String, dynamic>? _keysData;
   Map<String, dynamic>? _notificationData;
   Map<String, dynamic>? _updateData;
@@ -58,6 +59,7 @@ class _home_pageState extends State<home_page> {
   @override
   void initState() {
     super.initState();
+
     _user = _auth.currentUser;
     if (_user != null) {
       _userDataSubscription = _firestore
@@ -145,7 +147,7 @@ class _home_pageState extends State<home_page> {
     if (_logOut) {
       saveBoolValue("logIn", false);
       exit(1);
-    }
+    } else {}
     saveStringList("keys", [_bakcellKey, _narKey]);
     //Bakcell ve nar keyleri burdan yuklenecek
 
@@ -158,13 +160,13 @@ class _home_pageState extends State<home_page> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               UserAccountsDrawerHeader(
-                otherAccountsPicturesSize: Size.square(63),
+                otherAccountsPicturesSize: const Size.square(63),
                 otherAccountsPictures: [
                   Padding(
+                      padding: const EdgeInsets.only(right: 1),
                       child: theme(
                         themeNotifier,
-                      ),
-                      padding: EdgeInsets.only(right: 1)),
+                      )),
                 ],
                 currentAccountPictureSize: const Size(60, 60),
                 decoration: BoxDecoration(
@@ -281,7 +283,7 @@ class _home_pageState extends State<home_page> {
               padding: const EdgeInsets.all(8.0),
               child: Badge(
                 isLabelVisible: _notifStatus,
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: IconButton(
                     onPressed: () {
                       Navigator.push(
@@ -294,7 +296,7 @@ class _home_pageState extends State<home_page> {
                         ),
                       );
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       FontAwesomeIcons.bell,
                     )),
               ),
@@ -315,6 +317,21 @@ class _home_pageState extends State<home_page> {
         ),
         body: Column(
           children: [
+            FutureBuilder<String>(
+              future: autoKey.getKey(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: LinearProgressIndicator());
+                } else if (snapshot.hasData) {
+                  dataUpdate(
+                      "settings", 'keys', {'nar': 'Bearer ${snapshot.data}'});
+                  return const Center();
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Hata: ${snapshot.error}'));
+                }
+                return Container();
+              },
+            ),
             FutureBuilder<bool>(
               future: equalDeviceID(_deviceID),
               builder: (context, snapshot) {

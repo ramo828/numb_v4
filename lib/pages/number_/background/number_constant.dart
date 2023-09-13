@@ -81,6 +81,7 @@ Uri getBakcell(
 
 // bunu duzelt
 Uri getNar(String number, String prestigeKey, String prefixKey, int page) {
+  print(prefixKey);
   List<String> num = [
     number[0] == 'x' ? '' : number[0],
     number[1] == 'x' ? '' : number[1],

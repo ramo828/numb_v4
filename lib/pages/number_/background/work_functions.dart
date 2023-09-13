@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:archive/archive_io.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -195,4 +196,18 @@ Future<void> zipFile(String sourceFilePath, String zipFilePath) async {
 
   encoder.close();
   print('Dosya başarıyla sıkıştırıldı: $zipFilePath');
+}
+
+// Firestore'da belirli bir koleksiyon ve belgeyi güncelleme fonksiyonu
+Future<void> dataUpdate(
+    String collection, String document, Map<String, dynamic> data) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection(collection)
+        .doc(document)
+        .update(data);
+    print('Veri başarıyla güncellendi');
+  } catch (e) {
+    print('Veri güncellenirken bir hata oluştu: $e');
+  }
 }
