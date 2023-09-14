@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:async';
 import 'dart:io';
 
@@ -15,6 +17,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_page.dart';
 
+int _currentIndex = 0;
+final PageController _pageController = PageController();
+AutoKey autoKey = AutoKey("824-0038", "samir9995099");
+String _deviceID = '';
+bool _updateStatus = false;
+String _updateLink = '';
+String _updateContent = '';
+String _updateTitle = '';
+String real_version = "4.1.7";
+bool _isAdmin = false;
+String _name = '';
+String _surname = '';
+String _registerDate = '';
+String _email = '';
+
+bool _logOut = false;
+bool _notifStatus = false;
+String _message = "";
+
+bool _isActive = false;
+String _bakcellKey = "";
+String _narKey = "";
+String _version = "";
+String _title = "";
+StreamSubscription<DocumentSnapshot>? _notificationSubscription;
+StreamSubscription<DocumentSnapshot>? _keySubscription;
+StreamSubscription<DocumentSnapshot>? _updateSubscription;
+
 class home_page extends StatefulWidget {
   const home_page({
     super.key,
@@ -27,36 +57,13 @@ class home_page extends StatefulWidget {
 class _home_pageState extends State<home_page> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  StreamSubscription<DocumentSnapshot>? _keysSubscription;
-  StreamSubscription<DocumentSnapshot>? _notificationSubscription;
-  AutoKey autoKey = AutoKey("824-0038", "samir9995099");
-  final PageController _pageController = PageController();
+
   Map<String, dynamic>? _keysData;
   Map<String, dynamic>? _notificationData;
   Map<String, dynamic>? _updateData;
 
   StreamSubscription<DocumentSnapshot>? _userDataSubscription;
   User? _user;
-  String _name = '';
-  String _surname = '';
-  String _deviceID = '';
-  String _registerDate = '';
-  String _email = '';
-  String real_version = "4.1.7";
-  bool _logOut = false;
-  bool _notifStatus = false;
-  String _message = "";
-  bool _updateStatus = false;
-  String _updateLink = '';
-  String _updateContent = '';
-  String _updateTitle = '';
-  bool _isActive = false;
-  bool _isAdmin = false;
-  String _bakcellKey = "";
-  String _narKey = "";
-  String _version = "";
-  String _title = "";
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -104,7 +111,7 @@ class _home_pageState extends State<home_page> {
           });
         }
       });
-      _notificationSubscription = _firestore
+      _keySubscription = _firestore
           .collection('settings')
           .doc('keys')
           .snapshots()
@@ -118,7 +125,7 @@ class _home_pageState extends State<home_page> {
         }
       });
 
-      _notificationSubscription = _firestore
+      _updateSubscription = _firestore
           .collection('settings')
           .doc('update')
           .snapshots()
@@ -156,234 +163,247 @@ class _home_pageState extends State<home_page> {
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       return Scaffold(
-        drawer: Drawer(
-          backgroundColor: Colors.brown.shade100.withOpacity(0.8),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                otherAccountsPicturesSize: const Size.square(63),
-                otherAccountsPictures: [
-                  Padding(
-                      padding: const EdgeInsets.only(right: 1),
-                      child: theme(
-                        themeNotifier,
-                      )),
-                ],
-                currentAccountPictureSize: const Size(60, 60),
-                decoration: BoxDecoration(
-                  color:
-                      Colors.brown.shade300.withOpacity(0.8), // Arka plan rengi
-                ),
-                accountName: Text(
-                  "$_name $_surname",
-                  style: const TextStyle(
-                    color: Colors.blueGrey,
-                    fontFamily: 'Handwriting',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+          drawer: Drawer(
+            backgroundColor: Colors.brown.shade100.withOpacity(0.8),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  otherAccountsPicturesSize: const Size.square(63),
+                  otherAccountsPictures: [
+                    Padding(
+                        padding: const EdgeInsets.only(right: 1),
+                        child: theme(
+                          themeNotifier,
+                        )),
+                  ],
+                  currentAccountPictureSize: const Size(60, 60),
+                  decoration: BoxDecoration(
+                    color: Colors.brown.shade300
+                        .withOpacity(0.8), // Arka plan rengi
+                  ),
+                  accountName: Text(
+                    "$_name $_surname",
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontFamily: 'Handwriting',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  accountEmail: Text(
+                    _email,
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontFamily: 'Handwriting',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  currentAccountPicture: const CircleAvatar(
+                    radius: 100,
+                    backgroundImage: AssetImage('assets/indir.jpeg'),
                   ),
                 ),
-                accountEmail: Text(
-                  _email,
-                  style: const TextStyle(
-                    color: Colors.blueGrey,
-                    fontFamily: 'Handwriting',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
+                ListTile(
+                  leading: const Icon(Icons.home),
+                  title: const Text('Ana Səhifə'),
+                  onTap: () {
+                    // Ana sayfaya gitmek için yapılacak işlemler burada
+                    Navigator.pop(context); // Drawer'ı kapat
+                  },
                 ),
-                currentAccountPicture: const CircleAvatar(
-                  radius: 100,
-                  backgroundImage: AssetImage('assets/indir.jpeg'),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Ayarlar'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsPage(),
+                      ),
+                    );
+                  },
                 ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Ana Səhifə'),
-                onTap: () {
-                  // Ana sayfaya gitmek için yapılacak işlemler burada
-                  Navigator.pop(context); // Drawer'ı kapat
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Ayarlar'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
-                    ),
-                  );
-                },
-              ),
 
-              ListTile(
-                leading: const Icon(FontAwesomeIcons.universalAccess),
-                title: const Text('İcazələri yoxla'),
-                onTap: () async {
-                  await requestPermissions();
-                },
-              ),
-              const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
-              ListTile(
-                leading: const Icon(Icons.exit_to_app),
-                title: const Text('Çıxış'),
-                onTap: () {
-                  saveBoolValue("logIn", false);
+                ListTile(
+                  leading: const Icon(FontAwesomeIcons.universalAccess),
+                  title: const Text('İcazələri yoxla'),
+                  onTap: () async {
+                    await requestPermissions();
+                  },
+                ),
+                const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
+                ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: const Text('Çıxış'),
+                  onTap: () {
+                    saveBoolValue("logIn", false);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                  );
-                },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.brown.shade400.withOpacity(0.3),
+            currentIndex: _currentIndex,
+            onTap: (int index) {
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.ease,
+              );
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Ana səhifə',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.business),
+                label: 'Siyahı hazırla',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.work),
+                label: 'Yeni nömrələr',
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.brown.shade400.withOpacity(0.3),
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.ease,
-            );
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Ana səhifə',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Siyahı hazırla',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              label: 'Yeni nömrələr',
-            ),
-          ],
-        ),
-        appBar: AppBar(
-          // automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 65,
-          centerTitle: true,
-          actions: [
-            Padding(
+          appBar: AppBar(
+            // automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            toolbarHeight: 65,
+            centerTitle: true,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Badge(
+                  isLabelVisible: _notifStatus,
+                  padding: const EdgeInsets.all(8),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => notification(
+                                message: _message,
+                                notifStatus: true,
+                                title: _title),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.bell,
+                      )),
+                ),
+              )
+            ],
+            title: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Badge(
-                isLabelVisible: _notifStatus,
-                padding: const EdgeInsets.all(8),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => notification(
-                              message: _message,
-                              notifStatus: true,
-                              title: _title),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      FontAwesomeIcons.bell,
-                    )),
+              child: Text(
+                'Number Seller',
+                style: TextStyle(
+                    fontFamily: 'Handwriting',
+                    fontSize: 30,
+                    color: themeNotifier.isDark
+                        ? Colors.brown.withOpacity(0.9)
+                        : Colors.blueGrey),
               ),
-            )
-          ],
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Number Seller',
-              style: TextStyle(
-                  fontFamily: 'Handwriting',
-                  fontSize: 30,
-                  color: themeNotifier.isDark
-                      ? Colors.brown.withOpacity(0.9)
-                      : Colors.blueGrey),
             ),
           ),
-        ),
-        body: PageView(
-          controller: _pageController,
-          children: [
-            Column(children: [
-              FutureBuilder(
-                future:
-                    Future.wait([autoKey.getKey(), equalDeviceID(_deviceID)]),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: LinearProgressIndicator(),
-                    ); // Yükleniyor göstergesi
-                  } else if (snapshot.hasError) {
-                    return Text("Hata: ${snapshot.error}");
-                  } else {
-                    Object isEqual = snapshot.data![1];
-                    dataUpdate("settings", 'keys',
-                        {'nar': 'Bearer ${snapshot.data?[0]}'});
-                    if (isEqual as bool) {
-                      return work_info(
-                        name: _name,
-                        surname: _surname,
-                        registerDate: _registerDate,
-                        updateStatus: _updateStatus,
-                        updateTitle: _updateTitle,
-                        updateContent: _updateContent,
-                        updateUrl: _updateLink,
-                        isActive: _isActive,
-                        updateVersion: [_version, real_version],
-                      );
-                    } else {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 200),
-                          child: my_container(
-                            color: Colors.brown.shade500.withOpacity(0.5),
-                            child: const Text(
-                              "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontFamily: "Lobster",
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+          body: const work_body());
+    });
+  }
+}
+
+class work_body extends StatefulWidget {
+  const work_body({super.key});
+
+  @override
+  State<work_body> createState() => _work_bodyState();
+}
+
+class _work_bodyState extends State<work_body> {
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller: _pageController,
+      children: [
+        Column(children: [
+          FutureBuilder(
+            future: Future.wait([autoKey.getKey(), equalDeviceID(_deviceID)]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: LinearProgressIndicator(),
+                ); // Yükleniyor göstergesi
+              } else if (snapshot.hasError) {
+                return Text("Hata: ${snapshot.error}");
+              } else {
+                Object isEqual = snapshot.data![1];
+                dataUpdate(
+                    "settings", 'keys', {'nar': 'Bearer ${snapshot.data?[0]}'});
+                //Nar keyi burdan gelir
+                if (isEqual as bool) {
+                  return work_info(
+                    name: _name,
+                    surname: _surname,
+                    registerDate: _registerDate,
+                    updateStatus: _updateStatus,
+                    updateTitle: _updateTitle,
+                    updateContent: _updateContent,
+                    updateUrl: _updateLink,
+                    isActive: _isActive,
+                    updateVersion: [_version, real_version],
+                  );
+                } else {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 200),
+                      child: my_container(
+                        color: Colors.brown.shade500.withOpacity(0.5),
+                        child: const Text(
+                          "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: "Lobster",
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    }
-                  }
-                },
+                      ),
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ]),
+        _isActive
+            ? const number_home()
+            : const Center(
+                child: Text("Sizin hesab aktiv degil"),
               ),
-            ]),
-            _isActive
-                ? const number_home()
-                : const Center(
-                    child: Text("Sizin hesab aktiv degil"),
-                  ),
-            _isActive
-                ? const Center(
-                    child: Text("Yaxın gələcəkdə :)"),
-                  )
-                : const Center(
-                    child: Text("Sizin hesab aktiv degil"),
-                  ),
-          ],
-          onPageChanged: (int index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        ),
-      );
-    });
+        _isActive
+            ? const Center(
+                child: Text("Yaxın gələcəkdə :)"),
+              )
+            : const Center(
+                child: Text("Sizin hesab aktiv degil"),
+              ),
+      ],
+      onPageChanged: (int index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+    );
   }
 }
 
