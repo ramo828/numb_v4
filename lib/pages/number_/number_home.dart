@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/network.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
@@ -75,26 +74,6 @@ class _number_homeState extends State<number_home> {
     return Consumer<ModelTheme>(
       builder: (context, ModelTheme themeNotifier, child) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
-            toolbarHeight: 65,
-            centerTitle: true,
-            actions: [
-              theme(themeNotifier),
-            ],
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Number Seller',
-                style: TextStyle(
-                    fontFamily: 'Handwriting',
-                    fontSize: 30,
-                    color: themeNotifier.isDark
-                        ? Colors.brown.withOpacity(0.9)
-                        : Colors.blueGrey),
-              ),
-            ),
-          ),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Container(

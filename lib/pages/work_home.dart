@@ -30,6 +30,7 @@ class _home_pageState extends State<home_page> {
   StreamSubscription<DocumentSnapshot>? _keysSubscription;
   StreamSubscription<DocumentSnapshot>? _notificationSubscription;
   AutoKey autoKey = AutoKey("824-0038", "samir9995099");
+  final PageController _pageController = PageController();
   Map<String, dynamic>? _keysData;
   Map<String, dynamic>? _notificationData;
   Map<String, dynamic>? _updateData;
@@ -55,6 +56,7 @@ class _home_pageState extends State<home_page> {
   String _narKey = "";
   String _version = "";
   String _title = "";
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -242,34 +244,28 @@ class _home_pageState extends State<home_page> {
             ],
           ),
         ),
-        bottomNavigationBar: NavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.brown.shade400.withOpacity(0.3),
-          height: 25,
-          destinations: [
-            OutlinedButton(
-              child: const Icon(
-                Icons.home,
-                color: Colors.brown,
-              ),
-              onPressed: () {},
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.ease,
+            );
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Ana səhifə',
             ),
-            OutlinedButton(
-              onPressed: _isActive
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const number_home(),
-                        ),
-                      );
-                    }
-                  : () {
-                      showSnackBar(context, "Sizin hesab aktiv degil", 2);
-                    },
-              child: Icon(
-                Icons.list,
-                color: _isActive ? Colors.brown : Colors.black,
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'Siyahı hazırla',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work),
+              label: 'Yeni nömrələr',
             ),
           ],
         ),
@@ -315,68 +311,76 @@ class _home_pageState extends State<home_page> {
             ),
           ),
         ),
-        body: Column(
+        body: PageView(
+          controller: _pageController,
           children: [
-            FutureBuilder<String>(
-              future: autoKey.getKey(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: LinearProgressIndicator());
-                } else if (snapshot.hasData) {
-                  dataUpdate(
-                      "settings", 'keys', {'nar': 'Bearer ${snapshot.data}'});
-                  return const Center();
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Hata: ${snapshot.error}'));
-                }
-                return Container();
-              },
-            ),
-            FutureBuilder<bool>(
-              future: equalDeviceID(_deviceID),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  ); // Yükleniyor göstergesi
-                } else if (snapshot.hasError) {
-                  return Text("Hata: ${snapshot.error}");
-                } else {
-                  bool isEqual = snapshot.data ?? false;
-                  if (isEqual) {
-                    return work_info(
-                      name: _name,
-                      surname: _surname,
-                      registerDate: _registerDate,
-                      updateStatus: _updateStatus,
-                      updateTitle: _updateTitle,
-                      updateContent: _updateContent,
-                      updateUrl: _updateLink,
-                      isActive: _isActive,
-                      updateVersion: [_version, real_version],
-                    );
+            Column(children: [
+              FutureBuilder(
+                future:
+                    Future.wait([autoKey.getKey(), equalDeviceID(_deviceID)]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: LinearProgressIndicator(),
+                    ); // Yükleniyor göstergesi
+                  } else if (snapshot.hasError) {
+                    return Text("Hata: ${snapshot.error}");
                   } else {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 200),
-                        child: my_container(
-                          color: Colors.brown.shade500.withOpacity(0.5),
-                          child: const Text(
-                            "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: "Lobster",
-                              fontWeight: FontWeight.bold,
+                    Object isEqual = snapshot.data![1];
+                    dataUpdate("settings", 'keys',
+                        {'nar': 'Bearer ${snapshot.data?[0]}'});
+                    if (isEqual as bool) {
+                      return work_info(
+                        name: _name,
+                        surname: _surname,
+                        registerDate: _registerDate,
+                        updateStatus: _updateStatus,
+                        updateTitle: _updateTitle,
+                        updateContent: _updateContent,
+                        updateUrl: _updateLink,
+                        isActive: _isActive,
+                        updateVersion: [_version, real_version],
+                      );
+                    } else {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 200),
+                          child: my_container(
+                            color: Colors.brown.shade500.withOpacity(0.5),
+                            child: const Text(
+                              "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontFamily: "Lobster",
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   }
-                }
-              },
-            ),
+                },
+              ),
+            ]),
+            _isActive
+                ? const number_home()
+                : const Center(
+                    child: Text("Sizin hesab aktiv degil"),
+                  ),
+            _isActive
+                ? const Center(
+                    child: Text("Yaxın gələcəkdə :)"),
+                  )
+                : const Center(
+                    child: Text("Sizin hesab aktiv degil"),
+                  ),
           ],
+          onPageChanged: (int index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
         ),
       );
     });

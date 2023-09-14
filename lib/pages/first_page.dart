@@ -180,8 +180,6 @@ class _helloAppState extends State<helloApp> {
             onPageChanged: (int page) {
               setState(() {
                 position = page;
-                print(position);
-                print("_pageController.page: ${_pageController.page}");
               });
             },
             children: [
