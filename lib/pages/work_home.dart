@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/background/number_constant.dart';
+import 'package:number_seller/pages/number_/models/index_models.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -148,6 +149,10 @@ class _home_pageState extends State<home_page> {
   @override
   void dispose() {
     _userDataSubscription?.cancel();
+    _notificationSubscription?.cancel();
+    _userDataSubscription?.cancel();
+    _keySubscription?.cancel();
+
     super.dispose();
   }
 
@@ -162,6 +167,8 @@ class _home_pageState extends State<home_page> {
 
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
+      final indexProv = Provider.of<indexProvider>(context, listen: true);
+
       return Scaffold(
           drawer: Drawer(
             backgroundColor: Colors.brown.shade100.withOpacity(0.8),
@@ -253,11 +260,12 @@ class _home_pageState extends State<home_page> {
           ),
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.brown.shade400.withOpacity(0.3),
-            currentIndex: _currentIndex,
+            currentIndex: indexProv.index,
             onTap: (int index) {
+              print(indexProv.index);
               _pageController.animateToPage(
                 index,
-                duration: const Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 50),
                 curve: Curves.ease,
               );
             },
@@ -333,6 +341,8 @@ class work_body extends StatefulWidget {
 class _work_bodyState extends State<work_body> {
   @override
   Widget build(BuildContext context) {
+    final indexProv = Provider.of<indexProvider>(context, listen: false);
+
     return PageView(
       controller: _pageController,
       children: [
@@ -399,9 +409,7 @@ class _work_bodyState extends State<work_body> {
               ),
       ],
       onPageChanged: (int index) {
-        setState(() {
-          _currentIndex = index;
-        });
+        indexProv.updateIndex(index);
       },
     );
   }
