@@ -5,9 +5,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:number_seller/pages/active_/active_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/background/number_constant.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
+import 'package:number_seller/pages/number_/models/status_models.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
@@ -158,13 +160,17 @@ class _home_pageState extends State<home_page> {
 
   @override
   Widget build(BuildContext context) {
+    final statusProv = Provider.of<statusProvider>(context, listen: false);
     if (_logOut) {
       saveBoolValue("logIn", false);
       exit(1);
     } else {}
     saveStringList("keys", [_bakcellKey, _narKey]);
     //Bakcell ve nar keyleri burdan yuklenecek
-
+    Future.delayed(Duration.zero, () {
+      statusProv.updateStatus(_isActive);
+    });
+    // hesab aktivlik bilgisi burdan diger widgete oturulur
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       final indexProv = Provider.of<indexProvider>(context, listen: true);
@@ -262,7 +268,6 @@ class _home_pageState extends State<home_page> {
             backgroundColor: Colors.brown.shade400.withOpacity(0.3),
             currentIndex: indexProv.index,
             onTap: (int index) {
-              print(indexProv.index);
               _pageController.animateToPage(
                 index,
                 duration: const Duration(milliseconds: 50),
@@ -342,6 +347,7 @@ class _work_bodyState extends State<work_body> {
   @override
   Widget build(BuildContext context) {
     final indexProv = Provider.of<indexProvider>(context, listen: false);
+    final isStatus = Provider.of<statusProvider>(context, listen: true);
 
     return PageView(
       controller: _pageController,
@@ -395,15 +401,13 @@ class _work_bodyState extends State<work_body> {
             },
           ),
         ]),
-        _isActive
+        isStatus.status == true
             ? const number_home()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
-        _isActive
-            ? const Center(
-                child: Text("Yaxın gələcəkdə :)"),
-              )
+        isStatus.status == true
+            ? active_page()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
