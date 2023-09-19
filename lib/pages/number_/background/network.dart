@@ -24,6 +24,7 @@ class Network {
     int page,
   ) async {
     List<String> getNumberValue = [];
+    // ignore: unused_local_variable
     int counter = 0;
 
     var response = await http.get(
