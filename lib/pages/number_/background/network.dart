@@ -23,6 +23,7 @@ class Network {
     String category,
     int page,
   ) async {
+    print("GetOperation: $number");
     List<String> getNumberValue = [];
     // ignore: unused_local_variable
     int counter = 0;
@@ -66,6 +67,7 @@ class Network {
         }
       }
     } else if (response.statusCode == 500) {
+      // ignore: use_build_context_synchronously
       showSnackBar(context, "Key xətası: ${response.body}", 2);
     } else {
       print(response.statusCode);

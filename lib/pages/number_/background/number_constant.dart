@@ -154,7 +154,7 @@ class AutoKey {
       final key = jsonResponse['id_token'];
       return key.toString();
     } else {
-      throw Exception('Failed to get key');
+      throw Exception('Failed to get key ');
     }
   }
 }

@@ -246,6 +246,19 @@ class _home_pageState extends State<home_page> {
                     await requestPermissions();
                   },
                 ),
+
+                ListTile(
+                  leading: const Icon(FontAwesomeIcons.universalAccess),
+                  title: const Text('Test'),
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const active_page(),
+                      ),
+                    );
+                  },
+                ),
                 const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
