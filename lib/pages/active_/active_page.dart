@@ -80,6 +80,9 @@ class _active_pageState extends State<active_page> {
                 defaultCategory = "Hamısı";
               });
             }),
+        const SizedBox(
+          width: 15,
+        ),
         Text("Tapılan nömrə sayı: $numberLength"),
         Text(
             'İlərləmə: ${((_progress / max) * 100.0).toInt()}%'), // İlerleme değerini göster
@@ -97,6 +100,9 @@ class _active_pageState extends State<active_page> {
                     backgroundColor: Colors.brown.shade800.withOpacity(0.2)),
               )
             : Center(),
+        const SizedBox(
+          width: 15,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
