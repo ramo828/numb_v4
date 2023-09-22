@@ -4,19 +4,26 @@ Future<void> writeData(String data, String filename) async {
   // final directory =
   //     await getExternalStorageDirectory(); // Cihazın dış hafızasına erişim sağlar
   _createFolder();
-  const directory = "/sdcard/work/";
-  final file = File('$directory$filename');
-  if (file.existsSync()) {
-    File('$directory$filename').create(recursive: true);
-  }
 
-  await file.writeAsString(data);
+  try {
+    const directory = "/sdcard/work/";
+    final file = File('$directory$filename');
+    // file.deleteSync(); // Dosyayı senkron olarak sil
+    // print('Dosya başarıyla silindi');
+    if (file.existsSync()) {
+      File('$directory$filename').create(recursive: true);
+    }
+
+    await file.writeAsString(data);
+  } catch (e) {
+    print('Bir xəta baş verdi: $e');
+  }
 }
 
-Future<String> readData() async {
+Future<String> readData(String fileName) async {
   const directory = "/sdcard/work/";
   // final directory = await getExternalStorageDirectory();
-  final file = File('${directory}test.txt');
+  final file = File('$directory$fileName');
   String data = await file.readAsString();
   return data;
 }

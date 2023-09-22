@@ -3,6 +3,23 @@ import "package:number_seller/pages/number_/background/network.dart";
 import "package:number_seller/pages/number_/models/active_model.dart";
 import "package:provider/provider.dart";
 
+List<String> splitStringByNewline(String inputString) {
+  List<String> result = inputString.split('\n');
+  return result;
+}
+
+List<String> findMissingItems(List<String> newList, List<String> oldList) {
+  List<String> missingItems = [];
+
+  for (var item1 in newList) {
+    if (!oldList.contains(item1)) {
+      missingItems.add(item1);
+    }
+  }
+
+  return missingItems;
+}
+
 String formatNumber(int value) {
   if (value < 10) {
     return '00$value';
@@ -28,7 +45,9 @@ Future<List<String>> loadNumberData(
       "xxxx$numberData",
       selectedActive.selectedOperator,
       selectedActive.selectedPrefix,
-      selectedActive.selectedOperator.contains("Bakcell") ? "Hamısı" : "7077",
+      selectedActive.selectedOperator.contains("Bakcell")
+          ? "Hamısı"
+          : "GENERAL",
       counter,
     );
     counter++;
