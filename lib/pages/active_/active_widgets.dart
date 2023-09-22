@@ -7,7 +7,7 @@ class RoundedProgressBar extends StatelessWidget {
   final Color progressColor;
   final double borderRadius;
 
-  RoundedProgressBar({
+  const RoundedProgressBar({super.key, 
     required this.value,
     this.height = 10.0,
     this.backgroundColor = Colors.grey,

@@ -4,7 +4,6 @@ import 'package:number_seller/pages/active_/helper_function.dart';
 import 'package:number_seller/pages/number_/background/file_io.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
-import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:number_seller/pages/number_/number_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,7 @@ class _active_pageState extends State<active_page> {
   List<String> numbers = [];
   int max = 1000;
   bool isActive = true;
-  Duration difference = Duration();
+  Duration difference = const Duration();
   String numberStr = "";
   int counter = 0;
   int errCount = 0;
@@ -49,7 +48,7 @@ class _active_pageState extends State<active_page> {
                   statusOperation = 1;
                 }
                 defaultOperation = newValue;
-                selectedActive.updateSelectedOperation(defaultOperation!);
+                selectedActive.updateSelectedOperation(defaultOperation);
               });
             }),
         CustomDropdownButton(
@@ -81,16 +80,31 @@ class _active_pageState extends State<active_page> {
               });
             }),
         const SizedBox(
-          width: 15,
+          height: 15,
         ),
-        Text("Tapılan nömrə sayı: $numberLength"),
         Text(
-            'İlərləmə: ${((_progress / max) * 100.0).toInt()}%'), // İlerleme değerini göster
-        isActive ? Text("Keçən zaman: $difference") : Center(),
-        isActive ? Text("$counter") : Center(),
+          "Tapılan nömrə sayı: $numberLength",
+          style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+        ),
+        Text(
+          'Yüklənib: ${((_progress / max) * 100.0).toInt()}%',
+          style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+        ), // İlerleme değerini göster
+        isActive
+            ? Text(
+                "Keçən zaman: $difference",
+                style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+              )
+            : const Center(),
+        isActive
+            ? Text(
+                "Sıra: $counter",
+                style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+              )
+            : const Center(),
 
         !isActive
-            ? Container(
+            ? SizedBox(
                 width: 260,
                 height: 20,
                 child: RoundedProgressBar(
@@ -99,9 +113,9 @@ class _active_pageState extends State<active_page> {
                     value: _progress / max,
                     backgroundColor: Colors.brown.shade800.withOpacity(0.2)),
               )
-            : Center(),
+            : const Center(),
         const SizedBox(
-          width: 15,
+          height: 15,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

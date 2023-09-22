@@ -420,7 +420,7 @@ class _work_bodyState extends State<work_body> {
                 child: Text("Sizin hesab aktiv degil"),
               ),
         isStatus.status == true
-            ? active_page()
+            ? const active_page()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),

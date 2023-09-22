@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:number_seller/pages/number_/background/network.dart";
 import "package:number_seller/pages/number_/models/active_model.dart";
-import "package:number_seller/pages/number_/models/number_models.dart";
 import "package:provider/provider.dart";
 
 String formatNumber(int value) {
