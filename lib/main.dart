@@ -1,3 +1,4 @@
+import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
@@ -33,6 +34,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => statusProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ActiveProvider(),
         ),
       ],
       child: const MyApp(),

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 List<String> prefixList = [];
 
 // Initial Selected Value
+String defaultOperation = 'Köhnə baza';
 String defaultOperator = 'Bakcell';
 String defaultPrefix = '055';
 String defaultCategory = 'Hamısı';
@@ -45,6 +46,8 @@ List<String> operators = [
   'Nar',
 ];
 
+// List of items in our dropdown menu
+List<String> operation = ['Köhnə baza', 'Yeni baza', 'Hesablama'];
 // List of items in our dropdown menu
 List<String> prefixBakcell = [
   '055',
