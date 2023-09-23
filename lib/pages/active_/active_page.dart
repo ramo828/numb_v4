@@ -6,9 +6,14 @@ import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:number_seller/pages/number_/number_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class active_page extends StatefulWidget {
-  const active_page({super.key});
+  final level;
+  const active_page({
+    super.key,
+    required this.level,
+  });
 
   @override
   State<active_page> createState() => _active_pageState();
@@ -29,11 +34,25 @@ class _active_pageState extends State<active_page> {
   int statusOperation = 0;
   bool dataLoad = true;
   bool calculateStatus = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // Uygulama başladığında ekranın uyumamasını etkinleştir
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    // Sayfa kapatıldığında ekranın uyumamasını devre dışı bırak
+    WakelockPlus.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
-
+    print(widget.level);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -59,16 +78,17 @@ class _active_pageState extends State<active_page> {
             }),
         CustomDropdownButton(
             dropName: "Operator",
-            dropdownValue: defaultOperator,
-            items: operators,
+            dropdownValue: defaultOperator1,
+            items: operators1,
+            disableItem: (widget.level > 2) ? "" : "Bakcell",
             onChanged: (String? newValue) {
               selectedActive.updateSelectedOperator(newValue!);
               setState(() {
                 defaultOperator = newValue;
-                if (defaultOperator.contains("Bakcell")) {
-                  defaultPrefix = "055";
-                } else {
+                if (defaultOperator.contains("Nar")) {
                   defaultPrefix = "070";
+                } else {
+                  defaultPrefix = "077";
                 }
                 selectedActive.updateSelectedPrefix(defaultPrefix);
               });
@@ -88,12 +108,11 @@ class _active_pageState extends State<active_page> {
         const SizedBox(
           height: 15,
         ),
-        dataLoad
-            ? Text(
-                "Tapılan nömrə sayı: $numberLength",
-                style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
-              )
-            : const Center(),
+
+        Text(
+          "Tapılan nömrə sayı: $numberLength",
+          style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+        ),
         Text(
           'Yüklənib: ${((_progress / max) * 100.0).toInt()}%',
           style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
@@ -141,6 +160,8 @@ class _active_pageState extends State<active_page> {
               onPressed: isActive
                   ? () async {
                       if (dataLoad) {
+                        WakelockPlus.enable();
+
                         setState(() {
                           numbers.clear();
                           emergencyStop = false;
@@ -194,8 +215,10 @@ class _active_pageState extends State<active_page> {
                           difference = endTime
                               .difference(startTime); // Süreyi hesaplayın
                         });
+                        WakelockPlus.disable();
                       } else {
                         // Calculate
+                        WakelockPlus.enable();
 
                         List<String> missingItems = [];
                         List<String> nData =
@@ -206,17 +229,20 @@ class _active_pageState extends State<active_page> {
                           max = nData.length;
                           numberStr = "";
                           startStatus = true;
+                          numberLength = 0;
                         });
                         List<String> oData =
                             splitStringByNewline(await readData("oldData"));
                         for (var item1 in nData) {
                           if (!oData.contains(item1)) {
                             missingItems.add(item1);
+                            setState(() {
+                              numberLength++;
+                            });
                           }
                           setState(() {
                             _progress++;
                           });
-                          print(_progress);
                         }
                         for (var new_number in missingItems) {
                           numberStr += "$new_number\n";
@@ -227,6 +253,7 @@ class _active_pageState extends State<active_page> {
                           isActive = true;
                           startStatus = false;
                         });
+                        WakelockPlus.disable();
                       }
                     }
                   : null,

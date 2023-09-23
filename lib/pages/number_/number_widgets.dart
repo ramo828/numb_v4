@@ -8,7 +8,11 @@ List<String> prefixList = [];
 // Initial Selected Value
 String defaultOperation = 'Köhnə baza';
 String defaultOperator = 'Bakcell';
+String defaultOperator1 = 'Nar';
+
 String defaultPrefix = '055';
+String defaultPrefix1 = '070';
+
 String defaultCategory = 'Hamısı';
 
 // List<String> categoryDefault = ['Hamısı'];
@@ -44,6 +48,11 @@ List<String> categoryNar = [
 List<String> operators = [
   'Bakcell',
   'Nar',
+];
+// List of items in our dropdown menu
+List<String> operators1 = [
+  'Nar',
+  'Bakcell',
 ];
 
 // List of items in our dropdown menu

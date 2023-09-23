@@ -34,7 +34,7 @@ String _name = '';
 String _surname = '';
 String _registerDate = '';
 String _email = '';
-
+int _level = 0;
 bool _logOut = false;
 bool _notifStatus = false;
 String _message = "";
@@ -91,6 +91,7 @@ class _home_pageState extends State<home_page> {
             _email = userData['email'];
             _isActive = userData['isActive'];
             _isAdmin = userData['isAdmin'];
+            _level = userData['level'];
           });
         } else {
           setState(() {
@@ -247,18 +248,6 @@ class _home_pageState extends State<home_page> {
                   },
                 ),
 
-                ListTile(
-                  leading: const Icon(FontAwesomeIcons.universalAccess),
-                  title: const Text('Test'),
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const active_page(),
-                      ),
-                    );
-                  },
-                ),
                 const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
@@ -361,7 +350,6 @@ class _work_bodyState extends State<work_body> {
   Widget build(BuildContext context) {
     final indexProv = Provider.of<indexProvider>(context, listen: false);
     final isStatus = Provider.of<statusProvider>(context, listen: true);
-
     return PageView(
       controller: _pageController,
       children: [
@@ -414,13 +402,15 @@ class _work_bodyState extends State<work_body> {
             },
           ),
         ]),
-        isStatus.status == true
+        isStatus.status == true && _level != 2
             ? const number_home()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
-        isStatus.status == true
-            ? const active_page()
+        isStatus.status == true && _level >= 2
+            ? active_page(
+                level: _level,
+              )
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),

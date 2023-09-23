@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ActiveProvider extends ChangeNotifier {
-  String _selectedOperator = 'Bakcell';
-  String _selectedPrefix = '055';
+  String _selectedOperator = 'Nar';
+  String _selectedPrefix = '070';
   String _selectedOperation = "Köhnə baza";
 
   String get selectedOperator => _selectedOperator;
