@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 Future<void> writeData(String data, String filename) async {
   // final directory =
@@ -18,6 +19,22 @@ Future<void> writeData(String data, String filename) async {
   } catch (e) {
     print('Bir xəta baş verdi: $e');
   }
+}
+
+Future<void> writeToDisk(List<String> data, String dosyaYolu) async {
+  final String contents =
+      data.join('\n'); // Verileri yeni satırlarla birleştirin.
+  await compute(
+      (String dosyaIcerigi) => saveData(dosyaIcerigi, dosyaYolu), contents);
+}
+
+void saveData(String data, String dosyaYolu) {
+  final File file = File('/sdcard/work/$dosyaYolu');
+  if (file.existsSync()) {
+    file.deleteSync(); // Dosyayı senkron olarak sil
+  }
+  file.writeAsStringSync(data.replaceAll('\n\n', '\n'),
+      mode: FileMode.append); // Verileri dosyaya yazın.
 }
 
 Future<String> readData(String fileName) async {

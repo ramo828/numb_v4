@@ -161,22 +161,15 @@ Future<void> requestPermissions() async {
   var statusManageExternalStorage =
       await Permission.manageExternalStorage.status;
 
-  if (!statusStorage.isGranted) {
-    if (statusStorage.isPermanentlyDenied) {
-      // Kullanıcı bu izni kalıcı olarak reddetti, ayarlara yönlendirin.
-      print("Icaze verilmeyib");
-    } else {
-      await Permission.storage.request();
-    }
-  }
-
-  if (!statusManageExternalStorage.isGranted) {
-    if (statusManageExternalStorage.isPermanentlyDenied) {
-      // Kullanıcı bu izni kalıcı olarak reddetti, ayarlara yönlendirin.
-      print("Icaze verilmeyib");
-    } else {
-      await Permission.manageExternalStorage.request();
-    }
+  if (statusStorage.isGranted && statusManageExternalStorage.isGranted) {
+    // İzinler verildi, istediğiniz işlemi burada gerçekleştirin.
+    print("İzinler verildi. İşlem yapılabilir.");
+    // Örneğin, dosya yazma işlemini burada gerçekleştirebilirsiniz.
+  } else {
+    await Permission.storage.request();
+    await Permission.manageExternalStorage.request();
+    // İzinler verilmedi, kullanıcıdan izin istemek yerine işlemi iptal edebilirsiniz.
+    print("İzinler verilmedi. İşlem iptal edildi.");
   }
 }
 

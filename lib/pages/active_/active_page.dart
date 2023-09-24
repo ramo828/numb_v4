@@ -34,6 +34,7 @@ class _active_pageState extends State<active_page> {
   int statusOperation = 0;
   bool dataLoad = true;
   bool calculateStatus = false;
+  bool test = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -52,7 +53,6 @@ class _active_pageState extends State<active_page> {
   @override
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
-    print(widget.level);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -84,25 +84,26 @@ class _active_pageState extends State<active_page> {
             onChanged: (String? newValue) {
               selectedActive.updateSelectedOperator(newValue!);
               setState(() {
-                defaultOperator = newValue;
-                if (defaultOperator.contains("Nar")) {
-                  defaultPrefix = "070";
+                defaultOperator1 = newValue;
+                if (defaultOperator1.contains("Nar")) {
+                  defaultPrefix1 = "070";
                 } else {
-                  defaultPrefix = "077";
+                  defaultPrefix1 = "077";
                 }
                 selectedActive.updateSelectedPrefix(defaultPrefix);
               });
             }),
         CustomDropdownButton(
             dropName: "Prefix",
-            dropdownValue: defaultPrefix,
-            items:
-                defaultOperator.contains("Bakcell") ? prefixBakcell : prefixNar,
+            dropdownValue: defaultPrefix1,
+            items: defaultOperator1.contains("Bakcell")
+                ? prefixBakcell
+                : prefixNar,
             onChanged: (String? newValue) {
               selectedActive.updateSelectedPrefix(newValue!);
               setState(() {
-                defaultPrefix = newValue;
-                defaultCategory = "Hamısı";
+                defaultPrefix1 = newValue;
+                // defaultCategory = "Hamısı";
               });
             }),
         const SizedBox(
@@ -123,12 +124,7 @@ class _active_pageState extends State<active_page> {
                 style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
               )
             : const Center(),
-        !isActive && dataLoad
-            ? Text(
-                "Sıra: $counter",
-                style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
-              )
-            : const Center(),
+
         !dataLoad
             ? Text(
                 calculateStatus ? "Hesablanır" : "Hesablandı",
@@ -138,6 +134,15 @@ class _active_pageState extends State<active_page> {
                     color: calculateStatus ? Colors.pink : Colors.green),
               )
             : const Center(),
+        test
+            ? Text(
+                test ? "Yazılır $counter" : "Yazıldı $counter",
+                style: TextStyle(
+                    fontFamily: 'Lobster',
+                    fontSize: 17,
+                    color: test ? Colors.pink : Colors.green),
+              )
+            : Center(),
 
         !isActive || !dataLoad
             ? SizedBox(
@@ -150,6 +155,12 @@ class _active_pageState extends State<active_page> {
                     backgroundColor: Colors.brown.shade800.withOpacity(0.2)),
               )
             : const Center(),
+        test
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: LinearProgressIndicator(),
+              )
+            : Center(),
         const SizedBox(
           height: 15,
         ),
@@ -195,18 +206,27 @@ class _active_pageState extends State<active_page> {
                             _progress++;
                           });
                         }
-                        isActive = true;
-                        for (String numb in numbers) {
-                          if (emergencyStop) break;
-                          numberStr += "$numb\n";
-                          setState(() {
-                            counter++;
-                          });
-                        }
+
                         if (statusOperation == 0) {
-                          await writeData(numberStr, "oldData");
+                          isActive = true;
+                          setState(() {
+                            test = true;
+                          });
+                          await writeToDisk(numbers, "oldData");
+
+                          setState(() {
+                            test = false;
+                          });
                         } else if (statusOperation == 1) {
-                          await writeData(numberStr, "newData");
+                          isActive = true;
+                          setState(() {
+                            test = true;
+                          });
+                          await writeToDisk(numbers, "newData");
+
+                          setState(() {
+                            test = false;
+                          });
                         }
                         startStatus = false;
                         final endTime =
@@ -219,35 +239,7 @@ class _active_pageState extends State<active_page> {
                       } else {
                         // Calculate
                         WakelockPlus.enable();
-
-                        List<String> missingItems = [];
-                        List<String> nData =
-                            splitStringByNewline(await readData("newData"));
-                        setState(() {
-                          calculateStatus = true;
-                          _progress = 0;
-                          max = nData.length;
-                          numberStr = "";
-                          startStatus = true;
-                          numberLength = 0;
-                        });
-                        List<String> oData =
-                            splitStringByNewline(await readData("oldData"));
-                        for (var item1 in nData) {
-                          if (!oData.contains(item1)) {
-                            missingItems.add(item1);
-                            setState(() {
-                              numberLength++;
-                            });
-                          }
-                          setState(() {
-                            _progress++;
-                          });
-                        }
-                        for (var new_number in missingItems) {
-                          numberStr += "$new_number\n";
-                        }
-                        await writeData(numberStr, "yeni_nomreler.txt");
+                        await calcProcessing();
                         setState(() {
                           calculateStatus = false;
                           isActive = true;
@@ -288,5 +280,32 @@ class _active_pageState extends State<active_page> {
         ),
       ],
     );
+  }
+
+  Future<void> calcProcessing() async {
+    List<String> missingItems = [];
+    List<String> nData = splitStringByNewline(await readData("newData"));
+    setState(() {
+      calculateStatus = true;
+      _progress = 0;
+      max = nData.length;
+      numberStr = "";
+      startStatus = true;
+      numberLength = 0;
+    });
+    List<String> oData = splitStringByNewline(await readData("oldData"));
+    for (var item1 in nData) {
+      if (!oData.contains(item1)) {
+        missingItems.add(item1);
+        setState(() {
+          numberLength++;
+        });
+        await Future.delayed(Duration.zero);
+      }
+      setState(() {
+        _progress++;
+      });
+    }
+    writeToDisk(missingItems, "yeni_nomreler.txt");
   }
 }
