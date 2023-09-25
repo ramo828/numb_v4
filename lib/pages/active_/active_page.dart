@@ -283,7 +283,7 @@ class _active_pageState extends State<active_page> {
   }
 
   Future<void> calcProcessing() async {
-    List<String> missingItems = [];
+    Set<String> missingItems = Set<String>();
     List<String> nData = splitStringByNewline(await readData("newData"));
     setState(() {
       calculateStatus = true;
@@ -293,7 +293,8 @@ class _active_pageState extends State<active_page> {
       startStatus = true;
       numberLength = 0;
     });
-    List<String> oData = splitStringByNewline(await readData("oldData"));
+    Set<String> oData =
+        Set<String>.from(splitStringByNewline(await readData("oldData")));
     for (var item1 in nData) {
       if (!oData.contains(item1)) {
         missingItems.add(item1);
@@ -306,6 +307,6 @@ class _active_pageState extends State<active_page> {
         _progress++;
       });
     }
-    writeToDisk(missingItems, "yeni_nomreler.txt");
+    writeToDisk(missingItems.toList(), "yeni_nomreler.txt");
   }
 }
