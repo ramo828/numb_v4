@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:logger/logger.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
@@ -10,9 +13,15 @@ import 'pages/number_/background/firebase_options.dart'; // Firebase yapılandı
 import 'pages/number_/models/model_theme.dart'; // ModelTheme'ı içeren dosyanızı ekleyin
 import 'pages/first_page.dart';
 
+var logger = Logger(
+  printer: PrettyPrinter(),
+  output: FileOutput(file: File("/sdcard/work/data.log")),
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  logger.d("Program başladı");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

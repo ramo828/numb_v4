@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:number_seller/main.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/register_page.dart';
 import 'package:number_seller/pages/work_home.dart';
@@ -88,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       errorMsg = "$e";
+      logger.e(errorMsg);
     } finally {
       setState(() {
         isLoading = false; // İşlem tamamlandığında göstergesini kaldır

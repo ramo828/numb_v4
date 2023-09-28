@@ -14,6 +14,7 @@ String defaultPrefix = '055';
 String defaultPrefix1 = '070';
 
 String defaultCategory = 'Hamısı';
+String defaultCategory1 = 'Hamısı';
 
 // List<String> categoryDefault = ['Hamısı'];
 List<String> category055 = [
@@ -32,6 +33,35 @@ List<String> category099 = [
 ];
 
 List<String> categoryNar = [
+  'GENERAL',
+  'Prestige',
+  'Prestige1',
+  'Prestige2',
+  'Prestige3',
+  'Prestige4',
+  'Prestige5',
+  'Prestige6',
+  'Prestige7',
+  'Prestige8',
+  'Hamısı',
+];
+
+List<String> category0551 = [
+  'Hamısı',
+  'Sadə',
+  'Xüsusi 1',
+  'Xüsusi 2',
+];
+List<String> category0991 = [
+  'Hamısı',
+  'Sadə',
+  'Bürünc',
+  'Gümüş',
+  'Qızıl',
+  'Platin'
+];
+
+List<String> categoryNar1 = [
   'GENERAL',
   'Prestige',
   'Prestige1',
@@ -63,6 +93,15 @@ List<String> prefixBakcell = [
   '099',
 ];
 List<String> prefixNar = [
+  '070',
+  '077',
+];
+
+List<String> prefixBakcell1 = [
+  '055',
+  '099',
+];
+List<String> prefixNar1 = [
   '070',
   '077',
 ];

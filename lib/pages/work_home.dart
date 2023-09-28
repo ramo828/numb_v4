@@ -44,6 +44,7 @@ String _bakcellKey = "";
 String _narKey = "";
 String _version = "";
 String _title = "";
+Object isEqual = false;
 StreamSubscription<DocumentSnapshot>? _notificationSubscription;
 StreamSubscription<DocumentSnapshot>? _keySubscription;
 StreamSubscription<DocumentSnapshot>? _updateSubscription;
@@ -364,7 +365,7 @@ class _work_bodyState extends State<work_body> {
               } else if (snapshot.hasError) {
                 return Text("Hata: ${snapshot.error}");
               } else {
-                Object isEqual = snapshot.data![1];
+                isEqual = snapshot.data![1];
                 dataUpdate(
                     "settings", 'keys', {'nar': 'Bearer ${snapshot.data?[0]}'});
                 //Nar keyi burdan gelir
@@ -381,36 +382,25 @@ class _work_bodyState extends State<work_body> {
                     updateVersion: [_version, real_version],
                   );
                 } else {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 200),
-                      child: my_container(
-                        color: Colors.brown.shade500.withOpacity(0.5),
-                        child: const Text(
-                          "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontFamily: "Lobster",
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
+                  return const notAccess();
                 }
               }
             },
           ),
         ]),
         isStatus.status == true && _level != 2
-            ? const number_home()
+            ? isEqual as bool
+                ? const number_home()
+                : const notAccess()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
         isStatus.status == true && _level >= 2
-            ? active_page(
-                level: _level,
-              )
+            ? isEqual as bool
+                ? active_page(
+                    level: _level,
+                  )
+                : const notAccess()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
@@ -418,6 +408,32 @@ class _work_bodyState extends State<work_body> {
       onPageChanged: (int index) {
         indexProv.updateIndex(index);
       },
+    );
+  }
+}
+
+class notAccess extends StatelessWidget {
+  const notAccess({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 200),
+        child: my_container(
+          color: Colors.brown.shade500.withOpacity(0.5),
+          child: const Text(
+            "Siz bu hesabı işlədə bilməzsiniz. Bu hesab başqa cihaza aitdir",
+            style: TextStyle(
+              fontSize: 30,
+              fontFamily: "Lobster",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:number_seller/main.dart';
 import 'package:number_seller/pages/number_/background/network.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
@@ -189,28 +190,35 @@ class _number_homeState extends State<number_home> {
                           loading.okay
                               ? OutlinedButton(
                                   onPressed: () async {
-                                    String filePath = '';
-                                    if (selectedOperator.selectedFileType
-                                        .contains("Text")) {
-                                      filePath = '/sdcard/work/numberList.txt';
-                                    } else if (selectedOperator
-                                            .selectedFileType ==
-                                        "VCF") {
-                                      filePath = '/sdcard/work/contact.vcf';
-                                    } else if (selectedOperator
-                                            .selectedFileType ==
-                                        "VCF(Zip)") {
-                                      filePath = '/sdcard/work/contact.vcf.zip';
-                                    }
-                                    print(selectedOperator.selectedFileType);
-                                    final result = await Share.shareXFiles(
-                                      <XFile>[XFile(filePath)],
-                                      text: 'RamoSoft',
-                                      subject: 'Nömrələr',
-                                    );
+                                    try {
+                                      String filePath = '';
+                                      if (selectedOperator.selectedFileType
+                                          .contains("Text")) {
+                                        filePath =
+                                            '/sdcard/work/numberList.txt';
+                                      } else if (selectedOperator
+                                              .selectedFileType ==
+                                          "VCF") {
+                                        filePath = '/sdcard/work/contact.vcf';
+                                      } else if (selectedOperator
+                                              .selectedFileType ==
+                                          "VCF(Zip)") {
+                                        filePath =
+                                            '/sdcard/work/contact.vcf.zip';
+                                      }
+                                      print(selectedOperator.selectedFileType);
+                                      final result = await Share.shareXFiles(
+                                        <XFile>[XFile(filePath)],
+                                        text: 'RamoSoft',
+                                        subject: 'Nömrələr',
+                                      );
 
-                                    if (result.status ==
-                                        ShareResultStatus.success) {}
+                                      if (result.status ==
+                                          ShareResultStatus.success) {}
+                                    } catch (e) {
+                                      print(e);
+                                      logger.e(e);
+                                    }
                                   },
                                   child: const Row(
                                     children: [

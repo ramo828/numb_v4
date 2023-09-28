@@ -46,8 +46,10 @@ Future<List<String>> loadNumberData(
       selectedActive.selectedOperator,
       selectedActive.selectedPrefix,
       selectedActive.selectedOperator.contains("Bakcell")
-          ? "Hamısı"
-          : "GENERAL",
+          ? selectedActive.selectedCategory
+          : selectedActive.selectedCategory.contains("Hamısı")
+              ? ""
+              : selectedActive.selectedCategory,
       counter,
     );
     counter++;
