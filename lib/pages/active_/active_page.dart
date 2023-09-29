@@ -41,6 +41,7 @@ class _active_pageState extends State<active_page> {
   bool calculateStatus = false;
   bool test = false;
   bool shareStatus = false;
+  Directory appDocDir = Directory('');
   @override
   void initState() {
     // TODO: implement initState
@@ -62,6 +63,22 @@ class _active_pageState extends State<active_page> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        FutureBuilder<Directory>(
+          future: getApplicationDocumentsDirectory(),
+          builder: (BuildContext context, AsyncSnapshot<Directory> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Future hala çalışıyor, bekleme gösterebilirsiniz.
+              return const Center();
+            } else if (snapshot.hasError) {
+              // Hata oluştu, kullanıcıya hata mesajını gösterebilirsiniz.
+              return Text('Hata: ${snapshot.error}');
+            } else {
+              // Başarıyla tamamlandı, Directory nesnesini kullanabilirsiniz.
+              appDocDir = snapshot.data as Directory;
+              return const Center();
+            }
+          },
+        ),
         CustomDropdownButton(
             dropName: "Əməliyyat",
             dropdownValue: defaultOperation,
@@ -193,9 +210,6 @@ class _active_pageState extends State<active_page> {
                 OutlinedButton(
                   onPressed: isActive
                       ? () async {
-                          Directory appDocDir =
-                              await getApplicationDocumentsDirectory();
-
                           try {
                             if (dataLoad) {
                               WakelockPlus.enable();
@@ -241,7 +255,6 @@ class _active_pageState extends State<active_page> {
                                 setState(() {
                                   test = true;
                                 });
-                                // await writeToDisk(numbers, "oldData");
                                 await writeToDisk(numbers,
                                     "${appDocDir.path}/flutter_assets/oldData");
                                 setState(() {
@@ -252,7 +265,6 @@ class _active_pageState extends State<active_page> {
                                 setState(() {
                                   test = true;
                                 });
-                                // await writeToDisk(numbers, "newData");
                                 await writeToDisk(numbers,
                                     "${appDocDir.path}/flutter_assets/newData");
                                 setState(() {
@@ -269,9 +281,11 @@ class _active_pageState extends State<active_page> {
                               WakelockPlus.disable();
                             } else {
                               // Calculate
+
                               WakelockPlus.enable();
                               setState(() {
                                 shareStatus = false;
+                                isActive = false;
                               });
                               await calcProcessing();
 
@@ -285,7 +299,7 @@ class _active_pageState extends State<active_page> {
                             }
                           } catch (e) {
                             logger.e(e);
-                            print(e);
+                            showSnackBar(context, e.toString(), 3);
                           }
                         }
                       : null,
@@ -322,9 +336,6 @@ class _active_pageState extends State<active_page> {
                 ? OutlinedButton(
                     onPressed: () async {
                       try {
-                        Directory appDocDir =
-                            await getApplicationDocumentsDirectory();
-
                         final res = await Share.shareXFiles(
                           <XFile>[
                             XFile(
@@ -337,10 +348,12 @@ class _active_pageState extends State<active_page> {
                         if (res.status == ShareResultStatus.success) {}
                       } catch (e) {
                         logger.e(e);
+                        showSnackBar(context, e.toString(), 4);
                         print(e);
                       }
                     },
                     child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.share),
                         Text(
@@ -348,8 +361,18 @@ class _active_pageState extends State<active_page> {
                           style: TextStyle(fontFamily: 'Lobster'),
                         )
                       ],
-                    ))
-                : const Center()
+                    ),
+                  )
+                : const Center(),
+            shareStatus
+                ? Text(
+                    "Yazıldı: ${appDocDir.path}/flutter_assets",
+                    style: const TextStyle(
+                      fontFamily: "Lobster",
+                      fontSize: 8,
+                    ),
+                  )
+                : const Center(),
           ],
         ),
       ],
@@ -357,34 +380,42 @@ class _active_pageState extends State<active_page> {
   }
 
   Future<void> calcProcessing() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    ls("${appDocDir.path}/flutter_assets");
-    Set<String> missingItems = <String>{};
-    List<String> nData =
-        splitStringByNewline(await readData("flutter_assets/newData"));
-    setState(() {
-      calculateStatus = true;
-      _progress = 0;
-      max = nData.length;
-      numberStr = "";
-      startStatus = true;
-      numberLength = 0;
-    });
-    Set<String> oData = Set<String>.from(
-        splitStringByNewline(await readData("flutter_assets/oldData")));
-    for (var item1 in nData) {
-      if (!oData.contains(item1)) {
-        missingItems.add(item1);
-        setState(() {
-          numberLength++;
-        });
-        await Future.delayed(Duration.zero);
-      }
+    try {
+      ls("${appDocDir.path}/flutter_assets");
+      Set<String> missingItems = <String>{};
+      List<String> nData =
+          splitStringByNewline(await readData("flutter_assets/newData"));
       setState(() {
-        _progress++;
+        calculateStatus = true;
+        _progress = 0;
+        max = nData.length;
+        numberStr = "";
+        startStatus = true;
+        numberLength = 0;
       });
+      Set<String> oData = Set<String>.from(
+          splitStringByNewline(await readData("flutter_assets/oldData")));
+      for (var item1 in nData) {
+        if (emergencyStop) {
+          emergencyStop = false;
+          break;
+        }
+
+        if (!oData.contains(item1)) {
+          missingItems.add(item1);
+          setState(() {
+            numberLength++;
+          });
+          await Future.delayed(Duration.zero);
+        }
+        setState(() {
+          _progress++;
+        });
+      }
+      await writeToDisk(missingItems.toList(),
+          "${appDocDir.path}/flutter_assets/yeni_nomreler.txt");
+    } catch (e) {
+      showSnackBar(context, e.toString(), 4);
     }
-    await writeToDisk(missingItems.toList(),
-        "${appDocDir.path}/flutter_assets/yeni_nomreler.txt");
   }
 }

@@ -77,19 +77,24 @@ Future<void> saveData(String data, String dosyaYolu) async {
 }
 
 Future<String> readData(String fileName) async {
-  Directory appDocDir = await getApplicationDocumentsDirectory();
-  String fullPath =
-      '${appDocDir.path}/$fileName'; // Dosya yolunu burada doğru bir şekilde birleştirin
-  print(fullPath);
-  ls(appDocDir.path);
-  final file = File(fullPath);
+  try {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String fullPath =
+        '${appDocDir.path}/$fileName'; // Dosya yolunu burada doğru bir şekilde birleştirin
+    print(fullPath);
+    ls(appDocDir.path);
+    final file = File(fullPath);
 
-  if (await file.exists()) {
-    // Dosyanın varlığını kontrol edin
-    String data = await file.readAsString();
-    return data;
-  } else {
-    print("Fayl tapilmadi: $fullPath");
+    if (await file.exists()) {
+      // Dosyanın varlığını kontrol edin
+      String data = await file.readAsString();
+      return data;
+    } else {
+      print("Fayl tapilmadi: $fullPath");
+      return "Fayl yoxdu";
+    }
+  } catch (e) {
+    Exception(e);
     return "Fayl yoxdu";
   }
 }
