@@ -185,10 +185,10 @@ class _WorkElementsState extends State<WorkElements> {
           hint: const Text(
             'Hazırlanacaq prefixlər',
             style: TextStyle(
-              fontFamily: "Lobster",
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+                fontFamily: "Lobster",
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey),
           ),
           // value: '055',
           items: allItems.map((item) {
@@ -329,11 +329,11 @@ class CustomDropdownButton extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "$dropName: ",
-            style: const TextStyle(
-              fontFamily: "Lobster",
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(
+                fontFamily: "Lobster",
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: enableStatus ? Colors.grey : Colors.red),
           ),
         ),
         DropdownButton(

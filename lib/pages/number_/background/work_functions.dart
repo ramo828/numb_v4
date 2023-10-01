@@ -7,11 +7,18 @@ import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: camel_case_types
 class func {
+  void shareList(List<String> list) {
+    String listText =
+        list.join('\n'); // Liste öğelerini yeni satırlarla birleştir
+    Share.share(listText, subject: 'Nömrələr');
+  }
+
   String alpabetical_order(int counter) {
     if (counter <= 10) {
       return '_A';
@@ -192,16 +199,75 @@ Future<void> zipFile(String sourceFilePath, String zipFilePath) async {
   print('Dosya başarıyla sıkıştırıldı: $zipFilePath');
 }
 
+class FirebaseFunctions {
 // Firestore'da belirli bir koleksiyon ve belgeyi güncelleme fonksiyonu
-Future<void> dataUpdate(
-    String collection, String document, Map<String, dynamic> data) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection(collection)
-        .doc(document)
-        .update(data);
-    print('Veri başarıyla güncellendi');
-  } catch (e) {
-    print('Veri güncellenirken bir hata oluştu: $e');
+  Future<void> dataUpdate(
+      String collection, String document, Map<String, dynamic> data) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(document)
+          .update(data);
+      print('Veri başarıyla güncellendi');
+    } catch (e) {
+      print('Veri güncellenirken bir hata oluştu: $e');
+    }
+  }
+
+  Future<void> compareAndAddList(
+      List<String> inputList, String operator) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Firebase'den "numbers/new-numbers/bakcell" yolundaki koleksiyonu alın
+    DocumentSnapshot bakcellDoc =
+        await firestore.collection("numbers").doc(operator).get();
+
+    // Firebase'den gelen veriyi belirli bir tipe dönüştürün
+    final data = bakcellDoc.data() as Map<String, dynamic>;
+    print("Firebase'den gelen veri: $data");
+    if (data.containsKey('list') &&
+        data['list'] is List<dynamic>) {
+      List<String> firebaseList = List<String>.from(data['list']);
+
+      // Giriş listesi ile Firebase listesini karşılaştırın
+      List<String> difference =
+          inputList.where((item) => !firebaseList.contains(item)).toList();
+
+      // Eğer farklı öğeler varsa Firebase'e ekleyin
+      if (difference.isNotEmpty) {
+        firebaseList.addAll(difference);
+        await firestore
+            .collection("numbers")
+            .doc(operator)
+            .update({'list': firebaseList});
+        print("Firebase'e eklendi: $difference");
+      } else {
+        print("Firebase'e eklenmesi gereken öğe bulunamadı.");
+      }
+    } else {
+      print("Firebase verisi içinde 'list' alanı belirli bir liste değil.");
+    }
+  }
+
+  Future<List<String>> loadNumberData(String operator) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Firebase'den "numbers/new-numbers/bakcell" yolundaki koleksiyonu alın
+    DocumentSnapshot bakcellDoc =
+        await firestore.collection("numbers").doc(operator).get();
+
+    // Firebase'den gelen veriyi belirli bir tipe dönüştürün
+    final data = bakcellDoc.data() as Map<String, dynamic>;
+    if (data.containsKey('list') &&
+        data['list'] is List<dynamic>) {
+      List<String> firebaseList = List<String>.from(data['list']);
+      return firebaseList;
+    } else {
+      // Eğer koşul sağlanmazsa veya bir hata oluşursa null döndürün veya bir hata atın.
+      // Örneğin:
+      throw Exception("Firebase verisi yüklenirken bir hata oluştu");
+      // veya
+      // return null;
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:number_seller/main.dart';
 import 'package:number_seller/pages/active_/active_widgets.dart';
 import 'package:number_seller/pages/active_/helper_function.dart';
+import 'package:number_seller/pages/active_/numberList_page.dart';
 import 'package:number_seller/pages/number_/background/file_io.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
@@ -39,9 +40,12 @@ class _active_pageState extends State<active_page> {
   int statusOperation = 0;
   bool dataLoad = true;
   bool calculateStatus = false;
+  bool selectCalculateStatus = false;
   bool test = false;
   bool shareStatus = false;
   Directory appDocDir = Directory('');
+  String operator = "Nar";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -89,11 +93,14 @@ class _active_pageState extends State<active_page> {
                 if (newValue.contains("Köhnə")) {
                   statusOperation = 0;
                   dataLoad = true;
+                  selectCalculateStatus = false;
                 } else if (newValue.contains("Yeni")) {
                   statusOperation = 1;
                   dataLoad = true;
+                  selectCalculateStatus = false;
                 } else {
                   dataLoad = false;
+                  selectCalculateStatus = true;
                 }
                 defaultOperation = newValue;
                 selectedActive.updateSelectedOperation(defaultOperation);
@@ -114,9 +121,11 @@ class _active_pageState extends State<active_page> {
                   defaultPrefix1 = "055";
                 }
                 selectedActive.updateSelectedPrefix(defaultPrefix1);
+                operator = newValue.toString();
               });
             }),
         CustomDropdownButton(
+            enableStatus: !selectCalculateStatus,
             dropName: "Prefix",
             dropdownValue: defaultPrefix1,
             items: defaultOperator1.contains("Bakcell")
@@ -131,6 +140,7 @@ class _active_pageState extends State<active_page> {
             }),
         CustomDropdownButton(
             dropName: "Kategoriya",
+            enableStatus: !selectCalculateStatus,
             dropdownValue: defaultCategory1,
             disableItem: widget.level < 1 ? "Bürünc" : "",
             items: defaultPrefix1.contains("055")
@@ -373,6 +383,13 @@ class _active_pageState extends State<active_page> {
                     ),
                   )
                 : const Center(),
+            OutlinedButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MyDataTable(),
+                  ));
+                },
+                child: const Text("Hello"))
           ],
         ),
       ],
@@ -383,6 +400,8 @@ class _active_pageState extends State<active_page> {
     try {
       ls("${appDocDir.path}/flutter_assets");
       Set<String> missingItems = <String>{};
+      FirebaseFunctions f = FirebaseFunctions();
+
       List<String> nData =
           splitStringByNewline(await readData("flutter_assets/newData"));
       setState(() {
@@ -412,6 +431,7 @@ class _active_pageState extends State<active_page> {
           _progress++;
         });
       }
+      await f.compareAndAddList(missingItems.toList(), operator.toLowerCase());
       await writeToDisk(missingItems.toList(),
           "${appDocDir.path}/flutter_assets/yeni_nomreler.txt");
     } catch (e) {

@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/pages/active_/active_page.dart';
+import 'package:number_seller/pages/active_/numberList_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/background/number_constant.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
@@ -28,7 +29,7 @@ bool _updateStatus = false;
 String _updateLink = '';
 String _updateContent = '';
 String _updateTitle = '';
-String real_version = "4.1.9b";
+String real_version = "4.2.0";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
@@ -366,7 +367,8 @@ class _work_bodyState extends State<work_body> {
                 return Text("Hata: ${snapshot.error}");
               } else {
                 isEqual = snapshot.data![1];
-                dataUpdate(
+                FirebaseFunctions ff = FirebaseFunctions();
+                ff.dataUpdate(
                     "settings", 'keys', {'nar': 'Bearer ${snapshot.data?[0]}'});
                 //Nar keyi burdan gelir
                 if (isEqual as bool) {
@@ -395,15 +397,17 @@ class _work_bodyState extends State<work_body> {
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
-        isStatus.status == true && _level >= 2
+        isStatus.status == true && _level >= 2 && _level != 4
             ? isEqual as bool
                 ? active_page(
                     level: _level,
                   )
                 : const notAccess()
-            : const Center(
-                child: Text("Sizin hesab aktiv degil"),
-              ),
+            : isStatus.status == true && _level == 4
+                ? const MyDataTable()
+                : const Center(
+                    child: Text("Sizin hesab aktiv degil"),
+                  ),
       ],
       onPageChanged: (int index) {
         indexProv.updateIndex(index);
