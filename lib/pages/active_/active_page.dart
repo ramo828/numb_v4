@@ -383,13 +383,6 @@ class _active_pageState extends State<active_page> {
                     ),
                   )
                 : const Center(),
-            OutlinedButton(
-                onPressed: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyDataTable(),
-                  ));
-                },
-                child: const Text("Hello"))
           ],
         ),
       ],
