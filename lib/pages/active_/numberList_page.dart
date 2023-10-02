@@ -21,7 +21,7 @@ class _MyDataTableState extends State<MyDataTable> {
 
     return ListView(children: [
       FutureBuilder<List<String>>(
-          future: ff.loadNumberData("nar"),
+          future: ff.loadNumberData(isStatus.selectedOperator.toLowerCase()),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const LinearProgressIndicator(); // Veriler yüklenene kadar bekleme göstergesi göster

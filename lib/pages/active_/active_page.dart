@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/main.dart';
 import 'package:number_seller/pages/active_/active_widgets.dart';
 import 'package:number_seller/pages/active_/helper_function.dart';
@@ -343,35 +344,61 @@ class _active_pageState extends State<active_page> {
               ],
             ),
             shareStatus
-                ? OutlinedButton(
-                    onPressed: () async {
-                      try {
-                        final res = await Share.shareXFiles(
-                          <XFile>[
-                            XFile(
-                                "${appDocDir.path}/flutter_assets/yeni_nomreler.txt")
-                          ],
-                          text: 'RamoSoft',
-                          subject: 'Activies',
-                        );
+                ? Column(
+                    children: [
+                      OutlinedButton(
+                        onPressed: () async {
+                          try {
+                            final res = await Share.shareXFiles(
+                              <XFile>[
+                                XFile(
+                                    "${appDocDir.path}/flutter_assets/yeni_nomreler.txt")
+                              ],
+                              text: 'RamoSoft',
+                              subject: 'Activies',
+                            );
 
-                        if (res.status == ShareResultStatus.success) {}
-                      } catch (e) {
-                        logger.e(e);
-                        showSnackBar(context, e.toString(), 4);
-                        print(e);
-                      }
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.share),
-                        Text(
-                          "Paylaş",
-                          style: TextStyle(fontFamily: 'Lobster'),
-                        )
-                      ],
-                    ),
+                            if (res.status == ShareResultStatus.success) {}
+                          } catch (e) {
+                            logger.e(e);
+                            showSnackBar(context, e.toString(), 4);
+                            print(e);
+                          }
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.share),
+                            Text(
+                              "Paylaş",
+                              style: TextStyle(fontFamily: 'Lobster'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const MyDataTable(),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(FontAwesomeIcons.eye),
+                            ),
+                            Text(
+                              "Nömrələri göstər",
+                              style: TextStyle(fontFamily: 'Lobster'),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   )
                 : const Center(),
             shareStatus
@@ -424,6 +451,7 @@ class _active_pageState extends State<active_page> {
           _progress++;
         });
       }
+      await f.clearListField("numbers", 'nar');
       await f.compareAndAddList(missingItems.toList(), operator.toLowerCase());
       await writeToDisk(missingItems.toList(),
           "${appDocDir.path}/flutter_assets/yeni_nomreler.txt");

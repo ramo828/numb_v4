@@ -225,8 +225,7 @@ class FirebaseFunctions {
     // Firebase'den gelen veriyi belirli bir tipe dönüştürün
     final data = bakcellDoc.data() as Map<String, dynamic>;
     print("Firebase'den gelen veri: $data");
-    if (data.containsKey('list') &&
-        data['list'] is List<dynamic>) {
+    if (data.containsKey('list') && data['list'] is List<dynamic>) {
       List<String> firebaseList = List<String>.from(data['list']);
 
       // Giriş listesi ile Firebase listesini karşılaştırın
@@ -249,17 +248,42 @@ class FirebaseFunctions {
     }
   }
 
+  Future<void> clearListField(String collectionPath, String documentId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Belirtilen koleksiyon referansını ve belge referansını alın
+    DocumentReference documentReference =
+        firestore.collection(collectionPath).doc(documentId);
+
+    // Belgeyi alın
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+
+    // Belge varsa ve "list" alanı varsa, bu alanı boş bir listeyle güncelleyin
+    if (documentSnapshot.exists && documentSnapshot.data() != null) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+
+      if (data.containsKey('list') && data['list'] is List<dynamic>) {
+        List<dynamic> emptyList = [];
+        await documentReference.update({'list': emptyList});
+        print('Belge temizlendi: $collectionPath/$documentId');
+      } else {
+        print('Belge içinde "list" alanı bulunamadı.');
+      }
+    } else {
+      print('Belge bulunamadı veya boş.');
+    }
+  }
+
   Future<List<String>> loadNumberData(String operator) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    // Firebase'den "numbers/new-numbers/bakcell" yolundaki koleksiyonu alın
     DocumentSnapshot bakcellDoc =
         await firestore.collection("numbers").doc(operator).get();
 
     // Firebase'den gelen veriyi belirli bir tipe dönüştürün
     final data = bakcellDoc.data() as Map<String, dynamic>;
-    if (data.containsKey('list') &&
-        data['list'] is List<dynamic>) {
+    if (data.containsKey('list') && data['list'] is List<dynamic>) {
       List<String> firebaseList = List<String>.from(data['list']);
       return firebaseList;
     } else {
