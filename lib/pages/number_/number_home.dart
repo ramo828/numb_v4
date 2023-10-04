@@ -214,8 +214,11 @@ class _number_homeState extends State<number_home> {
                                       );
 
                                       if (result.status ==
-                                          ShareResultStatus.success) {}
+                                          ShareResultStatus.success) {
+                                        showSnackBar(context, "Paylaşıldı", 2);
+                                      }
                                     } catch (e) {
+                                      showSnackBar(context, e.toString(), 2);
                                       print(e);
                                       logger.e(e);
                                     }

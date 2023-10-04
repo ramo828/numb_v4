@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/pages/active_/active_page.dart';
-import 'package:number_seller/pages/active_/numberList_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/background/number_constant.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
@@ -251,6 +250,7 @@ class _home_pageState extends State<home_page> {
                 ),
 
                 const Divider(), // Ayırıcı çizgi ekleyebilirsiniz
+
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
                   title: const Text('Çıxış'),
@@ -397,17 +397,13 @@ class _work_bodyState extends State<work_body> {
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
-        isStatus.status == true && _level >= 2 && _level != 4
+        isStatus.status == true && _level >= 2
             ? isEqual as bool
-                ? active_page(
-                    level: _level,
-                  )
+                ? active_page(level: _level)
                 : const notAccess()
-            : isStatus.status == true && _level == 4
-                ? const MyDataTable()
-                : const Center(
-                    child: Text("Sizin hesab aktiv degil"),
-                  ),
+            : const Center(
+                child: Text("Sizin hesab aktiv degil"),
+              ),
       ],
       onPageChanged: (int index) {
         indexProv.updateIndex(index);

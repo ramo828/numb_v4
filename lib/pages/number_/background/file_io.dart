@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:number_seller/main.dart';
-import 'package:path_provider/path_provider.dart';
 
 // final directory =
 //     await getExternalStorageDirectory(); // Cihazın dış hafızasına erişim sağlar
@@ -23,14 +22,13 @@ Future<void> writeData(String data, String filename) async {
   _createFolder();
 
   try {
-    // final file = File('$directory$filename');
-    final file = File(filename);
+    final file = File(directory + filename);
 
     // file.deleteSync(); // Dosyayı senkron olarak sil
     // print('Dosya başarıyla silindi');
     if (file.existsSync()) {
       // File('$directory$filename').create(recursive: true);
-      File(filename).create(recursive: true);
+      File(directory + filename).create(recursive: true);
     }
 
     await file.writeAsString(data);
@@ -78,19 +76,15 @@ Future<void> saveData(String data, String dosyaYolu) async {
 
 Future<String> readData(String fileName) async {
   try {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String fullPath =
-        '${appDocDir.path}/$fileName'; // Dosya yolunu burada doğru bir şekilde birleştirin
-    print(fullPath);
-    ls(appDocDir.path);
-    final file = File(fullPath);
+    ls(fileName);
+    final file = File(fileName);
 
     if (await file.exists()) {
       // Dosyanın varlığını kontrol edin
       String data = await file.readAsString();
       return data;
     } else {
-      print("Fayl tapilmadi: $fullPath");
+      print("Fayl tapilmadi: $file");
       return "Fayl yoxdu";
     }
   } catch (e) {
@@ -118,5 +112,14 @@ void _createFolder() async {
   } else {
     print('Klasör zaten var: $folderPath');
     logger.i("Klasör zaten var: $folderPath");
+  }
+}
+
+Future<bool> doesFileExist(String filePath) async {
+  File file = File(filePath);
+  if (await file.exists()) {
+    return true;
+  } else {
+    return false;
   }
 }
