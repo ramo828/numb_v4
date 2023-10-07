@@ -121,3 +121,30 @@ Future<bool> doesFileExist(String filePath) async {
   File file = File(path![0].path + filePath);
   return await file.exists();
 }
+
+Future<bool> deleteFile(String filePath) async {
+  try {
+    List<Directory>? path = await getExternalStorageDirectories();
+    File file = File(path![0].path + filePath);
+    await file.delete();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<void> changeFileName(String oldFileName, String newFileName) async {
+  try {
+    List<Directory>? path = await getExternalStorageDirectories();
+
+    File oldFile = File('${path![0].path}/$oldFileName');
+    String directory = oldFile.parent.path;
+    String newFilePath = '$directory/$newFileName';
+
+    oldFile.renameSync(newFilePath);
+
+    print('Dosyanın adı değiştirildi: $newFilePath');
+  } catch (e) {
+    print('Dosya adı değiştirilemedi: $e');
+  }
+}

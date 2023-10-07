@@ -327,6 +327,13 @@ class _active_pageState extends State<active_page> {
                                     .difference(startTime); // Süreyi hesaplayın
                               });
                               WakelockPlus.disable();
+                              if (statusOperation == 0) {
+                                setState(() {
+                                  fileDetector[0] = true;
+                                });
+                              } else if (statusOperation == 1) {
+                                fileDetector[1] = true;
+                              }
                             } else {
                               // Calculate
 
@@ -377,7 +384,90 @@ class _active_pageState extends State<active_page> {
                     Icons.stop,
                     color: Colors.red,
                   ),
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 48,
+                    width: 70,
+                    child: Card(
+                      color: Colors.brown.shade100,
+                      child: PopupMenuButton<String>(
+                        color: Colors.brown.shade100.withOpacity(0.9),
+                        icon: const Icon(
+                          FontAwesomeIcons.gears,
+                          color: Colors.black54,
+                        ),
+                        onSelected: (String choice) async {
+                          // Popup menüden seçilen öğeyi işleme alabilirsiniz.
+                          if (choice == 'clear') {
+                            if (await deleteFile('/oldData') ||
+                                await deleteFile('/newData')) {
+                              setState(() {
+                                ls(cacheDir.path);
+                                fileDetector[0] = false;
+                                fileDetector[1] = false;
+                              });
+                              showSnackBar(context, "Bazalar silindi", 2);
+                            } else {
+                              showSnackBar(context, "Bazalar silinmedi", 2);
+                            }
+                          } else if (choice == 'rename') {
+                            await deleteFile('/oldData');
+                            Future.delayed(const Duration(microseconds: 100));
+                            changeFileName("newData", "oldData");
+                            Future.delayed(const Duration(microseconds: 100));
+
+                            setState(() {
+                              fileDetector[1] = false;
+                            });
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const MyDataTable(),
+                              ),
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          // Popup menü öğelerini burada oluşturun.
+                          return <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'show',
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.readme),
+                                  Spacer(),
+                                  Text('Göstər'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'rename',
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.recycle),
+                                  Spacer(),
+                                  Text('Datanı dəyiş'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'clear',
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.trash),
+                                  Spacer(),
+                                  Text('Bazaları sil'),
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             shareStatus
