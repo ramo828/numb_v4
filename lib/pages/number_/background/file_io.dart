@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:number_seller/main.dart';
+import 'package:path_provider/path_provider.dart';
 
 // final directory =
 //     await getExternalStorageDirectory(); // Cihazın dış hafızasına erişim sağlar
@@ -116,10 +117,7 @@ void _createFolder() async {
 }
 
 Future<bool> doesFileExist(String filePath) async {
-  File file = File(filePath);
-  if (await file.exists()) {
-    return true;
-  } else {
-    return false;
-  }
+  List<Directory>? path = await getExternalStorageDirectories();
+  File file = File(path![0].path + filePath);
+  return await file.exists();
 }

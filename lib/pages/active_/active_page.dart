@@ -45,7 +45,9 @@ class _active_pageState extends State<active_page> {
   bool test = false;
   bool shareStatus = false;
   Directory cacheDir = Directory('');
+  List<Directory> cacheDirs = [];
   String operator = "Nar";
+  List<bool> fileDetector = [false, false];
 
   @override
   void initState() {
@@ -53,6 +55,8 @@ class _active_pageState extends State<active_page> {
     super.initState();
     // Uygulama başladığında ekranın uyumamasını etkinleştir
     WakelockPlus.enable();
+    loadPath();
+    fileDetectorFunction();
   }
 
   @override
@@ -62,35 +66,52 @@ class _active_pageState extends State<active_page> {
     super.dispose();
   }
 
+  void loadPath() async {
+    cacheDirs = (await getExternalStorageDirectories())!;
+    cacheDir = cacheDirs[0];
+  }
+
+  void fileDetectorFunction() async {
+    bool oldDataStatus = await doesFileExist("/oldData");
+    bool newDataStatus = await doesFileExist("/newData");
+    setState(() {
+      fileDetector[0] = oldDataStatus;
+      fileDetector[1] = newDataStatus;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FutureBuilder<List<Directory>?>(
-          future: getExternalStorageDirectories(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Directory>?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // Future hala çalışıyor, bekleme gösterebilirsiniz.
-              return const Center();
-            } else if (snapshot.hasError) {
-              // Hata oluştu, kullanıcıya hata mesajını gösterebilirsiniz.
-              return Text('Hata: ${snapshot.error}');
-            } else if (!snapshot.hasData) {
-              // Dizin verisi bulunamadı veya boşsa, uygun bir mesaj gösterebilirsiniz.
-              return const Text('Önbellek dizini bulunamadı.');
-            } else {
-              // Başarıyla tamamlandı, Directory listesini kullanabilirsiniz.
-              cacheDir = snapshot.data![1];
-              // İlk önbellek dizinini alabilirsiniz (cacheDirs[0]).
-              // Diğer önbellek dizinleri de kullanılabilir.
-              return const Center();
-            }
-          },
+        Padding(
+          padding: const EdgeInsets.only(left: 140),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const Text("Yeni baza: "),
+                  Icon(
+                    fileDetector[1] ? Icons.check : Icons.cancel,
+                    color: fileDetector[1] ? Colors.green : Colors.red,
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("Köhnə baza: "),
+                  Icon(
+                    fileDetector[0] ? Icons.check : Icons.cancel,
+                    color: fileDetector[0] ? Colors.green : Colors.red,
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-
         CustomDropdownButton(
             dropName: "Əməliyyat",
             dropdownValue: defaultOperation,
@@ -416,24 +437,6 @@ class _active_pageState extends State<active_page> {
                     ),
                   )
                 : const Center(),
-            OutlinedButton(
-                onPressed: () async {
-                  var data = await readData("${cacheDir.path}/newData");
-                  // await writeToDisk(
-                  //     ['994776428183'], '${cacheDir.path}/newData1');
-                  ls(cacheDir.path);
-                  showSnackBar(context, "$data\n + ${cacheDir.path}", 2);
-                },
-                child: const Text("Köhnə data")),
-            OutlinedButton(
-                onPressed: () async {
-                  var data = await readData("${cacheDir.path}/oldData");
-                  // await writeToDisk(
-                  //     ['994776428183'], '${cacheDir.path}/newData1');
-                  ls(cacheDir.path);
-                  showSnackBar(context, "$data\n + ${cacheDir.path}", 2);
-                },
-                child: const Text("Yeni data")),
           ],
         ),
       ],
@@ -475,11 +478,13 @@ class _active_pageState extends State<active_page> {
           _progress++;
         });
       }
-      await f.clearListField("numbers", 'nar');
+      if (missingItems.isNotEmpty) await f.clearListField("numbers", 'nar');
+
       await f.compareAndAddList(missingItems.toList(), operator.toLowerCase());
       await writeToDisk(
           missingItems.toList(), "${cacheDir.path}/yeni_nomreler.txt");
     } catch (e) {
+      // ignore: use_build_context_synchronously
       showSnackBar(context, e.toString(), 4);
     }
   }
