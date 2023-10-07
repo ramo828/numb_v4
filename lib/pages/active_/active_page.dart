@@ -87,29 +87,32 @@ class _active_pageState extends State<active_page> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 140),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const Text("Yeni baza: "),
-                  Icon(
-                    fileDetector[1] ? Icons.check : Icons.cancel,
-                    color: fileDetector[1] ? Colors.green : Colors.red,
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  const Text("Köhnə baza: "),
-                  Icon(
-                    fileDetector[0] ? Icons.check : Icons.cancel,
-                    color: fileDetector[0] ? Colors.green : Colors.red,
-                  )
-                ],
-              )
-            ],
+        Card(
+          color: Colors.brown.shade100,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 140),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Text("Yeni baza: "),
+                    Icon(
+                      fileDetector[1] ? Icons.check : Icons.cancel,
+                      color: fileDetector[1] ? Colors.green : Colors.red,
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text("Köhnə baza: "),
+                    Icon(
+                      fileDetector[0] ? Icons.check : Icons.cancel,
+                      color: fileDetector[0] ? Colors.green : Colors.red,
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         CustomDropdownButton(
@@ -186,41 +189,47 @@ class _active_pageState extends State<active_page> {
         const SizedBox(
           height: 15,
         ),
-
-        Text(
-          "Tapılan nömrə sayı: $numberLength",
-          style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
-        ),
-        Text(
-          'Yüklənib: ${((_progress / max) * 100.0).toInt()}%',
-          style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
-        ), // İlerleme değerini göster
-        isActive && dataLoad
-            ? Text(
-                "Keçən zaman: $difference",
+        Card(
+          color: Colors.brown.shade50.withOpacity(0.7),
+          child: Column(
+            children: [
+              Text(
+                "Tapılan nömrə sayı: $numberLength",
                 style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
-              )
-            : const Center(),
+              ),
+              Text(
+                'Yüklənib: ${((_progress / max) * 100.0).toInt()}%',
+                style: const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+              ), // İlerleme değerini göster
+              isActive && dataLoad
+                  ? Text(
+                      "Keçən zaman: $difference",
+                      style:
+                          const TextStyle(fontFamily: 'Lobster', fontSize: 17),
+                    )
+                  : const Center(),
 
-        !dataLoad
-            ? Text(
-                calculateStatus ? "Hesablanır" : "Hesablandı",
-                style: TextStyle(
-                    fontFamily: 'Lobster',
-                    fontSize: 17,
-                    color: calculateStatus ? Colors.pink : Colors.green),
-              )
-            : const Center(),
-        test
-            ? Text(
-                test ? "Yazılır $counter" : "Yazıldı $counter",
-                style: TextStyle(
-                    fontFamily: 'Lobster',
-                    fontSize: 17,
-                    color: test ? Colors.pink : Colors.green),
-              )
-            : const Center(),
-
+              !dataLoad
+                  ? Text(
+                      calculateStatus ? "Hesablanır" : "Hesablandı",
+                      style: TextStyle(
+                          fontFamily: 'Lobster',
+                          fontSize: 17,
+                          color: calculateStatus ? Colors.pink : Colors.green),
+                    )
+                  : const Center(),
+              test
+                  ? Text(
+                      test ? "Yazılır $counter" : "Yazıldı $counter",
+                      style: TextStyle(
+                          fontFamily: 'Lobster',
+                          fontSize: 17,
+                          color: test ? Colors.pink : Colors.green),
+                    )
+                  : const Center(),
+            ],
+          ),
+        ),
         !isActive || !dataLoad
             ? SizedBox(
                 width: 260,

@@ -28,7 +28,7 @@ bool _updateStatus = false;
 String _updateLink = '';
 String _updateContent = '';
 String _updateTitle = '';
-String real_version = "4.2.3";
+String real_version = "4.2.4";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
@@ -268,30 +268,47 @@ class _home_pageState extends State<home_page> {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.brown.shade400.withOpacity(0.3),
-            currentIndex: indexProv.index,
-            onTap: (int index) {
-              _pageController.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 50),
-                curve: Curves.ease,
-              );
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Ana səhifə',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.business),
-                label: 'Siyahı hazırla',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.work),
-                label: 'Yeni nömrələr',
-              ),
-            ],
+          bottomNavigationBar: Card(
+            child: BottomNavigationBar(
+              backgroundColor: Colors.brown.shade100.withOpacity(0.8),
+              currentIndex: indexProv.index,
+              onTap: (int index) {
+                _pageController.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 50),
+                  curve: Curves.ease,
+                );
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Card(
+                    color: Colors.brown.shade100.withOpacity(0.7),
+                    child: const Icon(
+                      Icons.home,
+                    ),
+                  ),
+                  label: 'Ana səhifə',
+                ),
+                BottomNavigationBarItem(
+                  icon: Card(
+                    color: Colors.brown.shade100.withOpacity(0.7),
+                    child: const Icon(
+                      Icons.business_center,
+                    ),
+                  ),
+                  label: 'Siyahı hazırla',
+                ),
+                BottomNavigationBarItem(
+                  icon: Card(
+                    color: Colors.brown.shade100.withOpacity(0.7),
+                    child: const Icon(
+                      Icons.numbers_rounded,
+                    ),
+                  ),
+                  label: 'Yeni nömrələr',
+                ),
+              ],
+            ),
           ),
           appBar: AppBar(
             // automaticallyImplyLeading: false,
