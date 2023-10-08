@@ -421,7 +421,7 @@ class _active_pageState extends State<active_page> {
                                   numbers.addAll(data);
                                   setState(() {
                                     numberLength = numbers.length;
-                                    max = numbers.length;
+                                    max = manualNumber.split("\n").length;
                                     _progress++;
                                     startStatus = true;
                                     isActive = false;
@@ -545,13 +545,16 @@ class _active_pageState extends State<active_page> {
                               // ignore: use_build_context_synchronously
                               showSnackBar(
                                   context,
-                                  "Bazalar silinmedi. Buna səbəb bazaların yüklü olmaması ola bilər",
+                                  "Bazalar silinmedi. Buna səbəb bazaların tamamının və ya birinin yüklü olmaması ola bilər",
                                   2);
                             }
                           } else if (choice == 'rename') {
                             await deleteFile('/oldData');
                             Future.delayed(const Duration(microseconds: 100));
                             if (await changeFileName("newData", "oldData")) {
+                              setState(() {
+                                fileDetector[1] = false;
+                              });
                               // ignore: use_build_context_synchronously
                               showSnackBar(context,
                                   "Yeni baza köhnə bazaya dəyişdirildi", 2);
