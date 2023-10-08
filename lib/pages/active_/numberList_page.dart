@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:number_seller/pages/number_/background/active_function.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:provider/provider.dart';
@@ -14,13 +15,31 @@ class _MyDataTableState extends State<MyDataTable> {
   List<Map<String, dynamic>> mapList = [];
   // Listeden gelen değerler
   FirebaseFunctions ff = FirebaseFunctions();
-
+  TextEditingController tec = TextEditingController(text: "xxxxxxxxx");
+  String pattern = "xxxxxxxxx";
+  bool uncorrect = false;
   @override
   Widget build(BuildContext context) {
     final isStatus = Provider.of<ActiveProvider>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: IconButton(
+              onPressed: () {
+                showPopup(context);
+              },
+              icon: const Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Icon(
+                  Icons.search,
+                  size: 35,
+                ),
+              ),
+            ),
+          ),
+        ],
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
@@ -45,7 +64,12 @@ class _MyDataTableState extends State<MyDataTable> {
                 return const Text('Veri bulunamadı');
               } else {
                 // Verileri kullanarak bir arayüz oluşturun
-                List<String> data = snapshot.data!;
+                List<String> yeniData = [];
+                for (String yeniNomreler in snapshot.data!) {
+                  yeniData.add(yeniNomreler.substring(3, yeniNomreler.length));
+                }
+
+                List<String> data = findMatchingPatterns(pattern, yeniData);
                 mapList.clear();
                 for (int i = 0; i < data.length; i++) {
                   mapList.add({'id': i, 'number': data[i]});
@@ -127,6 +151,38 @@ class _MyDataTableState extends State<MyDataTable> {
               }
             }),
       ]),
+    );
+  }
+
+  void showPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Axtar'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                pattern = value;
+              });
+            },
+            minLines: 1,
+            maxLength: 9,
+            controller: tec,
+            decoration: const InputDecoration(
+              hintText: 'xxxxxxxxx',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Bağla'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
