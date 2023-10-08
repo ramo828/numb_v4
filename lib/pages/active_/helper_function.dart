@@ -42,7 +42,7 @@ Future<List<String>> loadNumberData(
   while (true) {
     print("Page: $counter");
     List<String> numbList = await net.getOperatorData(
-      "xxxx$numberData",
+      numberData,
       selectedActive.selectedOperator,
       selectedActive.selectedPrefix,
       selectedActive.selectedOperator.contains("Bakcell")

@@ -48,6 +48,8 @@ class _active_pageState extends State<active_page> {
   List<Directory> cacheDirs = [];
   String operator = "Nar";
   List<bool> fileDetector = [false, false];
+  String manualNumber = "";
+  bool isCheckedManual = false;
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _active_pageState extends State<active_page> {
     WakelockPlus.enable();
     loadPath();
     fileDetectorFunction();
+    manualNumberListLoad();
   }
 
   @override
@@ -64,6 +67,15 @@ class _active_pageState extends State<active_page> {
     // Sayfa kapatıldığında ekranın uyumamasını devre dışı bırak
     WakelockPlus.disable();
     super.dispose();
+  }
+
+  Future<void> manualNumberListLoad() async {
+    List dataL = await getStringList('manualNumberList');
+    if (dataL.isNotEmpty) {
+      for (String numData in dataL) {
+        manualNumber += "$numData\n";
+      }
+    }
   }
 
   void loadPath() async {
@@ -83,37 +95,120 @@ class _active_pageState extends State<active_page> {
   @override
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    TextEditingController tec = TextEditingController(text: manualNumber);
+    return ListView(
       children: [
-        Card(
-          color: Colors.brown.shade100,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 140),
-            child: Column(
+        Center(
+          child: Card(
+            color: Colors.brown.shade100,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 140),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Text("Yeni baza: "),
+                      Icon(
+                        fileDetector[1] ? Icons.check : Icons.cancel,
+                        color: fileDetector[1] ? Colors.green : Colors.red,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text("Köhnə baza: "),
+                      Icon(
+                        fileDetector[0] ? Icons.check : Icons.cancel,
+                        color: fileDetector[0] ? Colors.green : Colors.red,
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        PopupMenuButton<String>(
+          color: Colors.brown.shade100.withOpacity(0.9),
+          icon: Card(
+            color: Colors.brown.shade100.withOpacity(0.9),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    const Text("Yeni baza: "),
-                    Icon(
-                      fileDetector[1] ? Icons.check : Icons.cancel,
-                      color: fileDetector[1] ? Colors.green : Colors.red,
-                    )
-                  ],
+                Checkbox(
+                  value: isCheckedManual,
+                  onChanged: (newValue) {
+                    setState(() {
+                      isCheckedManual = newValue!;
+                    });
+                  },
                 ),
-                Row(
-                  children: [
-                    const Text("Köhnə baza: "),
-                    Icon(
-                      fileDetector[0] ? Icons.check : Icons.cancel,
-                      color: fileDetector[0] ? Colors.green : Colors.red,
-                    )
-                  ],
-                )
+                const Icon(
+                  FontAwesomeIcons.pen,
+                  color: Colors.black54,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text("Əl ilə yaz")
               ],
             ),
           ),
+          onSelected: (String choice) async {
+            if (choice == 'save') {
+              await saveStringList('manualNumberList', tec.text.split('\n'));
+              setState(() {
+                manualNumber = tec.text;
+              });
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            // Popup menü öğelerini burada oluşturun.
+            return <PopupMenuEntry<String>>[
+              // Sadece bir TextField eklemek için aşağıdaki satırı kullanın.
+              isCheckedManual
+                  ? PopupMenuItem<String>(
+                      value: 'Nömrələr',
+                      child: SingleChildScrollView(
+                        child: TextField(
+                          controller: tec,
+                          minLines: 7,
+                          decoration: const InputDecoration(
+                            hintText: 'xxxxxxx',
+                            hintMaxLines: 7,
+                          ),
+                          textInputAction: TextInputAction.newline,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          onChanged: (val) {
+                            print(val);
+                          },
+                        ),
+                      ),
+                    )
+                  : const PopupMenuItem<String>(
+                      child: Text("Passiv"),
+                    ),
+              isCheckedManual
+                  ? const PopupMenuItem<String>(
+                      value: 'save',
+                      child: SingleChildScrollView(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.save,
+                            ),
+                            Spacer(),
+                            Text("Qeyd et"),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const PopupMenuItem<String>(
+                      child: Center(),
+                    ),
+            ];
+          },
         ),
         CustomDropdownButton(
             dropName: "Əməliyyat",
@@ -139,6 +234,7 @@ class _active_pageState extends State<active_page> {
               });
             }),
         CustomDropdownButton(
+            enableStatus: !isCheckedManual,
             dropName: "Operator",
             dropdownValue: defaultOperator1,
             items: operators1,
@@ -157,7 +253,7 @@ class _active_pageState extends State<active_page> {
               });
             }),
         CustomDropdownButton(
-            enableStatus: !selectCalculateStatus,
+            enableStatus: !selectCalculateStatus && (!isCheckedManual || false),
             dropName: "Prefix",
             dropdownValue: defaultPrefix1,
             items: defaultOperator1.contains("Bakcell")
@@ -275,29 +371,63 @@ class _active_pageState extends State<active_page> {
                                   .now(); // İşlem başlama zamanını kaydet
                               startStatus = true;
                               isActive = false;
-                              for (int numberNumb = 0;
-                                  numberNumb < 1000;
-                                  numberNumb++) {
-                                if (emergencyStop) break;
-                                // ignore: use_build_context_synchronously
-                                var data = await loadNumberData(
-                                    formatNumber(numberNumb), context);
-                                if (data.isEmpty) {
-                                  errCount++;
-                                }
-                                if (errCount > 50) {
+                              if (!isCheckedManual) {
+                                for (int numberNumb = 0;
+                                    numberNumb < max;
+                                    numberNumb++) {
+                                  if (emergencyStop) break;
                                   // ignore: use_build_context_synchronously
-                                  showSnackBar(
-                                      context, "Datalar Yüklənmədi", 2);
-                                  break;
+                                  var data = await loadNumberData(
+                                      "xxxx${formatNumber(numberNumb)}",
+                                      context);
+                                  if (data.isEmpty) {
+                                    errCount++;
+                                  }
+                                  if (errCount > 50) {
+                                    // ignore: use_build_context_synchronously
+                                    showSnackBar(
+                                        context, "Datalar Yüklənmədi", 2);
+                                    break;
+                                  }
+                                  numbers.addAll(data);
+                                  setState(() {
+                                    numberLength = numbers.length;
+                                    _progress++;
+                                  });
                                 }
-                                numbers.addAll(data);
-                                setState(() {
-                                  numberLength = numbers.length;
-                                  _progress++;
-                                });
+                              } else {
+                                for (String numberNumb in manualNumber
+                                    .substring(0, manualNumber.length - 1)
+                                    .split('\n')) {
+                                  if (numberNumb.length == 9) {
+                                    selectedActive.updateSelectedPrefix(
+                                        numberNumb.substring(0, 2));
+                                    numberNumb = numberNumb.substring(
+                                        2, numberNumb.length);
+                                  }
+                                  if (emergencyStop) break;
+                                  // ignore: use_build_context_synchronously
+                                  var data =
+                                      await loadNumberData(numberNumb, context);
+                                  if (data.isEmpty) {
+                                    errCount++;
+                                  }
+                                  if (errCount > 50) {
+                                    // ignore: use_build_context_synchronously
+                                    showSnackBar(
+                                        context, "Datalar Yüklənmədi", 2);
+                                    break;
+                                  }
+                                  numbers.addAll(data);
+                                  setState(() {
+                                    numberLength = numbers.length;
+                                    max = numbers.length;
+                                    _progress++;
+                                    startStatus = true;
+                                    isActive = false;
+                                  });
+                                }
                               }
-
                               if (statusOperation == 0) {
                                 isActive = true;
                                 setState(() {
@@ -354,6 +484,7 @@ class _active_pageState extends State<active_page> {
                             }
                           } catch (e) {
                             logger.e(e);
+                            // ignore: use_build_context_synchronously
                             showSnackBar(context, e.toString(), 3);
                           }
                         }
@@ -408,14 +539,29 @@ class _active_pageState extends State<active_page> {
                                 fileDetector[0] = false;
                                 fileDetector[1] = false;
                               });
+                              // ignore: use_build_context_synchronously
                               showSnackBar(context, "Bazalar silindi", 2);
                             } else {
-                              showSnackBar(context, "Bazalar silinmedi", 2);
+                              // ignore: use_build_context_synchronously
+                              showSnackBar(
+                                  context,
+                                  "Bazalar silinmedi. Buna səbəb bazaların yüklü olmaması ola bilər",
+                                  2);
                             }
                           } else if (choice == 'rename') {
                             await deleteFile('/oldData');
                             Future.delayed(const Duration(microseconds: 100));
-                            changeFileName("newData", "oldData");
+                            if (await changeFileName("newData", "oldData")) {
+                              // ignore: use_build_context_synchronously
+                              showSnackBar(context,
+                                  "Yeni baza köhnə bazaya dəyişdirildi", 2);
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              showSnackBar(
+                                  context,
+                                  "Yeni baza köhnə bazaya dəyişdirilə bilmədi\nBuna səbəb yeni bazanın yüklənməmiş olması və ya daha öncədən dəyişdirilməsi ola bilər.",
+                                  5);
+                            }
                             Future.delayed(const Duration(microseconds: 100));
 
                             setState(() {
@@ -487,7 +633,9 @@ class _active_pageState extends State<active_page> {
                             if (res.status == ShareResultStatus.success) {}
                           } catch (e) {
                             logger.e(e);
+                            // ignore: use_build_context_synchronously
                             showSnackBar(context, e.toString(), 4);
+                            // ignore: avoid_print
                             print(e);
                           }
                         },

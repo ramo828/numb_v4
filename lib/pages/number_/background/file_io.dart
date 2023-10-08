@@ -133,7 +133,7 @@ Future<bool> deleteFile(String filePath) async {
   }
 }
 
-Future<void> changeFileName(String oldFileName, String newFileName) async {
+Future<bool> changeFileName(String oldFileName, String newFileName) async {
   try {
     List<Directory>? path = await getExternalStorageDirectories();
 
@@ -144,7 +144,9 @@ Future<void> changeFileName(String oldFileName, String newFileName) async {
     oldFile.renameSync(newFilePath);
 
     print('Dosyanın adı değiştirildi: $newFilePath');
+    return true;
   } catch (e) {
     print('Dosya adı değiştirilemedi: $e');
+    return false;
   }
 }
