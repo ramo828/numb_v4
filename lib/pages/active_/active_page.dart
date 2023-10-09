@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/main.dart';
@@ -96,6 +97,7 @@ class _active_pageState extends State<active_page> {
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
     TextEditingController tec = TextEditingController(text: manualNumber);
+
     return ListView(
       children: [
         Center(
@@ -694,6 +696,11 @@ class _active_pageState extends State<active_page> {
   }
 
   Future<void> calcProcessing() async {
+    final selectedActive = Provider.of<ActiveProvider>(context, listen: false);
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    user = auth.currentUser;
     try {
       ls(cacheDir.path);
       Set<String> missingItems = <String>{};
@@ -728,9 +735,14 @@ class _active_pageState extends State<active_page> {
           _progress++;
         });
       }
-      if (missingItems.isNotEmpty) await f.clearListField("numbers", 'nar');
+      if (missingItems.isNotEmpty) {
+        f.clearListField(
+            "users", user!.uid, selectedActive.selectedOperator.toLowerCase());
+      }
 
       await f.compareAndAddList(missingItems.toList(), operator.toLowerCase());
+      await f.compareAndAddListUser(
+          missingItems.toList(), operator.toLowerCase());
       await writeToDisk(
           missingItems.toList(), "${cacheDir.path}/yeni_nomreler.txt");
     } catch (e) {

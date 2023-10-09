@@ -5,6 +5,7 @@ import 'package:archive/archive_io.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
@@ -248,7 +249,49 @@ class FirebaseFunctions {
     }
   }
 
-  Future<void> clearListField(String collectionPath, String documentId) async {
+  Future<void> compareAndAddListUser(
+      List<String> inputList, String operator) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    User? user;
+    user = auth.currentUser;
+
+    // Firebase'den "numbers/new-numbers/bakcell" yolundaki koleksiyonu alın
+    DocumentSnapshot bakcellDoc =
+        await firestore.collection("users").doc(user!.uid).get();
+
+    // Firebase'den gelen veriyi belirli bir tipe dönüştürün
+    final data = bakcellDoc.data() as Map<String, dynamic>;
+    print("Firebase'den gelen veri: $data");
+    if (data.containsKey(operator) && data[operator] is List<dynamic>) {
+      List<String> firebaseList = List<String>.from(data[operator]);
+
+      // Giriş listesi ile Firebase listesini karşılaştırın
+      List<String> difference =
+          inputList.where((item) => !firebaseList.contains(item)).toList();
+
+      // Eğer farklı öğeler varsa Firebase'e ekleyin
+      if (difference.isNotEmpty) {
+        firebaseList.addAll(difference);
+        await firestore
+            .collection("users")
+            .doc(user.uid)
+            .update({operator: firebaseList});
+        print("Firebase'e eklendi: $difference");
+      } else {
+        print("Firebase'e eklenmesi gereken öğe bulunamadı.");
+      }
+    } else {
+      print("Firebase verisi içinde 'list' alanı belirli bir liste değil.");
+    }
+  }
+
+  Future<void> clearListField(
+    String collectionPath,
+    String documentId,
+    String arrName,
+  ) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     // Belirtilen koleksiyon referansını ve belge referansını alın
@@ -263,12 +306,12 @@ class FirebaseFunctions {
       Map<String, dynamic> data =
           documentSnapshot.data() as Map<String, dynamic>;
 
-      if (data.containsKey('list') && data['list'] is List<dynamic>) {
+      if (data.containsKey(arrName) && data[arrName] is List<dynamic>) {
         List<dynamic> emptyList = [];
-        await documentReference.update({'list': emptyList});
+        await documentReference.update({arrName: emptyList});
         print('Belge temizlendi: $collectionPath/$documentId');
       } else {
-        print('Belge içinde "list" alanı bulunamadı.');
+        print('Belge içinde $arrName alanı bulunamadı.');
       }
     } else {
       print('Belge bulunamadı veya boş.');
@@ -285,6 +328,29 @@ class FirebaseFunctions {
     final data = bakcellDoc.data() as Map<String, dynamic>;
     if (data.containsKey('list') && data['list'] is List<dynamic>) {
       List<String> firebaseList = List<String>.from(data['list']);
+      return firebaseList;
+    } else {
+      // Eğer koşul sağlanmazsa veya bir hata oluşursa null döndürün veya bir hata atın.
+      // Örneğin:
+      throw Exception("Firebase verisi yüklenirken bir hata oluştu");
+      // veya
+      // return null;
+    }
+  }
+
+  Future<List<String>> loadNumberDataUser(String operator) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    User? user;
+    user = auth.currentUser;
+    DocumentSnapshot bakcellDoc =
+        await firestore.collection("users").doc(user!.uid).get();
+
+    // Firebase'den gelen veriyi belirli bir tipe dönüştürün
+    final data = bakcellDoc.data() as Map<String, dynamic>;
+    if (data.containsKey(operator) && data[operator] is List<dynamic>) {
+      List<String> firebaseList = List<String>.from(data[operator]);
       return firebaseList;
     } else {
       // Eğer koşul sağlanmazsa veya bir hata oluşursa null döndürün veya bir hata atın.
