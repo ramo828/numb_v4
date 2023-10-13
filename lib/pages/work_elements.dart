@@ -94,7 +94,7 @@ class work_info extends StatefulWidget {
   final List<String> updateVersion;
   final String updateTitle;
   final String updateContent;
-  final String updateUrl;
+  // final String updateUrl;
   final bool isActive;
 
   const work_info({
@@ -105,7 +105,7 @@ class work_info extends StatefulWidget {
     required this.updateStatus,
     required this.updateTitle,
     required this.updateContent,
-    required this.updateUrl,
+    // required this.updateUrl,
     required this.isActive,
     required this.updateVersion,
   });
@@ -273,8 +273,11 @@ class _work_infoState extends State<work_info> {
                             fontSize: 20,
                           ),
                         ),
-                        onPressed: () {
-                          launchURLupdate(widget.updateUrl);
+                        onPressed: () async {
+                          FirebaseFunctions ff = FirebaseFunctions();
+                          var url = await ff.downloadFile1(
+                              "gs://mekan-4c393.appspot.com/app-release.apk");
+                          launchURLupdate(url);
                         },
                       ),
                     ],

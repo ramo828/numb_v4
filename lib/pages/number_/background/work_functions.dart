@@ -11,6 +11,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: camel_case_types
 class func {
@@ -214,19 +216,22 @@ class FirebaseFunctions {
       print('Veri güncellenirken bir hata oluştu: $e');
     }
   }
-Future<void> updateField(String collection, String document, String field, dynamic value) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection(collection)
-        .doc(document)
-        .update({
-          field: value,
-        });
-    print('Veri başarıyla güncellendi');
-  } catch (e) {
-    print('Veri güncellenirken bir hata oluştu: $e');
+
+  Future<void> updateField(
+      String collection, String document, String field, dynamic value) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(document)
+          .update({
+        field: value,
+      });
+      print('Veri başarıyla güncellendi');
+    } catch (e) {
+      print('Veri güncellenirken bir hata oluştu: $e');
+    }
   }
-}
+
   Future<void> compareAndAddList(
       List<String> inputList, String operator) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -370,6 +375,43 @@ Future<void> updateField(String collection, String document, String field, dynam
       throw Exception("Firebase verisi yüklenirken bir hata oluştu");
       // veya
       // return null;
+    }
+  }
+
+  // Future<void> downloadFile() async {
+  //   final String fileName =
+  //       'app-release.apk'; // İndirmek istediğiniz dosyanın adı
+  //   final Reference ref = FirebaseStorage.instance.ref(fileName);
+  //   final String filePath = '${(await getTemporaryDirectory()).path}/$fileName';
+
+  //   try {
+  //     await ref.writeToFile(File(filePath));
+  //     print('Dosya başarıyla indirildi: $filePath');
+  //   } catch (e) {
+  //     print('Dosya indirme hatası: $e');
+  //   }
+  // }
+
+  Future<String> downloadFile1(String fileName) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    Reference reference = storage.refFromURL(fileName);
+    try {
+      String downloadURL = await reference.getDownloadURL();
+      print('Dosyanın indirme URL\'si: $downloadURL');
+
+      // Veriyi indirmek için http veya Dio gibi bir kütüphane kullanabilirsiniz.
+      // Örnek olarak http kütüphanesini kullanalım:
+      final response = await http.get(Uri.parse(downloadURL));
+      if (response.statusCode == 200) {
+        var fileData = response.bodyBytes;
+        print('Dosya indirildi, veri uzunluğu: ${fileData.length} bytes');
+        return downloadURL;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      print('Dosya indirme sırasında hata oluştu: $e');
+      return "";
     }
   }
 }

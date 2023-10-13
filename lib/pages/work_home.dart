@@ -25,10 +25,11 @@ final PageController _pageController = PageController();
 AutoKey autoKey = AutoKey("824-0038", "samir9995099");
 String _deviceID = '';
 bool _updateStatus = false;
-String _updateLink = '';
+// String _updateLink = '';
 String _updateContent = '';
 String _updateTitle = '';
-String real_version = "4.2.7a";
+// ignore: non_constant_identifier_names
+String real_version = "4.2.7b";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
@@ -141,7 +142,7 @@ class _home_pageState extends State<home_page> {
             _updateStatus = _updateData!['status'];
             _updateContent = _updateData!['content'];
             _updateTitle = _updateData!['title'];
-            _updateLink = _updateData!['url'];
+            // _updateLink = _updateData!['url'];
             _version = _updateData!['version'];
           });
         }
@@ -149,7 +150,6 @@ class _home_pageState extends State<home_page> {
     }
     // requestPermissions();
   }
-
 
   @override
   void dispose() {
@@ -397,7 +397,7 @@ class _work_bodyState extends State<work_body> {
                     updateStatus: _updateStatus,
                     updateTitle: _updateTitle,
                     updateContent: _updateContent,
-                    updateUrl: _updateLink,
+                    // updateUrl: _updateLink,
                     isActive: _isActive,
                     updateVersion: [_version, real_version],
                   );

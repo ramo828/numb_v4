@@ -10,7 +10,6 @@ String cName = "";
 String bakcellKey = "";
 String narKey = "";
 
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -19,30 +18,32 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  
-  final TextEditingController bakcellKeyController = TextEditingController(text: bakcellKey);
-  final TextEditingController narKeyController = TextEditingController(text: narKey);
-  final TextEditingController contactNameController = TextEditingController(text: cName);
+  final TextEditingController bakcellKeyController =
+      TextEditingController(text: bakcellKey);
+  final TextEditingController narKeyController =
+      TextEditingController(text: narKey);
+  final TextEditingController contactNameController =
+      TextEditingController(text: cName);
 
   final underlineInputBorder = const UnderlineInputBorder(
     borderSide: BorderSide(color: Colors.transparent),
     // Çizgiyi şeffaf yapar
   );
 
-void getContactData() async {
- var temp = await getStringList("contactName");
- var tempKey = await getStringList("keys");
-bakcellKey = tempKey[0];
-narKey = tempKey[1];
-print("nar: $narKey");
- if(temp[0].isEmpty) {
-  cName = "Metros";
- } else {
-  cName = temp[0];
- }
-}
+  void getContactData() async {
+    var temp = await getStringList("contactName");
+    var tempKey = await getStringList("keys");
+    bakcellKey = tempKey[0];
+    narKey = tempKey[1];
+    print("nar: $narKey");
+    if (temp[0].isEmpty) {
+      cName = "Metros";
+    } else {
+      cName = temp[0];
+    }
+  }
 
-@override
+  @override
   void initState() {
     getContactData();
     // TODO: implement initState
@@ -92,18 +93,26 @@ print("nar: $narKey");
             icon: const Icon(FontAwesomeIcons.addressBook),
             controller: contactNameController,
             uib: underlineInputBorder,
-            
           ),
+          OutlinedButton(
+              onPressed: () async {
+                FirebaseFunctions ff = FirebaseFunctions();
+                await ff.downloadFile1(
+                    "gs://mekan-4c393.appspot.com/app-release.apk");
+              },
+              child: const Text("Hello")),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: OutlinedButton(
               onPressed: () async {
                 FirebaseFunctions ff = FirebaseFunctions();
-                if(bakcellKeyController.text.isNotEmpty) {
-                  await ff.updateField("settings", "keys", "bakcell",bakcellKeyController.text);
+                if (bakcellKeyController.text.isNotEmpty) {
+                  await ff.updateField(
+                      "settings", "keys", "bakcell", bakcellKeyController.text);
                 }
-                if(narKeyController.text.isNotEmpty) {
-                  await ff.updateField("settings", "keys", "nar",narKeyController.text);
+                if (narKeyController.text.isNotEmpty) {
+                  await ff.updateField(
+                      "settings", "keys", "nar", narKeyController.text);
                 }
                 await saveStringList(
                   'contactName',
