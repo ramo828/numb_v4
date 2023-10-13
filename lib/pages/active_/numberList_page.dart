@@ -274,7 +274,7 @@ class MyDataTableSource extends DataTableSource {
                 "Operator seç"
               ),
                 Text(
-                number,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),
+                number,style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),
               ),
             ],
           ),
@@ -288,20 +288,20 @@ class MyDataTableSource extends DataTableSource {
             ),
             onSelected: (val) {
               try {
-              launchUrl(Uri.parse("whatsapp://send?phone=+${val}${number.substring(2,number.length)}"));
+              launchUrl(Uri.parse("whatsapp://send?phone=+$val${number.substring(2,number.length)}"));
               } catch (e){
                 showSnackBar(context, "Xəta: $e", 2);
               }
             },
             itemBuilder: (BuildContext context) {
             return <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(child: Text("055"),value: "99455",),
-              const PopupMenuItem<String>(child: Text("099"),value: "99499"),
-              const PopupMenuItem<String>(child: Text("070"),value: "99470"),
-              const PopupMenuItem<String>(child: Text("077"),value: "99477"),
-              const PopupMenuItem<String>(child: Text("050"),value: "99450"),
-              const PopupMenuItem<String>(child: Text("051"),value: "99451"),
-              const PopupMenuItem<String>(child: Text("010"),value: "99410"),
+              const PopupMenuItem<String>(value: "99455",child: Text("055"),),
+              const PopupMenuItem<String>(value: "99499", child: Text("099")),
+              const PopupMenuItem<String>(value: "99470", child: Text("070")),
+              const PopupMenuItem<String>(value: "99477", child: Text("077")),
+              const PopupMenuItem<String>(value: "99450", child: Text("050")),
+              const PopupMenuItem<String>(value: "99451", child: Text("051")),
+              const PopupMenuItem<String>(value: "99410", child: Text("010")),
             ];
           }),
           actions: <Widget>[
@@ -310,7 +310,7 @@ class MyDataTableSource extends DataTableSource {
                 Navigator.of(context).pop();
               },
               child:
-                  Text('Bağla'),
+                  const Text('Bağla'),
                 
             ),
           ],
