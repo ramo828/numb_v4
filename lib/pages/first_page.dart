@@ -160,9 +160,14 @@ class _helloAppState extends State<helloApp> {
 
   @override
   void initState() {
+    setContactName();
     super.initState();
     _pageController = PageController();
   }
+
+void setContactName() async{
+  await saveStringList("contactName", ["Metros"]);
+}
 
   @override
   void dispose() {

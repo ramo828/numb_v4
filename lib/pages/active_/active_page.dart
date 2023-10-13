@@ -14,6 +14,7 @@ import 'package:number_seller/pages/number_/number_widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class active_page extends StatefulWidget {
@@ -680,17 +681,9 @@ class _active_pageState extends State<active_page> {
                     ],
                   )
                 : const Center(),
-            shareStatus
-                ? Text(
-                    "Yazıldı: ${cacheDir.path}",
-                    style: const TextStyle(
-                      fontFamily: "Lobster",
-                      fontSize: 8,
-                    ),
-                  )
-                : const Center(),
           ],
         ),
+       
       ],
     );
   }

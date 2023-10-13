@@ -214,7 +214,19 @@ class FirebaseFunctions {
       print('Veri güncellenirken bir hata oluştu: $e');
     }
   }
-
+Future<void> updateField(String collection, String document, String field, dynamic value) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection(collection)
+        .doc(document)
+        .update({
+          field: value,
+        });
+    print('Veri başarıyla güncellendi');
+  } catch (e) {
+    print('Veri güncellenirken bir hata oluştu: $e');
+  }
+}
   Future<void> compareAndAddList(
       List<String> inputList, String operator) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;

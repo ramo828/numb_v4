@@ -3,6 +3,7 @@ import 'package:number_seller/pages/number_/background/active_function.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyDataTable extends StatefulWidget {
   const MyDataTable({super.key});
@@ -220,10 +221,16 @@ class MyDataTableSource extends DataTableSource {
             BorderRadius.circular(10.0), // Yuvarlak köşeleri ayarlayın
         child: Container(
           color: Colors.brown.shade100.withOpacity(0.2),
-          child: Text(
-            user['number'],
-            style: const TextStyle(
-                color: Colors.grey, fontWeight: FontWeight.bold),
+          child: GestureDetector(
+            onLongPress: () {
+              print(user['number']);
+              showSendDialog(context, user['number']);
+            },
+            child: Text(
+              user['number'],
+              style: const TextStyle(
+                  color: Colors.grey, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       )),
@@ -251,8 +258,65 @@ class MyDataTableSource extends DataTableSource {
             }
           },
         ),
-      )
+      ),
     ]);
+  }
+
+  void showSendDialog(BuildContext context, String number) {
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            children: [
+              const Text(
+                "Operator seç"
+              ),
+                Text(
+                number,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),
+              ),
+            ],
+          ),
+          content: PopupMenuButton(
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.list),
+                Text("Prefix"),
+              ],
+            ),
+            onSelected: (val) {
+              try {
+              launchUrl(Uri.parse("whatsapp://send?phone=+${val}${number.substring(2,number.length)}"));
+              } catch (e){
+                showSnackBar(context, "Xəta: $e", 2);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+            return <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(child: Text("055"),value: "99455",),
+              const PopupMenuItem<String>(child: Text("099"),value: "99499"),
+              const PopupMenuItem<String>(child: Text("070"),value: "99470"),
+              const PopupMenuItem<String>(child: Text("077"),value: "99477"),
+              const PopupMenuItem<String>(child: Text("050"),value: "99450"),
+              const PopupMenuItem<String>(child: Text("051"),value: "99451"),
+              const PopupMenuItem<String>(child: Text("010"),value: "99410"),
+            ];
+          }),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  Text('Bağla'),
+                
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

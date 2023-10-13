@@ -91,7 +91,13 @@ class Network {
     loading.updateOkay(false);
     loading.updateLoad(true);
     func myFunctions = func();
-
+    var tempContactName = await getStringList("contactName");
+    String contactName = "";
+    if(tempContactName[0].isEmpty) {
+      contactName = "Metros";
+    } else {
+      contactName = tempContactName[0];
+    }
     while (true) {
       var numbList = await getOperatorData(
         number,
@@ -135,7 +141,7 @@ class Network {
             prefixCount++) {
           vcfType.add(
             myFunctions.vcf(
-              "Metros",
+              contactName,
               prefixList,
               prefixCount,
               numberList[countNumb],

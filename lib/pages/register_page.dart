@@ -316,6 +316,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
         'logOut': false,
         'registerDate': formattedDate,
         'level': 0,
+        'nar': [],
+        'bakcell' : []
       });
     } catch (e) {
       print("Hata: $e");

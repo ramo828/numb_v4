@@ -21,7 +21,6 @@ var logger = Logger(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  logger.d("Program başladı");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
