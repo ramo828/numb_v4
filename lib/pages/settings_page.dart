@@ -94,13 +94,6 @@ class _SettingsPageState extends State<SettingsPage> {
             controller: contactNameController,
             uib: underlineInputBorder,
           ),
-          OutlinedButton(
-              onPressed: () async {
-                FirebaseFunctions ff = FirebaseFunctions();
-                await ff.downloadFile1(
-                    "gs://mekan-4c393.appspot.com/app-release.apk");
-              },
-              child: const Text("Hello")),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: OutlinedButton(

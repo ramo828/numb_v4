@@ -115,6 +115,8 @@ class work_info extends StatefulWidget {
 }
 
 class _work_infoState extends State<work_info> {
+  bool update = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -264,6 +266,11 @@ class _work_infoState extends State<work_info> {
                           fontSize: 15,
                         ),
                       ),
+                      update
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Center(),
                       OutlinedButton(
                         child: const Text(
                           "Yenilə",
@@ -274,10 +281,16 @@ class _work_infoState extends State<work_info> {
                           ),
                         ),
                         onPressed: () async {
+                          setState(() {
+                            update = true;
+                          });
                           FirebaseFunctions ff = FirebaseFunctions();
                           var url = await ff.downloadFile1(
                               "gs://mekan-4c393.appspot.com/app-release.apk");
                           launchURLupdate(url);
+                          setState(() {
+                            update = false;
+                          });
                         },
                       ),
                     ],
