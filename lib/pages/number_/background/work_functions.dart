@@ -330,7 +330,7 @@ Future<void> updateField(String collection, String document, String field, dynam
     }
   }
 
-  Future<List<String>> loadNumberData(String operator) async {
+  Future<List<String>> loadNumberDataAll(String operator) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     DocumentSnapshot bakcellDoc =

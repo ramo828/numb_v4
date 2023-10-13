@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyDataTable extends StatefulWidget {
-  const MyDataTable({super.key});
+  final allData;
+  const MyDataTable({super.key, this.allData = false});
 
   @override
   State<MyDataTable> createState() => _MyDataTableState();
@@ -55,8 +56,9 @@ class _MyDataTableState extends State<MyDataTable> {
       ),
       body: ListView(children: [
         FutureBuilder<List<String>>(
-            future:
-                ff.loadNumberDataUser(isStatus.selectedOperator.toLowerCase()),
+            future: !widget.allData
+                ? ff.loadNumberDataUser(isStatus.selectedOperator.toLowerCase())
+                : ff.loadNumberDataAll(isStatus.selectedOperator.toLowerCase()),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const LinearProgressIndicator(); // Veriler yüklenene kadar bekleme göstergesi göster
@@ -263,55 +265,65 @@ class MyDataTableSource extends DataTableSource {
   }
 
   void showSendDialog(BuildContext context, String number) {
-    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Column(
             children: [
-              const Text(
-                "Operator seç"
-              ),
-                Text(
-                number,style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),
+              const Text("Operator seç"),
+              Text(
+                number,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),
           content: PopupMenuButton(
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.list),
-                Text("Prefix"),
-              ],
-            ),
-            onSelected: (val) {
-              try {
-              launchUrl(Uri.parse("whatsapp://send?phone=+$val${number.substring(2,number.length)}"));
-              } catch (e){
-                showSnackBar(context, "Xəta: $e", 2);
-              }
-            },
-            itemBuilder: (BuildContext context) {
-            return <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(value: "99455",child: Text("055"),),
-              const PopupMenuItem<String>(value: "99499", child: Text("099")),
-              const PopupMenuItem<String>(value: "99470", child: Text("070")),
-              const PopupMenuItem<String>(value: "99477", child: Text("077")),
-              const PopupMenuItem<String>(value: "99450", child: Text("050")),
-              const PopupMenuItem<String>(value: "99451", child: Text("051")),
-              const PopupMenuItem<String>(value: "99410", child: Text("010")),
-            ];
-          }),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.list),
+                  Text("Prefix"),
+                ],
+              ),
+              onSelected: (val) {
+                try {
+                  launchUrl(Uri.parse(
+                      "whatsapp://send?phone=+$val${number.substring(2, number.length)}"));
+                } catch (e) {
+                  showSnackBar(context, "Xəta: $e", 2);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: "99455",
+                    child: Text("055"),
+                  ),
+                  const PopupMenuItem<String>(
+                      value: "99499", child: Text("099")),
+                  const PopupMenuItem<String>(
+                      value: "99470", child: Text("070")),
+                  const PopupMenuItem<String>(
+                      value: "99477", child: Text("077")),
+                  const PopupMenuItem<String>(
+                      value: "99450", child: Text("050")),
+                  const PopupMenuItem<String>(
+                      value: "99451", child: Text("051")),
+                  const PopupMenuItem<String>(
+                      value: "99410", child: Text("010")),
+                ];
+              }),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child:
-                  const Text('Bağla'),
-                
+              child: const Text('Bağla'),
             ),
           ],
         );

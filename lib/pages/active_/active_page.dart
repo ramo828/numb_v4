@@ -572,10 +572,17 @@ class _active_pageState extends State<active_page> {
                             setState(() {
                               fileDetector[1] = false;
                             });
-                          } else {
+                          } else if (choice == "show") {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => const MyDataTable(),
+                              ),
+                            );
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const MyDataTable(allData: true),
                               ),
                             );
                           }
@@ -589,7 +596,23 @@ class _active_pageState extends State<active_page> {
                                 children: [
                                   Icon(FontAwesomeIcons.readme),
                                   Spacer(),
-                                  Text('Göstər'),
+                                  Text(
+                                    'Yeni nömrələr',
+                                    maxLines: 3,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'all_show',
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.clockRotateLeft),
+                                  Spacer(),
+                                  Text(
+                                    'Bütün nömrələr',
+                                    maxLines: 3,
+                                  ),
                                 ],
                               ),
                             ),
@@ -682,7 +705,6 @@ class _active_pageState extends State<active_page> {
                 : const Center(),
           ],
         ),
-       
       ],
     );
   }
