@@ -99,8 +99,12 @@ print("nar: $narKey");
             child: OutlinedButton(
               onPressed: () async {
                 FirebaseFunctions ff = FirebaseFunctions();
-                await ff.updateField("settings", "keys", "bakcell",bakcellKeyController.text);
-                await ff.updateField("settings", "keys", "nar",narKeyController.text);
+                if(bakcellKeyController.text.isNotEmpty) {
+                  await ff.updateField("settings", "keys", "bakcell",bakcellKeyController.text);
+                }
+                if(narKeyController.text.isNotEmpty) {
+                  await ff.updateField("settings", "keys", "nar",narKeyController.text);
+                }
                 await saveStringList(
                   'contactName',
                   [
