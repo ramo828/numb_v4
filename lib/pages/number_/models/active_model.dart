@@ -5,7 +5,7 @@ class ActiveProvider extends ChangeNotifier {
   String _selectedPrefix = '070';
   String _selectedOperation = "Köhnə baza";
   String _selectedCategory = 'Hamısı';
-  final List<bool> _newNumberCheckStatus = List.generate(10000000, (index) => false);
+  List<bool> _newNumberCheckStatus = List.generate(10000000, (index) => false);
   final List<String> _newNumberList = [];
 
   String get selectedOperator => _selectedOperator;
@@ -32,6 +32,11 @@ class ActiveProvider extends ChangeNotifier {
 
   void updateNewNumberCheckStatus(bool newOperator, int index) {
     _newNumberCheckStatus[index] = newOperator;
+    notifyListeners(); // Değişiklikleri bildir
+  }
+
+  void clearNewNumberCheckStatus() {
+    _newNumberCheckStatus = List.generate(10000000, (index) => false);
     notifyListeners(); // Değişiklikleri bildir
   }
 

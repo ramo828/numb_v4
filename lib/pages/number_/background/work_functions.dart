@@ -16,10 +16,15 @@ import 'package:http/http.dart' as http;
 
 // ignore: camel_case_types
 class func {
-  void shareList(List<String> list) {
-    String listText =
-        list.join('\n'); // Liste öğelerini yeni satırlarla birleştir
-    Share.share(listText, subject: 'Nömrələr');
+  void shareList(List<String> list, BuildContext context) {
+    try {
+      String listText =
+          list.join('\n'); // Liste öğelerini yeni satırlarla birleştir
+      Share.share(listText, subject: 'Nömrələr');
+    } catch (e) {
+      showSnackBar(context, "Seçilən nömrə yoxdur", 2);
+      print("Bos data");
+    }
   }
 
   String alpabetical_order(int counter) {

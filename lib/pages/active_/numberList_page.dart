@@ -137,7 +137,7 @@ class _MyDataTableState extends State<MyDataTable> {
                           child: GestureDetector(
                             onTap: () {
                               func f = func();
-                              f.shareList(isStatus.newNumberList);
+                              f.shareList(isStatus.newNumberList, context);
                             },
                             onLongPress: () async {
                               int counter = 0;
@@ -282,28 +282,36 @@ class MyDataTableSource extends DataTableSource {
         ),
       )),
       DataCell(
-        IconButton(
-          icon: Icon(
-            isStatus.getNewNumberCheckStatusAtIndex(index)
-                ? Icons.cancel
-                : Icons.check,
-            color: isStatus.getNewNumberCheckStatusAtIndex(index)
-                ? Colors.red
-                : Colors.green,
-          ),
-          onPressed: () {
-            // IconButton'a tıklandığında seçimi değiştir
-            isStatus.updateNewNumberCheckStatus(
-                !isStatus.getNewNumberCheckStatusAtIndex(index), index);
-            print('Seçilen: ${isStatus.getNewNumberCheckStatusAtIndex(index)}');
-            if (isStatus.getNewNumberCheckStatusAtIndex(index)) {
-              isStatus.updateNewNumberList(user['number']);
-              print(isStatus.newNumberList);
-            } else {
-              isStatus.removeNewNumberList(user['number']);
-              print(isStatus.newNumberList);
-            }
+        GestureDetector(
+          onLongPress: () {
+            isStatus.clearNewNumberCheckStatus();
+            isStatus.clearNewNumberList();
+            print("LongPress");
           },
+          child: IconButton(
+            icon: Icon(
+              isStatus.getNewNumberCheckStatusAtIndex(index)
+                  ? Icons.cancel
+                  : Icons.check,
+              color: isStatus.getNewNumberCheckStatusAtIndex(index)
+                  ? Colors.red
+                  : Colors.green,
+            ),
+            onPressed: () {
+              // IconButton'a tıklandığında seçimi değiştir
+              isStatus.updateNewNumberCheckStatus(
+                  !isStatus.getNewNumberCheckStatusAtIndex(index), index);
+              print(
+                  'Seçilen: ${isStatus.getNewNumberCheckStatusAtIndex(index)}');
+              if (isStatus.getNewNumberCheckStatusAtIndex(index)) {
+                isStatus.updateNewNumberList(user['number']);
+                // print(isStatus.newNumberList);
+              } else {
+                isStatus.removeNewNumberList(user['number']);
+                // print(isStatus.newNumberList);
+              }
+            },
+          ),
         ),
       ),
     ]);
