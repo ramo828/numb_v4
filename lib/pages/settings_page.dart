@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 String cName = "";
 String bakcellKey = "";
 String narKey = "";
+bool narKeyEnabled = false;
+bool bakcellKeyEnabled = false;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -77,16 +79,56 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         body: ListView(children: [
           buildTextField(
+            enabled: bakcellKeyEnabled,
             label: 'BakcellKey',
             icon: const Icon(Icons.key),
             controller: bakcellKeyController,
             uib: underlineInputBorder,
           ),
+          Row(
+            children: [
+              Checkbox(
+                value: bakcellKeyEnabled,
+                onChanged: (value) {
+                  setState(() {
+                    if (bakcellKeyEnabled) {
+                      bakcellKeyEnabled = false;
+                    } else {
+                      bakcellKeyEnabled = true;
+                    }
+                  });
+                },
+              ),
+              Text(bakcellKeyEnabled
+                  ? "Key girişini passiv et"
+                  : "Key girişini aktiv et")
+            ],
+          ),
           buildTextField(
+            enabled: narKeyEnabled,
             label: 'NarKey',
             icon: const Icon(Icons.key),
             controller: narKeyController,
             uib: underlineInputBorder,
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: narKeyEnabled,
+                onChanged: (value) {
+                  setState(() {
+                    if (narKeyEnabled) {
+                      narKeyEnabled = false;
+                    } else {
+                      narKeyEnabled = true;
+                    }
+                  });
+                },
+              ),
+              Text(narKeyEnabled
+                  ? "Key girişini passiv et"
+                  : "Key girişini aktiv et")
+            ],
           ),
           buildTextField(
             label: 'Kontaktların adı',

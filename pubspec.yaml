@@ -2,7 +2,7 @@ name: number_seller
 description: "Nömrə satışı."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,10 +16,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 4.2.7
+version: 4.2.8
 
 environment:
-  sdk: '>= 3.2.0-134.1.beta <4.0.0'
+  sdk: ">= 3.2.0-134.1.beta <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,22 +31,21 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: 
-  firebase_core: 
-  cloud_firestore: 
+  cupertino_icons:
+  firebase_core:
+  cloud_firestore:
   firebase_auth:
-  firebase_database: 
+  firebase_database:
   font_awesome_flutter:
   shared_preferences:
   shared_preferences_ios:
   shared_preferences_android:
   provider:
-  material_color_utilities: 
+  material_color_utilities:
   device_info_plus:
-  flutter_animate: 
+  flutter_animate:
   dots_indicator:
   crypto:
   intl:
@@ -54,7 +53,7 @@ dependencies:
   http:
   html:
   flutter_masked_text2:
-  beautiful_soup_dart: 
+  beautiful_soup_dart:
   path_provider:
   permission_handler:
   share_plus:
@@ -63,9 +62,6 @@ dependencies:
   wakelock_plus:
   logger:
   firebase_storage: ^11.2.8
- 
-
-
 
 dev_dependencies:
   flutter_test:
@@ -83,7 +79,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -111,8 +106,8 @@ flutter:
     - family: Handwriting
       fonts:
         - asset: assets/fonts/DancingScript-VariableFont_wght.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+    #       - asset: fonts/Schyler-Italic.ttf
+    #         style: italic
     - family: Lobster
       fonts:
         - asset: assets/fonts/Gluten-VariableFont_slnt,wght.ttf

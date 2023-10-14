@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:number_seller/pages/number_/background/active_function.dart';
+import 'package:number_seller/pages/number_/background/file_io.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyDataTable extends StatefulWidget {
@@ -136,6 +138,49 @@ class _MyDataTableState extends State<MyDataTable> {
                             onTap: () {
                               func f = func();
                               f.shareList(isStatus.newNumberList);
+                            },
+                            onLongPress: () async {
+                              int counter = 0;
+                              int counterNumber = 0;
+
+                              var vcfData = "";
+                              func f = func();
+                              List<String> prefix = [
+                                "+99455",
+                                "+99499",
+                                "+99451",
+                                "+99450",
+                                "+99410",
+                                "+99470",
+                                "+99477"
+                              ];
+
+                              while (isStatus.newNumberList.length > counter) {
+                                for (int counterPrefix = 0;
+                                    counterPrefix < prefix.length;
+                                    counterPrefix++) {
+                                  vcfData += f.vcf(
+                                    "Metros",
+                                    prefix,
+                                    counterPrefix,
+                                    isStatus.newNumberList[counter],
+                                    counterNumber,
+                                  );
+                                  counterNumber++;
+                                }
+                                counter++;
+                              }
+                              await writeData(vcfData, "new_number_test.vcf");
+                              await zipFile('/sdcard/work/new_number_test.vcf',
+                                  '/sdcard/work/new_number_test.vcf.zip');
+
+                              final result = await Share.shareXFiles(
+                                <XFile>[
+                                  XFile("/sdcard/work/new_number_test.vcf.zip")
+                                ],
+                                text: 'RamoSoft',
+                                subject: 'Nömrələr',
+                              );
                             },
                             child: const Text(
                               'Paylaş',

@@ -15,6 +15,7 @@ class buildTextField extends StatelessWidget {
   final String? prefixText;
   final TextInputType? inputType;
   final List<TextInputFormatter>? formatter;
+  final bool enabled;
 
   const buildTextField({
     super.key,
@@ -25,6 +26,7 @@ class buildTextField extends StatelessWidget {
     this.onPressed,
     this.onChanged,
     this.obscureText = false,
+    this.enabled = true,
     this.suffixIcon,
     this.prefixText,
     this.inputType,
@@ -43,6 +45,7 @@ class buildTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: TextFormField(
+            enabled: enabled,
             onChanged: onChanged,
             inputFormatters: formatter,
             keyboardType: inputType,
