@@ -29,7 +29,7 @@ bool _updateStatus = false;
 String _updateContent = '';
 String _updateTitle = '';
 // ignore: non_constant_identifier_names
-String real_version = "4.2.8a";
+String real_version = "4.2.8b";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
