@@ -51,6 +51,8 @@ class _active_pageState extends State<active_page> {
   List<bool> fileDetector = [false, false];
   String manualNumber = "";
   bool isCheckedManual = false;
+  String changePrefix = "070";
+  bool deleteStatus = true;
 
   @override
   void initState() {
@@ -59,7 +61,6 @@ class _active_pageState extends State<active_page> {
     // Uygulama başladığında ekranın uyumamasını etkinleştir
     WakelockPlus.enable();
     loadPath();
-    fileDetectorFunction();
     manualNumberListLoad();
   }
 
@@ -84,15 +85,6 @@ class _active_pageState extends State<active_page> {
     cacheDir = cacheDirs[0];
   }
 
-  void fileDetectorFunction() async {
-    bool oldDataStatus = await doesFileExist("/oldData");
-    bool newDataStatus = await doesFileExist("/newData");
-    setState(() {
-      fileDetector[0] = oldDataStatus;
-      fileDetector[1] = newDataStatus;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final selectedActive = Provider.of<ActiveProvider>(context);
@@ -100,35 +92,55 @@ class _active_pageState extends State<active_page> {
 
     return ListView(
       children: [
-        Center(
-          child: Card(
-            color: Colors.brown.shade100,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 140),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Text("Yeni baza: "),
-                      Icon(
-                        fileDetector[1] ? Icons.check : Icons.cancel,
-                        color: fileDetector[1] ? Colors.green : Colors.red,
-                      )
-                    ],
+        FutureBuilder<List<bool>>(
+          future: Future.wait([
+            doesFileExist("/oldData.${selectedActive.selectedPrefix}"),
+            doesFileExist("/newData.${selectedActive.selectedPrefix}"),
+          ]),
+          builder: (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Hata: ${snapshot.error}');
+            } else {
+              final List<bool> fileExists = snapshot.data!;
+              fileDetector[0] = fileExists[0];
+              fileDetector[1] = fileExists[1];
+
+              return Center(
+                child: Card(
+                  color: Colors.brown.shade100,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 140),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text("Yeni baza ($changePrefix): "),
+                            Icon(
+                              fileDetector[1] ? Icons.check : Icons.cancel,
+                              color:
+                                  fileDetector[1] ? Colors.green : Colors.red,
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Köhnə baza ($changePrefix): "),
+                            Icon(
+                              fileDetector[0] ? Icons.check : Icons.cancel,
+                              color:
+                                  fileDetector[0] ? Colors.green : Colors.red,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      const Text("Köhnə baza: "),
-                      Icon(
-                        fileDetector[0] ? Icons.check : Icons.cancel,
-                        color: fileDetector[0] ? Colors.green : Colors.red,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
+              );
+            }
+          },
         ),
         PopupMenuButton<String>(
           color: Colors.brown.shade100.withOpacity(0.9),
@@ -264,6 +276,7 @@ class _active_pageState extends State<active_page> {
             onChanged: (String? newValue) {
               selectedActive.updateSelectedPrefix(newValue!);
               setState(() {
+                changePrefix = newValue;
                 defaultPrefix1 = newValue;
                 // defaultCategory = "Hamısı";
               });
@@ -284,6 +297,37 @@ class _active_pageState extends State<active_page> {
                 defaultCategory1 = newValue;
               });
             }),
+        Tooltip(
+          message: 'Yeni nömrələr tapıldıqdan sonra köhnə nömrələri sil',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Wrap(children: [
+                Text(
+                  "Köhnə nömrələri sil",
+                  maxLines: 3,
+                  style: TextStyle(
+                    fontSize: 19,
+                    color: Colors.grey,
+                    fontFamily: "Lobster",
+                    fontWeight: FontWeight.bold,
+                  ), // Yazı tipi boyutunu ayarlayın
+                ),
+              ]),
+              Checkbox(
+                  value: deleteStatus,
+                  onChanged: (value) {
+                    setState(() {
+                      if (deleteStatus) {
+                        deleteStatus = false;
+                      } else {
+                        deleteStatus = true;
+                      }
+                    });
+                  }),
+            ],
+          ),
+        ),
         const SizedBox(
           height: 15,
         ),
@@ -435,8 +479,8 @@ class _active_pageState extends State<active_page> {
                                 setState(() {
                                   test = true;
                                 });
-                                await writeToDisk(
-                                    numbers, "${cacheDir.path}/oldData");
+                                await writeToDisk(numbers,
+                                    "${cacheDir.path}/oldData.${selectedActive.selectedPrefix}");
                                 setState(() {
                                   test = false;
                                 });
@@ -445,8 +489,8 @@ class _active_pageState extends State<active_page> {
                                 setState(() {
                                   test = true;
                                 });
-                                await writeToDisk(
-                                    numbers, "${cacheDir.path}/newData");
+                                await writeToDisk(numbers,
+                                    "${cacheDir.path}/newData.${selectedActive.selectedPrefix}");
                                 setState(() {
                                   test = false;
                                 });
@@ -460,12 +504,7 @@ class _active_pageState extends State<active_page> {
                               });
                               WakelockPlus.disable();
                               if (statusOperation == 0) {
-                                setState(() {
-                                  fileDetector[0] = true;
-                                });
-                              } else if (statusOperation == 1) {
-                                fileDetector[1] = true;
-                              }
+                              } else if (statusOperation == 1) {}
                             } else {
                               // Calculate
 
@@ -534,12 +573,12 @@ class _active_pageState extends State<active_page> {
                         onSelected: (String choice) async {
                           // Popup menüden seçilen öğeyi işleme alabilirsiniz.
                           if (choice == 'clear') {
-                            if (await deleteFile('/oldData') ||
-                                await deleteFile('/newData')) {
+                            if (await deleteFile(
+                                    '/oldData.${selectedActive.selectedPrefix}') ||
+                                await deleteFile(
+                                    '/newData.${selectedActive.selectedPrefix}')) {
                               setState(() {
                                 ls(cacheDir.path);
-                                fileDetector[0] = false;
-                                fileDetector[1] = false;
                               });
                               // ignore: use_build_context_synchronously
                               showSnackBar(context, "Bazalar silindi", 2);
@@ -553,10 +592,9 @@ class _active_pageState extends State<active_page> {
                           } else if (choice == 'rename') {
                             await deleteFile('/oldData');
                             Future.delayed(const Duration(microseconds: 100));
-                            if (await changeFileName("newData", "oldData")) {
-                              setState(() {
-                                fileDetector[1] = false;
-                              });
+                            if (await changeFileName(
+                                "newData.${selectedActive.selectedPrefix}",
+                                "oldData.${selectedActive.selectedPrefix}")) {
                               // ignore: use_build_context_synchronously
                               showSnackBar(context,
                                   "Yeni baza köhnə bazaya dəyişdirildi", 2);
@@ -568,10 +606,6 @@ class _active_pageState extends State<active_page> {
                                   5);
                             }
                             Future.delayed(const Duration(microseconds: 100));
-
-                            setState(() {
-                              fileDetector[1] = false;
-                            });
                           } else if (choice == "show") {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -720,8 +754,8 @@ class _active_pageState extends State<active_page> {
       Set<String> missingItems = <String>{};
       FirebaseFunctions f = FirebaseFunctions();
 
-      List<String> nData =
-          splitStringByNewline(await readData("${cacheDir.path}/newData"));
+      List<String> nData = splitStringByNewline(await readData(
+          "${cacheDir.path}/newData.${selectedActive.selectedPrefix}"));
       setState(() {
         calculateStatus = true;
         _progress = 0;
@@ -730,8 +764,8 @@ class _active_pageState extends State<active_page> {
         startStatus = true;
         numberLength = 0;
       });
-      Set<String> oData = Set<String>.from(
-          splitStringByNewline(await readData("${cacheDir.path}/oldData")));
+      Set<String> oData = Set<String>.from(splitStringByNewline(await readData(
+          "${cacheDir.path}/oldData.${selectedActive.selectedPrefix}")));
       for (var item1 in nData) {
         if (emergencyStop) {
           emergencyStop = false;
@@ -749,7 +783,7 @@ class _active_pageState extends State<active_page> {
           _progress++;
         });
       }
-      if (missingItems.isNotEmpty) {
+      if (missingItems.isNotEmpty && deleteStatus) {
         f.clearListField(
             "users", user!.uid, selectedActive.selectedOperator.toLowerCase());
       }
