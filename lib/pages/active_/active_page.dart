@@ -7,6 +7,7 @@ import 'package:number_seller/main.dart';
 import 'package:number_seller/pages/active_/active_widgets.dart';
 import 'package:number_seller/pages/active_/helper_function.dart';
 import 'package:number_seller/pages/active_/numberList_page.dart';
+import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/file_io.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
@@ -109,7 +110,7 @@ class _active_pageState extends State<active_page> {
 
               return Center(
                 child: Card(
-                  color: Colors.brown.shade100,
+                  color: darkTheme ? Colors.brown.shade100 : Colors.black38,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 140),
                     child: Column(
@@ -145,7 +146,9 @@ class _active_pageState extends State<active_page> {
         PopupMenuButton<String>(
           color: Colors.brown.shade100.withOpacity(0.9),
           icon: Card(
-            color: Colors.brown.shade100.withOpacity(0.9),
+            color: darkTheme
+                ? Colors.brown.shade100.withOpacity(0.9)
+                : Colors.black,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -315,16 +318,19 @@ class _active_pageState extends State<active_page> {
                 ),
               ]),
               Checkbox(
-                  value: deleteStatus,
-                  onChanged: (value) {
-                    setState(() {
-                      if (deleteStatus) {
-                        deleteStatus = false;
-                      } else {
-                        deleteStatus = true;
+                value: deleteStatus,
+                onChanged: selectCalculateStatus
+                    ? (value) {
+                        setState(() {
+                          if (deleteStatus) {
+                            deleteStatus = false;
+                          } else {
+                            deleteStatus = true;
+                          }
+                        });
                       }
-                    });
-                  }),
+                    : null,
+              ),
             ],
           ),
         ),
@@ -332,7 +338,9 @@ class _active_pageState extends State<active_page> {
           height: 15,
         ),
         Card(
-          color: Colors.brown.shade50.withOpacity(0.7),
+          color: !darkTheme
+              ? Colors.black26.withOpacity(0.7)
+              : Colors.brown.shade50.withOpacity(0.7),
           child: Column(
             children: [
               Text(
@@ -563,12 +571,16 @@ class _active_pageState extends State<active_page> {
                     height: 48,
                     width: 70,
                     child: Card(
-                      color: Colors.brown.shade100,
+                      color: darkTheme
+                          ? Colors.brown.shade100.withOpacity(0.9)
+                          : Colors.transparent,
                       child: PopupMenuButton<String>(
-                        color: Colors.brown.shade100.withOpacity(0.9),
-                        icon: const Icon(
+                        color: darkTheme
+                            ? Colors.brown.shade100.withOpacity(0.9)
+                            : Colors.black45,
+                        icon: Icon(
                           FontAwesomeIcons.gears,
-                          color: Colors.black54,
+                          color: darkTheme ? Colors.black54 : Colors.white,
                         ),
                         onSelected: (String choice) async {
                           // Popup menüden seçilen öğeyi işleme alabilirsiniz.

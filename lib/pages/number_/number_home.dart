@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:number_seller/main.dart';
+import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/network.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/number_/models/loading_models.dart';
@@ -79,7 +80,10 @@ class _number_homeState extends State<number_home> {
             padding: const EdgeInsets.all(20.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.brown.shade200.withOpacity(0.4),
+                color: darkTheme
+                    ? Colors.brown.shade200.withOpacity(0.4)
+                    : Colors.black12.withOpacity(0.4),
+
                 borderRadius:
                     BorderRadius.circular(20), // Yuvarlak köşeler için
               ),
@@ -94,7 +98,9 @@ class _number_homeState extends State<number_home> {
                       height: 110,
                       width: 200,
                       decoration: BoxDecoration(
-                        color: Colors.brown.shade200.withOpacity(0.4),
+                        color: darkTheme
+                            ? Colors.brown.shade200.withOpacity(0.4)
+                            : Colors.black26.withOpacity(0.4),
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
@@ -128,7 +134,10 @@ class _number_homeState extends State<number_home> {
                       height: 300,
                       // width: 100,
                       decoration: BoxDecoration(
-                        color: Colors.brown.shade200.withOpacity(0.4),
+                        color: darkTheme
+                            ? Colors.brown.shade200.withOpacity(0.4)
+                            : Colors.black26.withOpacity(0.4),
+
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),
@@ -142,7 +151,10 @@ class _number_homeState extends State<number_home> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                        color: Colors.brown.shade200.withOpacity(0.4),
+                        color: darkTheme
+                            ? Colors.brown.shade200.withOpacity(0.4)
+                            : Colors.black26.withOpacity(0.4),
+
                         borderRadius:
                             BorderRadius.circular(20), // Yuvarlak köşeler için
                       ),

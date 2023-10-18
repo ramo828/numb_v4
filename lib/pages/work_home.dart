@@ -180,28 +180,45 @@ class _home_pageState extends State<home_page> {
 
       return Scaffold(
           drawer: Drawer(
-            backgroundColor: Colors.brown.shade100.withOpacity(0.8),
+            backgroundColor: darkTheme
+                ? Colors.brown.shade100.withOpacity(0.8)
+                : Colors.black87,
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  otherAccountsPicturesSize: const Size.square(63),
+                  // otherAccountsPicturesSize: const Size.square(63),
                   otherAccountsPictures: [
-                    Padding(
-                        padding: const EdgeInsets.only(right: 1),
-                        child: theme(
-                          themeNotifier,
-                        )),
+                    GestureDetector(
+                      child: Icon(
+                        color: themeNotifier.isDark
+                            ? Colors.blueGrey
+                            : Colors.yellow,
+                        !themeNotifier.isDark
+                            ? Icons.sunny
+                            : FontAwesomeIcons.moon,
+                        size: 35,
+                      ),
+                      onTap: () {
+                        themeNotifier.isDark
+                            ? themeNotifier.isDark = false
+                            : themeNotifier.isDark = true;
+                        setState(() {
+                          darkTheme = themeNotifier.isDark;
+                        });
+                      },
+                    )
                   ],
                   currentAccountPictureSize: const Size(60, 60),
                   decoration: BoxDecoration(
-                    color: Colors.brown.shade300
-                        .withOpacity(0.8), // Arka plan rengi
+                    color: darkTheme
+                        ? Colors.brown.shade300.withOpacity(0.8)
+                        : Colors.black38, // Arka plan rengi
                   ),
                   accountName: Text(
                     "$_name $_surname",
-                    style: const TextStyle(
-                      color: Colors.blueGrey,
+                    style: TextStyle(
+                      color: !darkTheme ? Colors.white : Colors.black45,
                       fontFamily: 'Handwriting',
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -209,9 +226,9 @@ class _home_pageState extends State<home_page> {
                   ),
                   accountEmail: Text(
                     _email,
-                    style: const TextStyle(
-                      color: Colors.blueGrey,
-                      fontFamily: 'Handwriting',
+                    style: TextStyle(
+                      color: !darkTheme ? Colors.white : Colors.black45,
+                      fontFamily: 'Lobster',
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),
@@ -271,7 +288,9 @@ class _home_pageState extends State<home_page> {
           ),
           bottomNavigationBar: Card(
             child: BottomNavigationBar(
-              backgroundColor: Colors.brown.shade100.withOpacity(0.8),
+              backgroundColor: !darkTheme
+                  ? Colors.black.withOpacity(0.8)
+                  : Colors.brown.shade100.withOpacity(0.8),
               currentIndex: indexProv.index,
               onTap: (int index) {
                 _pageController.animateToPage(

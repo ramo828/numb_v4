@@ -1,3 +1,4 @@
+import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/models/number_models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -333,7 +334,11 @@ class CustomDropdownButton extends StatelessWidget {
                 fontFamily: "Lobster",
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: enableStatus ? Colors.grey : Colors.red),
+                color: enableStatus
+                    ? !darkTheme
+                        ? Colors.grey
+                        : Colors.black
+                    : Colors.red),
           ),
         ),
         DropdownButton(
@@ -346,7 +351,11 @@ class CustomDropdownButton extends StatelessWidget {
               child: Text(
                 item,
                 style: TextStyle(
-                  color: disableItem.contains(item) ? Colors.red : Colors.black,
+                  color: disableItem.contains(item)
+                      ? Colors.red
+                      : !darkTheme
+                          ? Colors.white
+                          : Colors.black,
                 ),
               ),
             );

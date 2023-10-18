@@ -1,3 +1,4 @@
+import 'package:number_seller/pages/login_page.dart';
 import 'package:number_seller/pages/number_/background/work_functions.dart';
 import 'package:number_seller/pages/work_home.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,7 @@ class _work_infoState extends State<work_info> {
       child: Column(
         children: [
           my_container(
-            color: Colors.brown.shade300,
+            color: darkTheme ? Colors.brown.shade300 : Colors.black26,
             height: 300,
             width: 350,
             child: Column(
