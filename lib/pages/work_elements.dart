@@ -249,7 +249,7 @@ class _work_infoState extends State<work_info> {
           widget.updateStatus &&
                   widget.updateVersion[0] != widget.updateVersion[1]
               ? my_container(
-                  height: 145,
+                  height: 100.0 * (widget.updateContent.length) / 25,
                   width: 350,
                   color: Colors.brown.shade600.withOpacity(0.4),
                   child: Column(
@@ -288,10 +288,14 @@ class _work_infoState extends State<work_info> {
                           setState(() {
                             update = true;
                           });
-                          FirebaseFunctions ff = FirebaseFunctions();
-                          var url = await ff.downloadFile1(
-                              "gs://mekan-4c393.appspot.com/app-release.apk");
-                          launchURLupdate(url);
+                          try {
+                            FirebaseFunctions ff = FirebaseFunctions();
+                            var url = await ff.downloadFile1(
+                                "gs://mekan-4c393.appspot.com/app-release.apk");
+                            launchURLupdate(url);
+                          } catch (e) {
+                            showSnackBar(context, e.toString(), 2);
+                          }
                           setState(() {
                             update = false;
                           });
