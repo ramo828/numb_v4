@@ -262,12 +262,15 @@ class _work_infoState extends State<work_info> {
                           fontSize: 15,
                         ),
                       ),
-                      Text(
-                        widget.updateContent,
-                        style: const TextStyle(
-                          fontFamily: 'Handwriting',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          widget.updateContent,
+                          style: const TextStyle(
+                            fontFamily: 'Handwriting',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                       update
@@ -276,10 +279,12 @@ class _work_infoState extends State<work_info> {
                             )
                           : const Center(),
                       OutlinedButton(
-                        child: const Text(
+                        style: const ButtonStyle(),
+                        child: Text(
                           "Yenilə",
                           style: TextStyle(
-                            fontFamily: 'Handwriting',
+                            fontFamily: 'Lobster',
+                            color: darkTheme ? Colors.black : Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -291,7 +296,7 @@ class _work_infoState extends State<work_info> {
                           try {
                             FirebaseFunctions ff = FirebaseFunctions();
                             var url = await ff.downloadFile1(
-                                "gs://mekan-4c393.appspot.com/app-release.apk");
+                                "gs://mekan-4c393.appspot.com/app-release.zip");
                             launchURLupdate(url);
                           } catch (e) {
                             showSnackBar(context, e.toString(), 2);

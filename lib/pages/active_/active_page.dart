@@ -100,7 +100,7 @@ class _active_pageState extends State<active_page> {
           ]),
           builder: (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const LinearProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Hata: ${snapshot.error}');
             } else {
@@ -610,6 +610,7 @@ class _active_pageState extends State<active_page> {
                               // ignore: use_build_context_synchronously
                               showSnackBar(context,
                                   "Yeni baza köhnə bazaya dəyişdirildi", 2);
+                              setState(() {});
                             } else {
                               // ignore: use_build_context_synchronously
                               showSnackBar(

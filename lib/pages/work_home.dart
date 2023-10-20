@@ -29,7 +29,7 @@ bool _updateStatus = false;
 String _updateContent = '';
 String _updateTitle = '';
 // ignore: non_constant_identifier_names
-String real_version = "4.2.8b";
+String real_version = "4.2.8d";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
@@ -100,6 +100,7 @@ class _home_pageState extends State<home_page> {
             _name = 'Kullanıcı bulunamadı';
           });
         }
+        requestPermissions();
       });
 
       _notificationSubscription = _firestore
@@ -164,6 +165,9 @@ class _home_pageState extends State<home_page> {
   @override
   Widget build(BuildContext context) {
     final statusProv = Provider.of<statusProvider>(context, listen: false);
+    Color startColor = Colors.red;
+    Color endColor = Colors.blue;
+    double animationValue = 0.0;
     if (_logOut) {
       saveBoolValue("logIn", false);
       exit(1);
@@ -177,6 +181,8 @@ class _home_pageState extends State<home_page> {
     return Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
       final indexProv = Provider.of<indexProvider>(context, listen: true);
+      double screenHeight = MediaQuery.of(context).size.height;
+      double screenWidth = MediaQuery.of(context).size.width;
 
       return Scaffold(
           drawer: Drawer(
@@ -283,6 +289,40 @@ class _home_pageState extends State<home_page> {
                     );
                   },
                 ),
+
+                TweenAnimationBuilder(
+                  // Animasyon süresi
+                  duration: const Duration(seconds: 3),
+
+                  // Başlangıç ve bitiş renkleri için ColorTween kullanılır
+                  tween: ColorTween(begin: startColor, end: endColor),
+
+                  // Builder işlevi, animasyon sırasında her çerçeve için çağrılır
+                  builder: (context, color, child) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.only(top: screenHeight / 2.42, left: 100),
+                      child: Text(
+                        "Created by RamoSoft",
+                        style: TextStyle(
+                          fontFamily: "Handwriting",
+                          fontSize: 18,
+                          color: color,
+                        ),
+                      ),
+                    );
+                  },
+
+                  // Animasyon tamamlandığında bu işlev çağrılır
+                  onEnd: () {
+                    // Animasyon tamamlandığında renkleri değiştir
+                    final tempColor = startColor;
+                    setState(() {
+                      startColor = endColor;
+                      endColor = tempColor;
+                    });
+                  },
+                )
               ],
             ),
           ),
@@ -302,7 +342,9 @@ class _home_pageState extends State<home_page> {
               items: [
                 BottomNavigationBarItem(
                   icon: Card(
-                    color: Colors.brown.shade100.withOpacity(0.7),
+                    color: darkTheme
+                        ? Colors.brown.shade100.withOpacity(0.7)
+                        : Colors.black.withOpacity(0.7),
                     child: const Icon(
                       Icons.home,
                     ),
@@ -311,7 +353,9 @@ class _home_pageState extends State<home_page> {
                 ),
                 BottomNavigationBarItem(
                   icon: Card(
-                    color: Colors.brown.shade100.withOpacity(0.7),
+                    color: darkTheme
+                        ? Colors.brown.shade100.withOpacity(0.7)
+                        : Colors.black.withOpacity(0.7),
                     child: const Icon(
                       Icons.business_center,
                     ),
@@ -320,7 +364,9 @@ class _home_pageState extends State<home_page> {
                 ),
                 BottomNavigationBarItem(
                   icon: Card(
-                    color: Colors.brown.shade100.withOpacity(0.7),
+                    color: darkTheme
+                        ? Colors.brown.shade100.withOpacity(0.7)
+                        : Colors.black.withOpacity(0.7),
                     child: const Icon(
                       Icons.numbers_rounded,
                     ),
