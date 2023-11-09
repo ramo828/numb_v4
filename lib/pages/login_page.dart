@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:number_seller/main.dart';
-import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/number_/backend/work_functions.dart';
 import 'package:number_seller/pages/register_page.dart';
 import 'package:number_seller/pages/work_home.dart';
 import 'package:number_seller/pages/number_/models/model_theme.dart';
@@ -12,7 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 bool showPass = true;
-bool darkTheme = false;
+bool darkTheme = true;
 String errorMsg = "";
 // ignore: non_constant_identifier_names
 List color = [

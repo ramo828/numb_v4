@@ -5,15 +5,15 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:number_seller/pages/active_/active_page.dart';
+import 'package:number_seller/pages/new_numbers/nn_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
-import 'package:number_seller/pages/number_/background/number_constant.dart';
+import 'package:number_seller/pages/number_/backend/number_constant.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
 import 'package:number_seller/pages/number_/models/status_models.dart';
 import 'package:number_seller/pages/number_/number_home.dart';
 import 'package:number_seller/pages/settings_page.dart';
 import 'package:number_seller/pages/work_elements.dart';
-import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/number_/backend/work_functions.dart';
 import 'package:number_seller/pages/number_/models/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:number_seller/main.dart';
-import 'package:number_seller/pages/active_/active_widgets.dart';
-import 'package:number_seller/pages/active_/helper_function.dart';
-import 'package:number_seller/pages/active_/numberList_page.dart';
+import 'package:number_seller/pages/new_numbers/nn_widgets.dart';
+import 'package:number_seller/pages/new_numbers/helper_function.dart';
+import 'package:number_seller/pages/new_numbers/numberList_page.dart';
 import 'package:number_seller/pages/login_page.dart';
-import 'package:number_seller/pages/number_/background/file_io.dart';
-import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/number_/backend/file_io.dart';
+import 'package:number_seller/pages/number_/backend/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:number_seller/pages/number_/number_widgets.dart';
 import 'package:path_provider/path_provider.dart';
@@ -262,8 +262,10 @@ class _active_pageState extends State<active_page> {
                 defaultOperator1 = newValue;
                 if (defaultOperator1.contains("Nar")) {
                   defaultPrefix1 = "070";
+                  changePrefix = defaultPrefix1;
                 } else {
                   defaultPrefix1 = "055";
+                  changePrefix = defaultPrefix1;
                 }
                 selectedActive.updateSelectedPrefix(defaultPrefix1);
                 operator = newValue.toString();

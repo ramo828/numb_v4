@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:number_seller/pages/number_/background/active_function.dart';
-import 'package:number_seller/pages/number_/background/file_io.dart';
-import 'package:number_seller/pages/number_/background/work_functions.dart';
+import 'package:number_seller/pages/number_/backend/active_function.dart';
+import 'package:number_seller/pages/number_/backend/file_io.dart';
+import 'package:number_seller/pages/number_/backend/number_constant.dart';
+import 'package:number_seller/pages/number_/backend/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class MyDataTable extends StatefulWidget {
   final allData;
@@ -43,6 +45,19 @@ class _MyDataTableState extends State<MyDataTable> {
               ),
             ),
           ),
+          // OutlinedButton(
+          //     onPressed: () async {
+          //       Uri uri = await getActiveNar("994776428183");
+          //       print(uri.toString());
+          //       final res = await http.get(uri, headers: await getHeaders(1));
+          //       if (res.statusCode == 200) {
+          //         print(res.body);
+          //       } else {
+          //         print(res.statusCode);
+          //         print(res.body);
+          //       }
+          //     },
+          //     child: Text("Hello"))
         ],
         title: Padding(
           padding: const EdgeInsets.all(8.0),

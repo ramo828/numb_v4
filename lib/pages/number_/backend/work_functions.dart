@@ -178,13 +178,13 @@ Future<void> requestPermissions() async {
 
   if (statusStorage.isGranted && statusManageExternalStorage.isGranted) {
     // İzinler verildi, istediğiniz işlemi burada gerçekleştirin.
-    print("İzinler verildi. İşlem yapılabilir.");
+    print("Izinler verildi. Işlem yapılabilir.");
     // Örneğin, dosya yazma işlemini burada gerçekleştirebilirsiniz.
   } else {
     await Permission.storage.request();
     await Permission.manageExternalStorage.request();
-    // İzinler verilmedi, kullanıcıdan izin istemek yerine işlemi iptal edebilirsiniz.
-    print("İzinler verilmedi. İşlem iptal edildi.");
+    // Izinler verilmedi, kullanıcıdan izin istemek yerine işlemi iptal edebilirsiniz.
+    print("Izinler verilmedi. Işlem iptal edildi.");
   }
 }
 
