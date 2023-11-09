@@ -249,7 +249,7 @@ class _work_infoState extends State<work_info> {
           widget.updateStatus &&
                   widget.updateVersion[0] != widget.updateVersion[1]
               ? my_container(
-                  height: 100.0 * (widget.updateContent.length) / 25,
+                  height: 100.0 * (widget.updateContent.length) / 10,
                   width: 350,
                   color: Colors.brown.shade600.withOpacity(0.4),
                   child: Column(
@@ -284,7 +284,7 @@ class _work_infoState extends State<work_info> {
                           "Yenilə",
                           style: TextStyle(
                             fontFamily: 'Lobster',
-                            color: darkTheme ? Colors.black : Colors.white,
+                            color: !darkTheme ? Colors.black : Colors.white24,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),

@@ -5,7 +5,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:number_seller/pages/active_numbers/active_main.dart';
 import 'package:number_seller/pages/new_numbers/nn_page.dart';
+// import 'package:number_seller/pages/new_numbers/nn_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
 import 'package:number_seller/pages/number_/backend/number_constant.dart';
 import 'package:number_seller/pages/number_/models/index_models.dart';
@@ -29,7 +31,7 @@ bool _updateStatus = false;
 String _updateContent = '';
 String _updateTitle = '';
 // ignore: non_constant_identifier_names
-String real_version = "4.2.8d";
+String real_version = "4.2.9";
 bool _isAdmin = false;
 String _name = '';
 String _surname = '';
@@ -326,55 +328,66 @@ class _home_pageState extends State<home_page> {
               ],
             ),
           ),
-          bottomNavigationBar: Card(
-            child: BottomNavigationBar(
-              backgroundColor: !darkTheme
-                  ? Colors.black.withOpacity(0.8)
-                  : Colors.brown.shade100.withOpacity(0.8),
-              currentIndex: indexProv.index,
-              onTap: (int index) {
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 50),
-                  curve: Curves.ease,
-                );
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Card(
-                    color: darkTheme
-                        ? Colors.brown.shade100.withOpacity(0.7)
-                        : Colors.black.withOpacity(0.7),
-                    child: const Icon(
-                      Icons.home,
-                    ),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: Colors.brown.shade600,
+            unselectedItemColor: Colors.brown.shade300.withOpacity(0.5),
+            backgroundColor: !darkTheme
+                ? Colors.black.withOpacity(0.8)
+                : Colors.brown.shade400.withOpacity(0.3),
+            currentIndex: indexProv.index,
+            onTap: (int index) {
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 50),
+                curve: Curves.elasticIn,
+              );
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Card(
+                  color: darkTheme
+                      ? Colors.brown.shade100.withOpacity(0.7)
+                      : Colors.black.withOpacity(0.7),
+                  child: const Icon(
+                    Icons.home,
                   ),
-                  label: 'Ana səhifə',
                 ),
-                BottomNavigationBarItem(
-                  icon: Card(
-                    color: darkTheme
-                        ? Colors.brown.shade100.withOpacity(0.7)
-                        : Colors.black.withOpacity(0.7),
-                    child: const Icon(
-                      Icons.business_center,
-                    ),
+                label: 'Ana səhifə',
+              ),
+              BottomNavigationBarItem(
+                icon: Card(
+                  color: darkTheme
+                      ? Colors.brown.shade100.withOpacity(0.7)
+                      : Colors.black.withOpacity(0.7),
+                  child: const Icon(
+                    Icons.business_center,
                   ),
-                  label: 'Siyahı hazırla',
                 ),
-                BottomNavigationBarItem(
-                  icon: Card(
-                    color: darkTheme
-                        ? Colors.brown.shade100.withOpacity(0.7)
-                        : Colors.black.withOpacity(0.7),
-                    child: const Icon(
-                      Icons.numbers_rounded,
-                    ),
+                label: 'Siyahı hazırla',
+              ),
+              BottomNavigationBarItem(
+                icon: Card(
+                  color: darkTheme
+                      ? Colors.brown.shade100.withOpacity(0.7)
+                      : Colors.black.withOpacity(0.7),
+                  child: const Icon(
+                    Icons.numbers_rounded,
                   ),
-                  label: 'Yeni nömrələr',
                 ),
-              ],
-            ),
+                label: 'Yeni nömrələr',
+              ),
+              BottomNavigationBarItem(
+                icon: Card(
+                  color: darkTheme
+                      ? Colors.brown.shade100.withOpacity(0.7)
+                      : Colors.black.withOpacity(0.7),
+                  child: const Icon(
+                    Icons.local_activity_rounded,
+                  ),
+                ),
+                label: 'Aktiv nömrələr',
+              ),
+            ],
           ),
           appBar: AppBar(
             // automaticallyImplyLeading: false,
@@ -483,6 +496,13 @@ class _work_bodyState extends State<work_body> {
         isStatus.status == true && _level >= 2
             ? isEqual as bool
                 ? active_page(level: _level)
+                : const notAccess()
+            : const Center(
+                child: Text("Sizin hesab aktiv degil"),
+              ),
+        isStatus.status == true && _level >= 3
+            ? isEqual as bool
+                ? active_number()
                 : const notAccess()
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
