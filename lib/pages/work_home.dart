@@ -330,10 +330,10 @@ class _home_pageState extends State<home_page> {
           ),
           bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Colors.brown.shade600,
-            unselectedItemColor: Colors.brown.shade300.withOpacity(0.5),
+            unselectedItemColor: Colors.brown.withOpacity(0.6),
             backgroundColor: !darkTheme
                 ? Colors.black.withOpacity(0.8)
-                : Colors.brown.shade400.withOpacity(0.3),
+                : Colors.brown.shade400.withOpacity(0.2),
             currentIndex: indexProv.index,
             onTap: (int index) {
               _pageController.animateToPage(
@@ -376,17 +376,17 @@ class _home_pageState extends State<home_page> {
                 ),
                 label: 'Yeni nömrələr',
               ),
-              BottomNavigationBarItem(
-                icon: Card(
-                  color: darkTheme
-                      ? Colors.brown.shade100.withOpacity(0.7)
-                      : Colors.black.withOpacity(0.7),
-                  child: const Icon(
-                    Icons.local_activity_rounded,
-                  ),
-                ),
-                label: 'Aktiv nömrələr',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Card(
+              //     color: darkTheme
+              //         ? Colors.brown.shade100.withOpacity(0.7)
+              //         : Colors.black.withOpacity(0.7),
+              //     child: const Icon(
+              //       Icons.local_activity_rounded,
+              //     ),
+              //   ),
+              //   label: 'Aktiv nömrələr',
+              // ),
             ],
           ),
           appBar: AppBar(
@@ -500,13 +500,13 @@ class _work_bodyState extends State<work_body> {
             : const Center(
                 child: Text("Sizin hesab aktiv degil"),
               ),
-        isStatus.status == true && _level >= 3
-            ? isEqual as bool
-                ? active_number()
-                : const notAccess()
-            : const Center(
-                child: Text("Sizin hesab aktiv degil"),
-              ),
+        // isStatus.status == true && _level >= 3
+        //     ? isEqual as bool
+        //         ? active_number()
+        //         : const notAccess()
+        //     : const Center(
+        //         child: Text("Sizin hesab aktiv degil"),
+        //       ),
       ],
       onPageChanged: (int index) {
         indexProv.updateIndex(index);

@@ -249,7 +249,7 @@ class _work_infoState extends State<work_info> {
           widget.updateStatus &&
                   widget.updateVersion[0] != widget.updateVersion[1]
               ? my_container(
-                  height: 100.0 * (widget.updateContent.length) / 10,
+                  height: 180.0 * (widget.updateContent.length) / 10,
                   width: 350,
                   color: Colors.brown.shade600.withOpacity(0.4),
                   child: Column(
