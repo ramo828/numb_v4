@@ -63,7 +63,7 @@ dependencies:
   logger:
   firebase_storage: ^11.2.8
   file_picker:
-
+  clipboard:
 dev_dependencies:
   flutter_test:
     sdk: flutter

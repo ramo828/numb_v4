@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:number_seller/pages/active_numbers/active_main.dart';
 import 'package:number_seller/pages/new_numbers/nn_page.dart';
 // import 'package:number_seller/pages/new_numbers/nn_page.dart';
 import 'package:number_seller/pages/notification_page.dart';
@@ -20,6 +19,7 @@ import 'package:number_seller/pages/number_/models/model_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:clipboard/clipboard.dart';
 import 'login_page.dart';
 
 int _currentIndex = 0;
@@ -164,6 +164,11 @@ class _home_pageState extends State<home_page> {
     super.dispose();
   }
 
+  void kopyala() {
+    FlutterClipboard.copy(_deviceID)
+        .then((value) => print('Metin kopyalandı: $_deviceID'));
+  }
+
   @override
   Widget build(BuildContext context) {
     final statusProv = Provider.of<statusProvider>(context, listen: false);
@@ -195,7 +200,6 @@ class _home_pageState extends State<home_page> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  // otherAccountsPicturesSize: const Size.square(63),
                   otherAccountsPictures: [
                     GestureDetector(
                       child: Icon(
@@ -217,29 +221,66 @@ class _home_pageState extends State<home_page> {
                       },
                     )
                   ],
-                  currentAccountPictureSize: const Size(60, 60),
+                  currentAccountPictureSize: const Size(45, 45),
                   decoration: BoxDecoration(
                     color: darkTheme
                         ? Colors.brown.shade300.withOpacity(0.8)
                         : Colors.black38, // Arka plan rengi
                   ),
-                  accountName: Text(
-                    "$_name $_surname",
-                    style: TextStyle(
-                      color: !darkTheme ? Colors.white : Colors.black45,
-                      fontFamily: 'Handwriting',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  accountName: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      "$_name $_surname",
+                      style: TextStyle(
+                        color: !darkTheme ? Colors.white : Colors.black45,
+                        fontFamily: 'Handwriting',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
-                  accountEmail: Text(
-                    _email,
-                    style: TextStyle(
-                      color: !darkTheme ? Colors.white : Colors.black45,
-                      fontFamily: 'Lobster',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
+                  accountEmail: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        _email,
+                        style: TextStyle(
+                          color: !darkTheme ? Colors.white : Colors.black45,
+                          fontFamily: 'Lobster',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 40),
+                            child: Text(
+                              "$_deviceID",
+                              style: TextStyle(
+                                color:
+                                    !darkTheme ? Colors.white : Colors.black45,
+                                fontFamily: 'Lobster',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                kopyala();
+                                showSnackBar(context, "ID kopyalandı", 2);
+                              },
+                              child: const Icon(
+                                Icons.copy,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   currentAccountPicture: const CircleAvatar(
                     radius: 100,
