@@ -256,7 +256,7 @@ class _home_pageState extends State<home_page> {
                           Padding(
                             padding: const EdgeInsets.only(left: 40),
                             child: Text(
-                              "$_deviceID",
+                              _deviceID,
                               style: TextStyle(
                                 color:
                                     !darkTheme ? Colors.white : Colors.black45,

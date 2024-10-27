@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:number_seller/pages/number_/backend/nn_function.dart';
 import 'package:number_seller/pages/number_/backend/file_io.dart';
-import 'package:number_seller/pages/number_/backend/number_constant.dart';
 import 'package:number_seller/pages/number_/backend/work_functions.dart';
 import 'package:number_seller/pages/number_/models/active_model.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 class MyDataTable extends StatefulWidget {
   final allData;

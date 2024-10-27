@@ -260,18 +260,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all<Size>(
+                    fixedSize: WidgetStateProperty.all<Size>(
                       const Size(55, 30), // Genişlik ve yükseklik değerleri
                     ),
-                    textStyle: MaterialStateProperty.all<TextStyle>(
+                    textStyle: WidgetStateProperty.all<TextStyle>(
                       const TextStyle(
                         fontSize: 30,
                       ), // Yazı boyutunu ayarla
                     ),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors
+                    backgroundColor: WidgetStateProperty.all<Color>(Colors
                         .brown.shade300
                         .withOpacity(0.4)), // Arka plan rengi
-                    foregroundColor: MaterialStateProperty.all<Color>(
+                    foregroundColor: WidgetStateProperty.all<Color>(
                         Colors.black45), // Yazı rengi
                     // Diğer özellikleri de burada özelleştirebilirsiniz
                   ),

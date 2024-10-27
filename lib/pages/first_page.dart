@@ -75,12 +75,12 @@ class WelcomeWidget extends StatelessWidget {
   final bool nextButtonStatus;
 
   const WelcomeWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     required this.imageCount,
     this.nextButtonStatus = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
